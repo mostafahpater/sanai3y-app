@@ -25,8 +25,14 @@ export default function SendTalpFromClient() {
       <ScrollView style={styles.scrollView}>
         {/* Start Box Posts */}
         <View style={[styles.box, styles.shadowProp]}>
-          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-            <View>
+          <View style={{ flexDirection: "row", justifyContent: "flex-start", marginLeft:10}}>
+          <Image
+              style={styles.tinyLogo}
+              source={{
+                uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
+              }}
+            />
+            <View style={{marginLeft:10}}>
               <Text
                 style={{
                   marginRight: 10,
@@ -42,12 +48,7 @@ export default function SendTalpFromClient() {
                 اسوان
               </Text>
             </View>
-            <Image
-              style={styles.tinyLogo}
-              source={{
-                uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
-              }}
-            />
+
           </View>
           <Image
             style={styles.tinyLogotest}
@@ -113,9 +114,8 @@ export default function SendTalpFromClient() {
                 backgroundColor: "#ffb200",
                 color: "#000",
                 width: "100%",
-                height: 40,
-                lineHeight: 40,
                 fontSize: 18,
+                padding:6,
                 borderRadius: 10,
               }}
             >

@@ -24,7 +24,18 @@ export default function HomeStack() {
 
         }} />
 
-      <Screen name='SendTalp' component={SendTalpFromClient} options={{ title: 'ارسال طلب' }} />
+      <Screen name='SendTalp' component={SendTalpFromClient}
+        options={
+          {
+            headerTitle: "الطلب",
+            // headerTitleAlign:"left",
+            // headerBackTitleStyle:{
+            //   textAlign:"right",
+            //   justifyContent:"flex-end"
+            // }
+          }
+        }
+      />
     </Navigator>
   )
 }
