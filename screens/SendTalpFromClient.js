@@ -5,7 +5,10 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
-  Image
+  Image,
+  ScrollView,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React from "react";
 import { useRoute } from "@react-navigation/native";
@@ -18,117 +21,134 @@ export default function SendTalpFromClient() {
   console.log(id);
 
   return (
-    <View style={styles.container}>
-
-      {/* Start Box Posts */}
-      <View style={[styles.box, styles.shadowProp]}>
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <View>
-            <Text
-              style={{
-                marginRight: 10,
-                paddingRight: 10,
-                borderRightWidth: 1,
-                borderRightColor: "#ffb200",
-                fontWeight: "bold",
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        {/* Start Box Posts */}
+        <View style={[styles.box, styles.shadowProp]}>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <View>
+              <Text
+                style={{
+                  marginRight: 10,
+                  paddingRight: 10,
+                  borderRightWidth: 1,
+                  borderRightColor: "#ffb200",
+                  fontWeight: "bold",
+                }}
+              >
+                عبدالحاقظ
+              </Text>
+              <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
+                اسوان
+              </Text>
+            </View>
+            <Image
+              style={styles.tinyLogo}
+              source={{
+                uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
               }}
-            >
-              عبدالحاقظ
-            </Text>
-            <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
-              اسوان
-            </Text>
+            />
           </View>
           <Image
-            style={styles.tinyLogo}
+            style={styles.tinyLogotest}
             source={{
-              uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
+              uri: "https://media.lactualite.com/2019/12/361ba8f8-istock-1084346110-1200x675.jpg",
             }}
           />
-        </View>
-        <AntDesign name="closecircle" style={styles.test} />
 
-        <Text style={{ padding: 10 }}>
-          بالعربية تغطية بالصور والفيديو لأهم أخبار العالم والدول العربية
-          والخليج والشرق الأوسط، مع موضوعات حصرية بينها سياسة واقتصاد وصحة
-          ورياضة وسياحة ..
-        </Text>
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-          }}
-        >
-          <Button
-          
-            title="ارسال طلب"
-            color="#ffb200"
-            style={{ borderRadius: 50 }}
-            onPress={() => navigation.navigate("SendTalp", {test:{id:1}})}
-          />
           <Text
             style={{
-              backgroundColor: "#EEE",
-              width: 80,
-              height: 25,
-              textAlign: "center",
-              borderRadius: 10,
+              padding: 10,
+              borderBottomWidth: 1,
+              borderBottomColor: "#eee",
             }}
           >
-            كهربائي
+            بالعربية تغطية بالصور والفيديو لأهم أخبار العالم والدول العربية
+            والخليج والشرق الأوسط، مع موضوعات حصرية بينها سياسة واقتصاد وصحة
+            ورياضة وسياحة ..
           </Text>
-        </View>
-      </View>
-      {/* End Box Posts */}
 
-      <TextInput
-        multiline={true}
-        numberOfLines={4}
-        placeholder={"ازاي تقدر تحل المشكلة"}
-        style={{
-          padding: 20,
-          height: 150,
-          width: "90%",
-          textAlignVertical: "top",
-          backgroundColor: "#EEE",
-          elevation: 1,
-          borderRadius: 10,
-        }}
-      />
-      <TouchableOpacity
-        style={{
-          width: "90%",
-          marginTop: 10,
-          backgroundColor: "#ffb200",
-          borderRadius: 10,
-        }}
-      >
-        <Text
-          style={{
-            textAlign: "center",
-            backgroundColor: "#ffb200",
-            color: "#000",
-            width: "100%",
-            height: 40,
-            lineHeight: 40,
-            fontSize: 18,
-            borderRadius: 10,
-          }}
-        >
-          ارسال الطلب
-        </Text>
-      </TouchableOpacity>
-    </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+            }}
+          ></View>
+        </View>
+        {/* End Box Posts */}
+        <View style={{ alignItems: "center" }}>
+          <TextInput
+            multiline={true}
+            numberOfLines={2}
+            placeholder={"ازاي تقدر تحل المشكلة"}
+            style={{
+              padding: 10,
+              height: 100,
+              width: "90%",
+              textAlignVertical: "top",
+              backgroundColor: "#eeeeee6e",
+              // elevation: 1,
+              borderRadius: 5,
+              marginTop: 50,
+              borderWidth:2,
+              borderColor:'#eee'
+            }}
+          />
+        </View>
+
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            style={{
+              width: "50%",
+              marginTop: 10,
+              backgroundColor: "#ffb200",
+              borderRadius: 10,
+              marginBottom: 40,
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                backgroundColor: "#ffb200",
+                color: "#000",
+                width: "100%",
+                height: 40,
+                lineHeight: 40,
+                fontSize: 18,
+                borderRadius: 10,
+              }}
+            >
+              ارسال الطلب
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
-    justifyContent: "center",
-    alignItems: "center",
+    // paddingTop: StatusBar.currentHeight,
+  },
+  scrollView: {
+    backgroundColor: "#FFF",
+    paddingRight: 10,
+    paddingLeft: 10,
+    margin: 0,
+    paddingTop: 20,
+  },
+  tinyLogo: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+  },
+  tinyLogotest: {
+    width: "100%",
+    height: 300,
+    marginTop: 10,
+    borderRadius: 5,
   },
 });
