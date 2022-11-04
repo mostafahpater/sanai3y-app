@@ -5,11 +5,13 @@ const { Navigator, Screen } = createBottomTabNavigator();
 
 // Import Screens
 import Login from "../screens/Login";
-import Profile from "../screens/Profile";
-import { Entypo, FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Chat from "../screens/Chat";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";
+import ProfileClient from "../screens/ProfileClient";
+import ProfileSnai3y from "../screens/ProfileSnai3y";
+import AddJop from "../screens/AddJop";
 export default function MainTabs() {
   return (
     <Navigator>
@@ -18,13 +20,9 @@ export default function MainTabs() {
         name="HomeScreen"
         component={HomeStack}
         options={{
-        
-          headerShown:false,
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-              الصفحة الرئيسية
-            </Text>
-          ),
+
+          headerShown: false,
+          tabBarShowLabel:false,
           headerStyle: {
             backgroundColor: "#ffb200",
           },
@@ -32,7 +30,7 @@ export default function MainTabs() {
             <FontAwesome
               name="home"
               color={focused ? "#ffb200" : ""}
-              size={30}
+              size={25}
             />
           ),
         }}
@@ -43,59 +41,94 @@ export default function MainTabs() {
         name="Users"
         component={AllUser}
         options={{
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-              الحرفين
-            </Text>
-          ),
+          tabBarShowLabel:false,
 
           tabBarIcon: ({ focused }) => (
             <FontAwesome
               name="users"
               color={focused ? "#ffb200" : ""}
-              size={30}
+              size={25}
             />
           ),
         }}
       />
       {/* End User Screen  */}
-      {/* Start Profile Screen  */}
+
+      {/* Start Add Jop Screen  */}
       <Screen
-        name="Profile"
-        component={Profile}
+        name="addjop"
+        component={AddJop}
         options={{
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-                الصفحة الشخصية
-            </Text>
+          tabBarShowLabel:false,
+
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="add-circle"
+              color={focused ? "#ffb200" : ""}
+              size={25}
+            />
           ),
+        }}
+      />
+      {/* End Add Jop Screen  */}
+
+      {/* Start Profile Client  */}
+      <Screen
+        name="ProfileClient"
+        component={ProfileClient}
+        options={{
+          tabBarShowLabel:false,
 
           tabBarIcon: ({ focused }) => (
             <FontAwesome
               name="user"
               color={focused ? "#ffb200" : ""}
-              size={30}
+              size={25}
             />
           ),
         }}
       />
+      {/* End Profile Client  */}
+      {/* Start Profile Client  */}
+      <Screen
+        name="ProfileSnai3y"
+        component={ProfileSnai3y}
+        options={{
+          tabBarShowLabel:false,
+          headerTitle:"الصفحة الشخصية",
+          headerTitleAlign:"center",
+          headerTitleStyle:{
+            fontSize:25
+          },
+          headerStyle:{
+            backgroundColor:"#fbb150",
+            elevation:15,
+            shadowColor:"#000"
+          },
+          tabBarIcon: ({ focused }) => (
+            <FontAwesome
+              name="user"
+              color={focused ? "#ffb200" : ""}
+              size={25}
+            />
+          ),
+        }}
+        
+
+      />
       {/* End Profile Screen  */}
+      {/* End Profile Client  */}
       {/* Start Chat Screen  */}
       <Screen
         name="chat"
         component={Chat}
         options={{
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-              الرسائل
-            </Text>
-          ),
-
+          tabBarShowLabel:false,
           tabBarIcon: ({ focused }) => (
             <Entypo
               name="chat"
               color={focused ? "#ffb200" : ""}
-              size={30}
+              size={25}
             />
           ),
         }}
