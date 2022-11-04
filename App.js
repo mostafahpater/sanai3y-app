@@ -2,27 +2,38 @@ import { StatusBar } from 'expo-status-bar';
 import {  StyleSheet, Text, View } from 'react-native';
 import * as React from 'react';
 import Login from './screens/Login';
-import Slider from './screens/Slider';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-export default function App() {
-  const Stack = createStackNavigator();
+import { NavigationContainer  } from "@react-navigation/native"
+import MainTabs from './navigation';
+import { createStackNavigator } from '@react-navigation/stack';
+import RegisterationStack from './navigation/RegisterationStack';
 
+export default function App() {
+  const Stack = createStackNavigator()
   return (
+  //   <View style={styles.container}>
+  //  <Login></Login>
+  //   </View>
     <NavigationContainer>
-   <Stack.Navigator initialRouteName="LoginScreen">
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
-      />
-        <Stack.Screen
-        name="Slider"
-        component={Slider}
-        options={{headerShown: false}}
-      />
+      <Stack.Navigator  initialRouteName='register'>
+        <Stack.Screen name='Home' component={MainTabs} 
+          options={{
+            headerShown:false
+          }}
+        />
+        <Stack.Screen name='register' component={RegisterationStack} 
+          options={{
+            headerShown:true,
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen name='login' component={Login} 
+          options={{
+            headerShown:false
+          }}
+        />
       </Stack.Navigator>
-      </NavigationContainer>
+    </NavigationContainer>
+  
   );
 }
 
