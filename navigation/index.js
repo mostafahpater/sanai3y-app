@@ -6,7 +6,7 @@ const { Navigator, Screen } = createBottomTabNavigator();
 // Import Screens
 import Login from "../screens/Login";
 import Profile from "../screens/Profile";
-import { FontAwesome } from "@expo/vector-icons";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Chat from "../screens/Chat";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";
@@ -92,8 +92,8 @@ export default function MainTabs() {
           ),
 
           tabBarIcon: ({ focused }) => (
-            <FontAwesome
-              name="user"
+            <Entypo
+              name="chat"
               color={focused ? "#ffb200" : ""}
               size={30}
             />

@@ -5,6 +5,7 @@ import { NavigationContainer  } from "@react-navigation/native"
 import MainTabs from './navigation';
 import { createStackNavigator } from '@react-navigation/stack';
 import RegisterationStack from './navigation/RegisterationStack';
+import Messages from './screens/Messages';
 
 export default function App() {
   const Stack = createStackNavigator()
@@ -13,7 +14,7 @@ export default function App() {
   //  <Login></Login>
   //   </View>
     <NavigationContainer>
-      <Stack.Navigator  initialRouteName='register'>
+      <Stack.Navigator  initialRouteName='Home'>
         <Stack.Screen name='Home' component={MainTabs} 
           options={{
             headerShown:false
@@ -30,6 +31,7 @@ export default function App() {
             headerShown:false
           }}
         />
+        <Stack.Screen name='messages' component={Messages}/>
       </Stack.Navigator>
     </NavigationContainer>
   
