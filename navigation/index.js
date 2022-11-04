@@ -5,12 +5,13 @@ const { Navigator, Screen } = createBottomTabNavigator();
 
 // Import Screens
 import Login from "../screens/Login";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Chat from "../screens/Chat";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";
 import ProfileClient from "../screens/ProfileClient";
 import ProfileSnai3y from "../screens/ProfileSnai3y";
+import AddJop from "../screens/AddJop";
 export default function MainTabs() {
   return (
     <Navigator>
@@ -21,11 +22,7 @@ export default function MainTabs() {
         options={{
 
           headerShown: false,
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-              الصفحة الرئيسية
-            </Text>
-          ),
+          tabBarShowLabel:false,
           headerStyle: {
             backgroundColor: "#ffb200",
           },
@@ -33,7 +30,7 @@ export default function MainTabs() {
             <FontAwesome
               name="home"
               color={focused ? "#ffb200" : ""}
-              size={30}
+              size={25}
             />
           ),
         }}
@@ -44,38 +41,49 @@ export default function MainTabs() {
         name="Users"
         component={AllUser}
         options={{
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-              الحرفين
-            </Text>
-          ),
+          tabBarShowLabel:false,
 
           tabBarIcon: ({ focused }) => (
             <FontAwesome
               name="users"
               color={focused ? "#ffb200" : ""}
-              size={30}
+              size={25}
             />
           ),
         }}
       />
       {/* End User Screen  */}
+
+      {/* Start Add Jop Screen  */}
+      <Screen
+        name="addjop"
+        component={AddJop}
+        options={{
+          tabBarShowLabel:false,
+
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="add-circle"
+              color={focused ? "#ffb200" : ""}
+              size={25}
+            />
+          ),
+        }}
+      />
+      {/* End Add Jop Screen  */}
+
       {/* Start Profile Client  */}
       <Screen
         name="ProfileClient"
         component={ProfileClient}
         options={{
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-              عميل
-            </Text>
-          ),
+          tabBarShowLabel:false,
 
           tabBarIcon: ({ focused }) => (
             <FontAwesome
               name="user"
               color={focused ? "#ffb200" : ""}
-              size={30}
+              size={25}
             />
           ),
         }}
@@ -86,12 +94,17 @@ export default function MainTabs() {
         name="ProfileSnai3y"
         component={ProfileSnai3y}
         options={{
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-              صنايعي
-            </Text>
-          )
+          tabBarShowLabel:false,
+
+          tabBarIcon: ({ focused }) => (
+            <FontAwesome
+              name="user"
+              color={focused ? "#ffb200" : ""}
+              size={25}
+            />
+          ),
         }}
+        
 
       />
       {/* End Profile Screen  */}
@@ -101,17 +114,12 @@ export default function MainTabs() {
         name="chat"
         component={Chat}
         options={{
-          tabBarLabel: ({ focused }) => (
-            <Text style={{ color: focused ? "#000" : "#555" }}>
-              الرسائل
-            </Text>
-          ),
-
+          tabBarShowLabel:false,
           tabBarIcon: ({ focused }) => (
             <FontAwesome
               name="user"
               color={focused ? "#ffb200" : ""}
-              size={30}
+              size={25}
             />
           ),
         }}
