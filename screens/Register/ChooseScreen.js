@@ -2,8 +2,10 @@ import { StyleSheet, Text, View , Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import { Button } from 'react-native-paper'
+import { useNavigation } from '@react-navigation/native'
 
 const ChooseScreen = () => {
+  const navigation = useNavigation()
   return (
     <View style={styles.parent}>
       <View style={{height:150,justifyContent:"center"}}>
@@ -14,10 +16,14 @@ const ChooseScreen = () => {
       </View>
 
       <View style={{height:200,alignItems:"center",justifyContent:"center"}}>
-        <TouchableOpacity style={styles.buttonChoose}>
+        <TouchableOpacity style={styles.buttonChoose}
+          onPress={()=> navigation.navigate('registerClient')}
+        >
             <Text style={styles.textChoose}>سجل كعميل</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonChoose}>
+        <TouchableOpacity style={styles.buttonChoose}
+          onPress={()=> navigation.navigate('registerSnai3y')}
+        >
             <Text style={styles.textChoose}>سجل كحرفي</Text>
         </TouchableOpacity>
       </View>
@@ -26,7 +32,9 @@ const ChooseScreen = () => {
         <Text style={{fontSize:20}}>
             لدي حساب بالفعل!
         </Text>
-        <TouchableOpacity style={{marginRight:5}}>
+        <TouchableOpacity style={{marginRight:5}}
+          onPress={()=> navigation.navigate('login')}
+        >
             <Text style={{fontSize:22,color:"#1d4ed8"}}>دخول</Text>
         </TouchableOpacity>
       </View>
