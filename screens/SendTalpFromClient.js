@@ -12,7 +12,7 @@ export default function SendTalpFromClient() {
 
   return (
     <View>
-      <View style={{ borderWidth: 1, flexDirection:'column', alignContent:'center'}} >
+      <View style={{ borderWidth: 1, backgroundColor:'blue'}} >
         <TextInput
           multiline={true}
           numberOfLines={10}
@@ -23,6 +23,8 @@ export default function SendTalpFromClient() {
             width: "80%" ,
             textAlignVertical: "top",
             backgroundColor: "red",
+        
+                      
           }}
         />
       </View>
