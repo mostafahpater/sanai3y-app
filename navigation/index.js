@@ -6,6 +6,7 @@ const { Navigator, Screen } = createBottomTabNavigator();
 // Import Screens
 import Login from "../screens/Login";
 import { FontAwesome } from "@expo/vector-icons";
+import Chat from "../screens/Chat";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";
 import ProfileClient from "../screens/ProfileClient";
@@ -18,8 +19,8 @@ export default function MainTabs() {
         name="HomeScreen"
         component={HomeStack}
         options={{
-        
-          headerShown:false,
+
+          headerShown: false,
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? "#000" : "#555" }}>
               الصفحة الرئيسية
@@ -66,7 +67,7 @@ export default function MainTabs() {
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? "#000" : "#555" }}>
-                عميل
+              عميل
             </Text>
           ),
 
@@ -87,7 +88,22 @@ export default function MainTabs() {
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? "#000" : "#555" }}>
-                صنايعي
+              صنايعي
+            </Text>
+          )
+        }}
+
+      />
+      {/* End Profile Screen  */}
+      {/* End Profile Client  */}
+      {/* Start Chat Screen  */}
+      <Screen
+        name="chat"
+        component={Chat}
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <Text style={{ color: focused ? "#000" : "#555" }}>
+              الرسائل
             </Text>
           ),
 
@@ -100,7 +116,7 @@ export default function MainTabs() {
           ),
         }}
       />
-      {/* End Profile Client  */}
+      {/* End Chat Screen  */}
 
     </Navigator>
   );
