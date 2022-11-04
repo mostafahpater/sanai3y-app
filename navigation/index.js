@@ -9,13 +9,12 @@ import Profile from "../screens/Profile";
 import { FontAwesome } from "@expo/vector-icons";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";
-
 export default function MainTabs() {
   return (
     <Navigator>
       {/* Start Home Sceen  */}
       <Screen
-        name="Home"
+        name="HomeScreen"
         component={HomeStack}
         options={{
         
@@ -81,7 +80,6 @@ export default function MainTabs() {
       />
       {/* End Profile Screen  */}
 
-      <Screen name="Login" component={Login} />
     </Navigator>
   );
 }
