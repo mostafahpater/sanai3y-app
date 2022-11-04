@@ -13,7 +13,7 @@ export default function App() {
   //  <Login></Login>
   //   </View>
     <NavigationContainer>
-      <Stack.Navigator  initialRouteName='register'>
+      <Stack.Navigator  initialRouteName='Home'>
         <Stack.Screen name='Home' component={MainTabs} 
           options={{
             headerShown:false

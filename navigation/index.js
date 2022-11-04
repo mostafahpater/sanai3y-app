@@ -5,10 +5,11 @@ const { Navigator, Screen } = createBottomTabNavigator();
 
 // Import Screens
 import Login from "../screens/Login";
-import Profile from "../screens/Profile";
 import { FontAwesome } from "@expo/vector-icons";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";
+import ProfileClient from "../screens/ProfileClient";
+import ProfileSnai3y from "../screens/ProfileSnai3y";
 export default function MainTabs() {
   return (
     <Navigator>
@@ -58,14 +59,14 @@ export default function MainTabs() {
         }}
       />
       {/* End User Screen  */}
-      {/* Start Profile Screen  */}
+      {/* Start Profile Client  */}
       <Screen
-        name="Profile"
-        component={Profile}
+        name="ProfileClient"
+        component={ProfileClient}
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{ color: focused ? "#000" : "#555" }}>
-                الصفحة الشخصية
+                عميل
             </Text>
           ),
 
@@ -78,7 +79,28 @@ export default function MainTabs() {
           ),
         }}
       />
-      {/* End Profile Screen  */}
+      {/* End Profile Client  */}
+      {/* Start Profile Client  */}
+      <Screen
+        name="ProfileSnai3y"
+        component={ProfileSnai3y}
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <Text style={{ color: focused ? "#000" : "#555" }}>
+                صنايعي
+            </Text>
+          ),
+
+          tabBarIcon: ({ focused }) => (
+            <FontAwesome
+              name="user"
+              color={focused ? "#ffb200" : ""}
+              size={30}
+            />
+          ),
+        }}
+      />
+      {/* End Profile Client  */}
 
     </Navigator>
   );
