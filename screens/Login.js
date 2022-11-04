@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import { StatusBar } from 'expo-status-bar';
+import { pathUrl } from '../Config/env';
 // import Loader from './Components/Loader';
  
 const LoginScreen = () => {
@@ -30,7 +31,6 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
   const passwordInputRef = createRef();
-  const baseUrl = "http://localhost:7000/client/signin";
   const loginSchema = yup.object().shape({
         email: yup.string().email("البريد الإلكتروني غير صحيح").required("هذا الحقل مطلوب"),
         password: yup.string().required("هذا الحقل مطلوب"),
@@ -38,7 +38,7 @@ const LoginScreen = () => {
    const onSubmit= async (values) => {
     setLoading(true);
     let body = {email: '', password: ''};
-     axios.post("http://192.168.1.11:7000/client/signin",values).then((res)=>{
+     axios.post(`${pathUrl}/client/signin`,values).then((res)=>{
        // console.log(res);
        if (res.status == 200) {
         console.log("true");
@@ -152,7 +152,7 @@ const LoginScreen = () => {
        </TouchableOpacity>
        <Text
          style={styles.registerTextStyle}
-         onPress={() => navigation.navigate('RegisterScreen')}>
+         onPress={() => navigation.navigate("register")}>
            <Text
            style={{color:"#000"}}
            > ليس لديك حساب؟  </Text>
