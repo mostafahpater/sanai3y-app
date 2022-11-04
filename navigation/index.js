@@ -81,7 +81,7 @@ export default function MainTabs() {
       />
       {/* End Profile Screen  */}
 
-      {/* <Screen name="Login" component={Login} /> */}
+      <Screen name="Login" component={Login} />
     </Navigator>
   );
 }
