@@ -98,7 +98,16 @@ export default function MainTabs() {
         component={ProfileSnai3y}
         options={{
           tabBarShowLabel:false,
-
+          headerTitle:"الصفحة الشخصية",
+          headerTitleAlign:"center",
+          headerTitleStyle:{
+            fontSize:25
+          },
+          headerStyle:{
+            backgroundColor:"#fbb150",
+            elevation:15,
+            shadowColor:"#000"
+          },
           tabBarIcon: ({ focused }) => (
             <FontAwesome
               name="user"
@@ -119,8 +128,8 @@ export default function MainTabs() {
         options={{
           tabBarShowLabel:false,
           tabBarIcon: ({ focused }) => (
-            <FontAwesome
-              name="user"
+            <Entypo
+              name="chat"
               color={focused ? "#ffb200" : ""}
               size={25}
             />
