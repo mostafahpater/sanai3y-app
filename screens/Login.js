@@ -1,7 +1,3 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
- 
-// Import React and Component
 import React, {useState, createRef} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NavigationContainer,useNavigation  } from '@react-navigation/native';
@@ -26,18 +22,13 @@ import { pathUrl } from '../Config/env';
  
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const [userEmail, setUserEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState('');
-  const passwordInputRef = createRef();
   const loginSchema = yup.object().shape({
         email: yup.string().email("البريد الإلكتروني غير صحيح").required("هذا الحقل مطلوب"),
         password: yup.string().required("هذا الحقل مطلوب"),
      })
    const onSubmit= async (values) => {
     setLoading(true);
-    let body = {email: '', password: ''};
      axios.post(`${pathUrl}/client/signin`,values).then((res)=>{
        // console.log(res);
        if (res.status == 200) {
