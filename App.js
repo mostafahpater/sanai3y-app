@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native"
 import MainTabs from './navigation';
 import { createStackNavigator } from '@react-navigation/stack';
 import RegisterationStack from './navigation/RegisterationStack';
+import WorksForm from './screens/WorksForm';
 import Messages from './screens/Messages';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Fragment } from 'react';
@@ -58,8 +59,7 @@ export default function App() {
         </NavigationContainer>
       </Provider>
     </Fragment>
-
-  );
+  )
 }
 const styles = StyleSheet.create({
   container: {
