@@ -1,10 +1,10 @@
 // Example of Splash, Login and Sign Up in React Native
 // https://aboutreact.com/react-native-login-and-signup/
- 
+
 // Import React and Component
-import React, {useState, createRef} from 'react';
+import React, { useState, createRef } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { NavigationContainer,useNavigation  } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   StyleSheet,
   TextInput,
@@ -20,159 +20,181 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as yup from 'yup'
 import { Formik } from 'formik'
-import { StatusBar } from 'expo-status-bar';
 import { pathUrl } from '../Config/env';
+import { Entypo, FontAwesome } from '@expo/vector-icons';
 // import Loader from './Components/Loader';
- 
+
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const [userEmail, setUserEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState('');
-  const passwordInputRef = createRef();
-  const loginSchema = yup.object().shape({
-        email: yup.string().email("البريد الإلكتروني غير صحيح").required("هذا الحقل مطلوب"),
-        password: yup.string().required("هذا الحقل مطلوب"),
-     })
-   const onSubmit= async (values) => {
-    setLoading(true);
-    let body = {email: '', password: ''};
-     axios.post(`${pathUrl}/client/signin`,values).then((res)=>{
-       // console.log(res);
-       if (res.status == 200) {
-        console.log("true");
-          //  console.log(body);
-          const stor = async () => {
-           await AsyncStorage.setItem("token", res.headers.authorization);
-          await  AsyncStorage.setItem("snai3yRole", res.data.data.rule);
-          await  AsyncStorage.setItem("Name", res.data.data.firstName +" "+ res.data.data.lastName);
-          await  AsyncStorage.setItem("image", res.data.data.image);
-        }
-        
-       
-        //  console.log(res.data);
-       } else {
-        console.log("erorr");
-         console.log('Please check your email id or password');
-       }
-     }).catch((err)=>{
-      console.log("erorr");
-      console.log(err);
-     })
-      };
+  const [logErr, setLogErr] = useState(false)
 
+  const loginSchema = yup.object().shape({
+    email: yup.string().email("البريد الإلكتروني غير صحيح").required("هذا الحقل مطلوب"),
+    password: yup.string().required("هذا الحقل مطلوب"),
+  })
+  // Local Storage
+
+
+  const onSubmit = async (values) => {
+    // setLoading(true);
+    const sendLogin = async () => {
+      // console.log(values)
+      try {
+        let res = await axios.post(`${pathUrl}/client/signin`, values)
+        // console.log(values)
+        // console.log(res);
+        if (res.data.message == "Valid password & logged in") {
+          const stor = async () => {
+            await AsyncStorage.setItem("token", res.headers.authorization);
+            await AsyncStorage.setItem("snai3yRole", res.data.data.rule);
+            await AsyncStorage.setItem("id", res.data.data._id);
+            console.log("true");
+          }
+          stor()
+          console.log(res)
+          navigation.navigate('Home')
+          setLogErr(false)
+        } else {
+          setLogErr(true)
+        }
+
+      } catch (err) {
+        console.log(err)
+        // setLogErr(true)
+      }
+    }
+
+    sendLogin()
+    // let token = AsyncStorage.getItem("snai3yRole")
+    // console.log(token)
+  };
+
+  
+  // console.log(pathUrl)
   return (
     <Formik
-    initialValues={{email:'',password:''}}
-    // onSubmit={login}
-    validationSchema={loginSchema}
-    onSubmit={onSubmit}
+      initialValues={{ email: '', password: '' }}
+      // onSubmit={login}
+      validationSchema={loginSchema}
+      onSubmit={onSubmit}
     >
-      {({handleSubmit,handleChange,errors,touched,values,setFieldTouched  })=>(
- <View style={styles.mainBody}>
- {/* <Loader loading={loading} /> */}
- <ScrollView
-   keyboardShouldPersistTaps="handled"
-   contentContainerStyle={{
-     flex: 1,
-     justifyContent: 'center',
-     alignContent: 'center',
-   }}>
-   <View>
-       <View style={{alignItems: 'center'}}>
-         <Image
-           source={require('../assets/logo.png')}
-           style={{
-             width: '50%',
-             height: 100,
-             resizeMode: 'contain',
-             margin: 30,
-           }}
-         />
-       
-       </View>
-     <KeyboardAvoidingView enabled>
-       <Text style={{
-           color:"#000",
-           fontSize:25,
-           fontWeight:"700",
-          
-           textAlign: 'center'
-         }}
-         
-         >تسجيل الدخول</Text>
-       <View style={styles.SectionStyle}>
-         <Icon name='user' style={styles.styleUser} />
-        
-         <TextInput
-           style={styles.inputStyle}
-           onChangeText={handleChange('email')}
-           value={values.email}
-           placeholder="ادخل الايميل" //dummy@abc.com
-           placeholderTextColor="#8b9cb5"
-           autoCapitalize="none"
-           keyboardType="email-address"
-           returnKeyType="next"           
-           blurOnSubmit={false}
-           onBlur={()=>setFieldTouched('email')}
-         />
-       </View>
-       {touched.email && errors.email  && (
-         <Text style={styles.errorTextStyle}>
-           {errors.email}
-         </Text>
-       )}
-       <View style={styles.SectionStyle}>
-       <Icon name='lock' style={styles.styleUser}/>
-         <TextInput
-           style={styles.inputStyle}
-           placeholder="ادخل كلمة السر" //12345
-           placeholderTextColor="#8b9cb5"
-           keyboardType="default"
-           value={values.password}
-           onChangeText={handleChange('password')}
-           onSubmitEditing={Keyboard.dismiss}
-           blurOnSubmit={false}
-           secureTextEntry={true}
-           returnKeyType="next"
-           onBlur={()=>setFieldTouched('password')}
-         />
-       </View>
-       {touched.password && errors.password &&  (
-         <Text style={styles.errorTextStyle}>
-           {errors.password}
-         </Text>
-       ) }
-       <TouchableOpacity
-         style={styles.buttonStyle}
-         activeOpacity={0.5}
-         onPress={handleSubmit}>
-         <Text style={styles.buttonTextStyle}>تسجيل الدخول</Text>
-       </TouchableOpacity>
-       <Text
-         style={styles.registerTextStyle}
-         onPress={() => navigation.navigate("register")}>
-           <Text
-           style={{color:"#000"}}
-           > ليس لديك حساب؟  </Text>
-          التسجيل
-       </Text>
-     </KeyboardAvoidingView>
-   </View>
+      {({ handleSubmit, handleChange, errors, touched, values, setFieldTouched }) => (
+        <View style={styles.mainBody}>
+          {/* <Loader loading={loading} /> */}
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              flex: 1,
+              justifyContent: 'center',
+              alignContent: 'center',
+            }}>
+            <View>
+              <View style={{ alignItems: 'center', justifyContent: "flex-end", height: 200 }}>
+                <Image
+                  source={require('../assets/logo.png')}
+                  style={{
+                    width: '50%',
+                    height: "100%",
+                    resizeMode: 'contain',
+                    margin: 30,
+                  }}
+                />
 
-</ScrollView>
-</View>
+              </View>
+              {logErr && <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "center", marginBottom: 10 }}>
+                <View style={{ backgroundColor: "#dc2626", padding: 5, borderRadius: 5, width: "80%" }}>
+                  <Text style={{ color: "#fff", fontSize: 18, textAlign: "center" }}>البريد الألكتروني أو كلمة السر غير صحيحه</Text>
+                </View>
+              </View>}
+              <KeyboardAvoidingView enabled>
+                <Text style={{
+                  color: "#000",
+                  fontSize: 25,
+                  fontWeight: "700",
+
+                  textAlign: 'center'
+                }}
+
+                >تسجيل الدخول</Text>
+
+                {/* <Entypo name='login' style={{
+                  color: "#000",
+                  fontSize: 30,
+                  fontWeight: "700",
+                  textAlign: 'center'
+                }}/> */}
+                <View style={styles.SectionStyle}>
+                  <Icon name='user' style={styles.styleUser} />
+
+                  <TextInput
+                    style={styles.inputStyle}
+                    onChangeText={handleChange('email')}
+                    value={values.email}
+                    placeholder="ادخل البريد الالكتروني" //dummy@abc.com
+                    placeholderTextColor="#8b9cb5"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                    onBlur={() => setFieldTouched('email')}
+                  />
+                </View>
+                {touched.email && errors.email && (
+                  <Text style={styles.errorTextStyle}>
+                    {errors.email}
+                  </Text>
+                )}
+                <View style={styles.SectionStyle}>
+                  <Icon name='lock' style={styles.styleUser} />
+                  <TextInput
+                    style={styles.inputStyle}
+                    placeholder="ادخل كلمة السر" //12345
+                    placeholderTextColor="#8b9cb5"
+                    keyboardType="default"
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    onSubmitEditing={Keyboard.dismiss}
+                    blurOnSubmit={false}
+                    secureTextEntry={true}
+                    returnKeyType="next"
+                    onBlur={() => setFieldTouched('password')}
+                  />
+                </View>
+                {touched.password && errors.password && (
+                  <Text style={styles.errorTextStyle}>
+                    {errors.password}
+                  </Text>
+                )}
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  activeOpacity={0.5}
+                  onPress={handleSubmit}>
+                  <Text style={styles.buttonTextStyle}>تسجيل الدخول</Text>
+                </TouchableOpacity>
+                <Text
+                  style={styles.registerTextStyle}
+                  onPress={() => navigation.navigate("register")}>
+                  <Text
+                    style={{ color: "#000" }}
+                  > ليس لديك حساب؟  </Text>
+                  التسجيل
+                </Text>
+              </KeyboardAvoidingView>
+            </View>
+
+          </ScrollView>
+        </View>
       )}
-   
+
     </Formik>
 
   );
 };
 export default LoginScreen;
- 
+
 const styles = StyleSheet.create({
- 
+
   mainBody: {
     flex: 1,
     justifyContent: 'center',
@@ -204,20 +226,20 @@ const styles = StyleSheet.create({
   buttonTextStyle: {
     color: 'white',
     paddingVertical: 10,
-    fontSize: 16,
+    fontSize: 20,
   },
   inputStyle: {
     flex: 1,
     color: '#000',
-    paddingLeft: 27,
+    paddingLeft: 35,
     paddingRight: 15,
     borderWidth: 1,
-    backgroundColor:"#fff",
+    backgroundColor: "#fff",
     borderRadius: 5,
-    borderColor: '#8b9cb5',
+    borderColor: '#dadae8',
     textAlign: 'right',
     elevation: 2,
-    
+
   },
   registerTextStyle: {
     color: 'blue',
@@ -232,13 +254,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
   },
-  styleUser:{
-    position:"absolute",
-    fontSize:24,
-  zIndex:99,
-    color:"#ffb200",
-  
-    padding:5,
-    paddingTop:9
+  styleUser: {
+    position: "absolute",
+    fontSize: 24,
+    zIndex: 99,
+    color: "#ffb200",
+
+    padding: 5,
+    paddingTop: 9,
+    paddingEnd:10
   },
 });

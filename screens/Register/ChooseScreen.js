@@ -8,7 +8,7 @@ const ChooseScreen = () => {
   const navigation = useNavigation()
   return (
     <View style={styles.parent}>
-      <View style={{height:150,justifyContent:"center"}}>
+      <View style={{justifyContent:"center"}}>
         <Text style={{fontSize:25,marginBottom:20}}>مرحباً بك أختر طريقة التسجيل التي تريدها</Text>
       </View>
       <View style={{height:200, justifyContent:"center",alignItems:"center"}}>
@@ -29,14 +29,14 @@ const ChooseScreen = () => {
       </View>
 
       <View style={{flexDirection:"row-reverse"}}>
-        <Text style={{fontSize:20}}>
-            لدي حساب بالفعل!
-        </Text>
-        <TouchableOpacity style={{marginRight:5}}
-          onPress={()=> navigation.navigate('login')}
+        <TouchableOpacity style={{marginLeft:8}}
+          onPress={()=>navigation.navigate('login')}
         >
             <Text style={{fontSize:22,color:"#1d4ed8"}}>دخول</Text>
         </TouchableOpacity>
+        <Text style={{fontSize:20}}>
+            لدي حساب بالفعل!
+        </Text>
       </View>
     </View>
 

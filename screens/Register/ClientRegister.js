@@ -8,9 +8,11 @@ import SelectDropdown from 'react-native-select-dropdown'
 import axios from 'axios';
 import { schemaUser } from './RegisterSchema';
 import { pathUrl } from '../../Config/env';
+import { useNavigation } from '@react-navigation/native';
 
 const RegisterClient = () => {
     let [regErr, setRegErr] = useState(false)
+    const navigate = useNavigation()
     // Data for Address
     let data = [
         { value: 'أسوان' },
@@ -60,6 +62,9 @@ const RegisterClient = () => {
 
                             if (res.data == "You already have acount, You can signin") {
                                 setRegErr(true)
+                            }
+                            else{
+                                navigate.navigate(('login'))
                             }
                         }
                         catch (err) {
