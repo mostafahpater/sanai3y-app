@@ -27,8 +27,14 @@ export default function Home() {
 
       {/* Start Box Posts */}
       <View style={[styles.box, styles.shadowProp]}>
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <View>
+        <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+          <Image
+            style={styles.tinyLogo}
+            source={{
+              uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
+            }}
+          />
+          <View style={{marginLeft:10}}>
             <Text
               style={{
                 marginRight: 10,
@@ -44,12 +50,6 @@ export default function Home() {
               اسوان
             </Text>
           </View>
-          <Image
-            style={styles.tinyLogo}
-            source={{
-              uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
-            }}
-          />
         </View>
         <AntDesign name="closecircle" style={styles.test} />
 
@@ -66,29 +66,26 @@ export default function Home() {
             alignItems: "baseline",
           }}
         >
-          <Button
-          
-            title="ارسال طلب"
-            color="#ffb200"
-            style={{ borderRadius: 50 }}
-            onPress={() => navigation.navigate("SendTalp", {test:{id:1}})}
-          />
           <Text
             style={{
               backgroundColor: "#EEE",
               width: 80,
-              height: 25,
               textAlign: "center",
               borderRadius: 10,
+              fontSize:12
             }}
           >
             كهربائي
           </Text>
+          <Button
+            title="ارسال طلب"
+            color="#ffb200"
+            style={{ borderRadius: 50 }}
+            onPress={() => navigation.navigate("SendTalp", { test: { id: 1 } })}
+          />
         </View>
       </View>
       {/* End Box Posts */}
-
-
     </View>
   );
 }
@@ -130,7 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     position: "absolute",
     top: 20,
-    left: 20,
+    right: 20,
   },
 });
 

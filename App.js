@@ -8,17 +8,17 @@ import MainTabs from './navigation';
 import { createStackNavigator } from '@react-navigation/stack';
 import RegisterationStack from './navigation/RegisterationStack';
 import WorksForm from './screens/WorksForm';
+import Messages from './screens/Messages';
 
 export default function App() {
   const Stack = createStackNavigator()
 
   return (
-    
     <View style={styles.container}>
    <WorksForm></WorksForm>
     </View>
     // <NavigationContainer>
-    //   <Stack.Navigator  initialRouteName='register'>
+    //   <Stack.Navigator  initialRouteName='Home'>
     //     <Stack.Screen name='Home' component={MainTabs} 
     //       options={{
     //         headerShown:false
@@ -35,6 +35,7 @@ export default function App() {
     //         headerShown:false
     //       }}
     //     />
+    //     <Stack.Screen name='messages' component={Messages}/>
     //   </Stack.Navigator>
     // </NavigationContainer>
   

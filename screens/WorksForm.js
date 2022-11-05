@@ -13,11 +13,13 @@ import {
   FlatList,
   Button,
 } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 // import * as ImagePicker from "react-native-image-picker"
 import * as ImagePicker from "expo-image-picker";
-import { pathUrl } from '../Config/env';
-import * as yup from 'yup'
+import { pathUrl } from "../Config/env";
+import * as yup from "yup";
 import axios from "axios";
+import LoginScreen from "./Login";
 export default function WorksForm() {
   const [image, setImage] = useState(null);
 
@@ -36,33 +38,37 @@ export default function WorksForm() {
       setImage(result.uri);
     }
   };
+  console.log(image);
   const worksSchema = yup.object().shape({
     title: yup.string().required("هذا الحقل مطلوب"),
     description: yup.string().required("هذا الحقل مطلوب"),
-    jobImage: yup.mixed().required("الرجاء اختيار صورة "),
- })
-const onSubmit= async (values) => {
-setLoading(true);
- axios.post(`${pathUrl}/jobs/postjob`,values).then((res)=>{
-   // console.log(res);
-   if (res.status == 200) {
-    console.log("true");  
-       //  console.log(res.data);
-   } else {
-    console.log("erorr");
-     console.log('Please check your email id or password');
-   }
- }).catch((err)=>{
-  console.log("erorr");
-  console.log(err);
- })
+    jobImage: yup.mixed(),
+  });
+  const onSubmit = async (values) => {
+    console.log("first");
+    // setLoading(true);
+    axios
+      .post(`${pathUrl}/jobs/postjob`, values)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 200) {
+          console.log("true");
+        } else {
+          console.log("erorr");
+          console.log("Please check your email id or password");
+        }
+      })
+      .catch((err) => {
+        console.log("erorr");
+        console.log(err);
+      });
   };
 
   return (
     <Formik
-      initialValues={{ title: "", description: "",jobImage:"" }}
-        validationSchema={worksSchema}
-        onSubmit={onSubmit}
+      initialValues={{ title: "", description: "", jobImage: "" }}
+      validationSchema={worksSchema}
+      onSubmit={onSubmit}
     >
       {({
         handleSubmit,
@@ -74,88 +80,98 @@ setLoading(true);
       }) => (
         <View style={styles.mainBody}>
           {/* <Loader loading={loading} /> */}
-<ScrollView
-  keyboardShouldPersistTaps="handled"
-  contentContainerStyle={{
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-  }}
->
-
-          <View>
-            <KeyboardAvoidingView enabled>
-              <Text
-                style={{
-                  color: "#000",
-                  fontSize: 25,
-                  fontWeight: "700",
-                  textAlign: "center",
-                }}
-              >
-                اضافة
-              </Text>
-              <View style={styles.SectionStyle}>
-                <TextInput
-                  style={styles.inputStyle}
-                  onChangeText={handleChange("title")}
-                  value={values.title}
-                  placeholder="ادخل عنوان العمل" //Text
-                  placeholderTextColor="#8b9cb5"
-                  autoCapitalize="none"
-                  keyboardType="default"
-                  returnKeyType="next"
-                  blurOnSubmit={false}
-                  onBlur={() => setFieldTouched("title")}
-                />
-              </View>
-              {touched.title && errors.title && (
-                <Text style={styles.errorTextStyle}>{errors.title}</Text>
-              )}
-              <View style={styles.SectionStyle}>
-                <TextInput
-                  style={[styles.inputStyle,styles.description]}
-                  placeholder="ادخل وصف العمل" //12345
-                  placeholderTextColor="#8b9cb5"
-                  keyboardType="default"
-                  value={values.description}
-                  onChangeText={handleChange("description")}
-                  onSubmitEditing={Keyboard.dismiss}
-                  blurOnSubmit={false}
-                  returnKeyType="next"
-                  onBlur={() => setFieldTouched("description")}
-                />
-              </View>
-              {touched.description && errors.description && (
-                <Text style={styles.errorTextStyle}>{errors.description}</Text>
-              )}
-              <TouchableOpacity
-                style={styles.buttonPhoto}
-                activeOpacity={0.5}
-                onPress={handleUpload}
-              >
-                <Text style={styles.buttonTextStyle}>اضف صورة</Text>
-              </TouchableOpacity>
-              {image && (
-                <Image
-                  source={{ uri: image }}
-                  style={{ height: 200, margin: 10 }}
-                />
-              )}
-               {touched.jobImage && errors.jobImage && (
-                <Text style={styles.errorTextStyle}>{errors.jobImage}</Text>
-              )}
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                activeOpacity={0.5}
-                onPress={handleSubmit}
-              >
-                <Text style={styles.buttonTextStyle}>اضافة</Text>
-              </TouchableOpacity>
-            </KeyboardAvoidingView>
-          </View>
-</ScrollView>
-
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              flex: 1,
+              justifyContent: "center",
+              alignContent: "center",
+            }}
+          >
+            <View>
+              <KeyboardAvoidingView enabled>
+                <Text
+                  style={{
+                    color: "#000",
+                    fontSize: 25,
+                    fontWeight: "700",
+                    textAlign: "center",
+                  }}
+                >
+                  اضافة عمل جديد
+                </Text>
+                <View style={styles.SectionStyle}>
+                  <TextInput
+                    style={styles.inputStyle}
+                    onChangeText={handleChange("title")}
+                    value={values.title}
+                    placeholder="ادخل عنوان العمل" //Text
+                    placeholderTextColor="#8b9cb5"
+                    autoCapitalize="none"
+                    keyboardType="default"
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                    onBlur={() => setFieldTouched("title")}
+                  />
+                </View>
+                {touched.title && errors.title && (
+                  <Text style={styles.errorTextStyle}>{errors.title}</Text>
+                )}
+                <View style={styles.SectionStyle}>
+                  <TextInput
+                    style={[styles.inputStyle, styles.description]}
+                    placeholder="ادخل وصف العمل" //12345
+                    placeholderTextColor="#8b9cb5"
+                    keyboardType="default"
+                    value={values.description}
+                    onChangeText={handleChange("description")}
+                    onSubmitEditing={Keyboard.dismiss}
+                    blurOnSubmit={false}
+                    returnKeyType="next"
+                    onBlur={() => setFieldTouched("description")}
+                  />
+                </View>
+                {touched.description && errors.description && (
+                  <Text style={styles.errorTextStyle}>
+                    {errors.description}
+                  </Text>
+                )}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={styles.buttonPhoto}
+                    activeOpacity={0.5}
+                    onPress={handleUpload}
+                  >
+                    <Text style={[styles.buttonTextStyle, { color: "black" }]}>
+                      اضف صورة
+                    </Text>
+                    <Icon name="upload" style={styles.styleUser} />
+                  </TouchableOpacity>
+                  {image && (
+                    <Image
+                      source={{ uri: image }}
+                      style={{ height: 200, width: 200, margin: 10 }}
+                    />
+                  )}
+                </View>
+                {touched.jobImage && errors.jobImage && (
+                  <Text style={styles.errorTextStyle}>{errors.jobImage}</Text>
+                )}
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  activeOpacity={0.5}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.buttonTextStyle}>اضافة</Text>
+                </TouchableOpacity>
+              </KeyboardAvoidingView>
+            </View>
+          </ScrollView>
         </View>
       )}
     </Formik>
@@ -191,25 +207,27 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     elevation: 5,
   },
-  description:{
-    height:100,
-    
+  description: {
+    height: 100,
   },
   buttonTextStyle: {
     color: "white",
     paddingVertical: 10,
-    fontSize: 16,
+    fontSize: 19,
   },
   buttonPhoto: {
-    backgroundColor: "blue",
+    backgroundColor: "white",
     borderWidth: 0,
-    height: 40,
+    height: 55,
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
     borderRadius: 5,
-    marginLeft: 100,
-    marginRight: 100,
+    padding: 5,
+
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 20,
     elevation: 5,
   },
   inputStyle: {
@@ -217,14 +235,22 @@ const styles = StyleSheet.create({
     color: "#000",
     paddingLeft: 6,
     paddingRight: 15,
-    paddingTop:5,
+    paddingTop: 5,
     borderWidth: 1,
     backgroundColor: "#fff",
     borderRadius: 5,
     borderColor: "#8b9cb5",
     textAlign: "right",
-    textAlignVertical :"top",
+    textAlignVertical: "top",
     elevation: 2,
+  },
+  styleUser: {
+    fontSize: 22,
+
+    color: "#ffb200",
+
+    padding: 9,
+    paddingTop: 9,
   },
 
   errorTextStyle: {
