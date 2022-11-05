@@ -1,25 +1,32 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import { pathUrl } from '../Config/env';
-// import Conversations from '../components/Conversations'
+import Conversations from '../components/Conversations'
 
 const Chat = (props) => {
 
     // The current user or sender>>> (sanai3y or client)
     const [currentSender, setCurrentSender] = useState(null);
-    // The current
+    
     // The conversations of the current sender
     const [conversations, setConversations] = useState([]);
     // The token of the current sender
     const [token, setToken] = useState("");
 
+    // Getting the data of the current reciever
+    useEffect(() => {
+        const getCurrentReciever = async () => {
+            // const res = await axios.
+        }
+    }, [])
+
     // Getting the conversations of the current sender
     useEffect(() => {
         const getConversations = async () => {
             try {
-                const res = await axios.get(`${pathUrl}/conversations/${currentSender._id}`);
+                const res = await axios.get(`${pathUrl}/conversations/${currentSender?._id}`);
                 // console.log(res.data.data);
                 setConversations([...res.data.data]);
             } catch (err) {
@@ -27,7 +34,7 @@ const Chat = (props) => {
             }
         };
         getConversations();
-    }, []);
+    }, [currentSender]);
     
     // Getting the data of the current sender
     useEffect(() => {
@@ -50,15 +57,22 @@ const Chat = (props) => {
         //     await AsyncStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjYzNWZlNDEzYmVkM2QxN2E2OGU3M2ZiZiIsImVtYWlsIjoibUBnbWFpbC5jb20iLCJpYXQiOjE2NjcyMjg2OTF9.XgGTAnZyEEl3wFUeoraAN1h4gpUGTO04zI7Zca9MwrY")
         // }
         // token();
-    }, []);
+    }, [token]);
 
     
     console.log(conversations);
 
     return (
         <View style={styles.con}>
-            <Text>Chat</Text>
-            <TouchableOpacity style={styles.conv} onPress={()=> {props.navigation.navigate("messages")}}>
+            <FlatList
+            data = {conversations}
+            keyExtractor = {(item, index) => index}
+            renderItem = {({item, index}) => <View>
+                <Conversations conversation={item} currentSender={currentSender}/>
+                {/* <Conversations/> */}
+            </View>}
+            />
+            {/* <TouchableOpacity style={styles.conv} onPress={()=> {props.navigation.navigate("messages")}}>
                 <Image source={require("../assets/noAvatar.png")} style={styles.image} />
                 <Text style={styles.recieverName}> محمد</Text>
             </TouchableOpacity>
@@ -81,7 +95,7 @@ const Chat = (props) => {
             <TouchableOpacity style={styles.conv}>
                 <Image source={require("../assets/noAvatar.png")} style={styles.image} />
                 <Text style={styles.recieverName}> محمد</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     )
 }
@@ -95,20 +109,20 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         color: "#000",
     },
-    conv: {
-        flexDirection: "row-reverse",
-        alignItems: "center"
-    },
-    image: {
-        width: 60,
-        height: 60,
-        borderRadius: 60,
-        margin: 10
+    // conv: {
+    //     flexDirection: "row",
+    //     alignItems: "center"
+    // },
+    // image: {
+    //     width: 60,
+    //     height: 60,
+    //     borderRadius: 60,
+    //     margin: 10
 
-    },
-    recieverName: {
-        fontSize: 20,
-        backgroundColor: "green",
-    }
+    // },
+    // recieverName: {
+    //     fontSize: 20,
+    //     backgroundColor: "green",
+    // }
 
 })

@@ -5,7 +5,7 @@ const { Navigator, Screen } = createBottomTabNavigator();
 
 // Import Screens
 import Login from "../screens/Login";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
 import Chat from "../screens/Chat";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";

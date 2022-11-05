@@ -17,22 +17,22 @@ const Messages = () => {
             <View style={styles.messages}>
                 <View style={own? styles.sent_message: styles.recieved_message}>
                     <Image style={styles.image} source={require("../assets/noAvatar.png")}/>
-                    <Text style={styles.text}>السلام عليكم ورحمة الله وبركاته</Text>
+                    <Text style={own? styles.sent_text: styles.recieved_text}>السلام عليكم ورحمة الله وبركاته</Text>
                     <Text style={styles.time}>1 minute ago</Text>
                 </View>
                 <View style={notOwn? styles.sent_message: styles.recieved_message}>
                     <Image style={styles.image} source={require("../assets/noAvatar.png")}/>
-                    <Text style={styles.text}>السلام عليكم ورحمة الله وبركاته</Text>
+                    <Text style={notOwn? styles.sent_text: styles.recieved_text}>السلام عليكم ورحمة الله وبركاته</Text>
                     <Text style={styles.time}>1 minute ago</Text>
                 </View>
             </View>
             <View style= {styles.send}>
-                <Button style={styles.button}>sumit</Button>
                 <TextInput 
                 style={styles.input} 
                 multiline = {true}
                 numberOfLines = {4}
                 />
+                <Button style={styles.button}>sumit</Button>
             </View>
         </View>
     )
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         margin: 10
     },
-    text: {
+    sent_text: {
         fontSize: 20,
         // width: "70%",
         maxWidth: "70%",
@@ -65,7 +65,23 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 3,
         borderColor: "red",
-        margin: 5
+        margin: 5,
+        backgroundColor: "#3838f0",
+        color: "white"
+
+    },
+    recieved_text: {
+        fontSize: 20,
+        // width: "70%",
+        maxWidth: "70%",
+        padding: 15,
+        borderRadius: 10,
+        borderWidth: 3,
+        borderColor: "red",
+        margin: 5,
+        backgroundColor: "#9b9090",
+        color: "white"
+
 
     },
     time: {
@@ -90,14 +106,16 @@ const styles = StyleSheet.create({
 
     // },
     sent_message: {
-        flexDirection: "row-reverse",
-        alignItems: "center"
+        flexDirection: "row",
+        alignItems: "center",
+        
         // position: "absolute",
 
     },
     recieved_message: {
-        flexDirection: "row",
-        alignItems: "center"
+        flexDirection: "row-reverse",
+        alignItems: "center",
+        
     },
     input: {
         borderWidth: 3,
