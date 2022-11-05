@@ -18,15 +18,13 @@ const ClientReducer = createSlice({
     }
 })
 
-let  id = '';
-AsyncStorage.getItem("id").then((res)=> id = res)
 
-export const getDataClient = ()=> async (dispatch)=>{
-    const res = await axios.get(`${pathUrl}/client/clients/${id}`)
+export const getDataClient = (idd)=> async (dispatch)=>{
+    const res = await axios.get(`${pathUrl}/client/clients/${idd}`)
 
     dispatch(setDataClient(res.data.Data))
-    dispatch(setJops(res.data.Data.jops))
-    // console.log(res.data.Data)
+    dispatch(setJops(res.data.Data.jobs))
+    console.log(res.data.Data)
 }
 
 export const {setDataClient , setJops} = ClientReducer.actions

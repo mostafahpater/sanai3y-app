@@ -25,10 +25,6 @@ export default function MainTabs() {
     setRole(res)
   })
     console.log("index");
-    let data = useSelector(state => state.ClientReducer)
-    useEffect(()=>{
-      dispatch(getDataClient())
-    },[])
   return (
 
       <Navigator>

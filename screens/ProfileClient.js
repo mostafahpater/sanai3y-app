@@ -40,25 +40,8 @@ export default function ProfileClient() {
   // let [data, setData] = useState({})
   // let [jobs , setJops] = useState([])
   let [id , setId] = useState('')
-  // console.log(id)
-  // AsyncStorage.getItem("id").then((res)=> setId(res) )
-  // const getData = async ()=>{
-  //   try {
 
-  //     const res = await axios.get(`${pathUrl}/client/clients/${id}`)
-  //     setData(res.data.Data)
-  //     setJops(res.data.Data.jobs)
-      
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-  
-  // useEffect(()=>{
-  //   getData()
-  // },[setData])
   console.log(jobs)
-  useEffect(()=>{},[data])
   return (
 
     <ScrollView style={{ backgroundColor: "#fff" }}>
@@ -198,10 +181,6 @@ export default function ProfileClient() {
 
         {/* Card Style */}
         <FlatList
-          // style={
-          //   {flex:1}
-          // }
-          numColumns={1}
           data={jobs}
           keyExtractor= {(index) => index}
           renderItem={item => 
