@@ -25,16 +25,27 @@ const Chat = (props) => {
     // Getting the conversations of the current sender
     useEffect(() => {
         const getConversations = async () => {
-            try {
+            // try {
                 const res = await axios.get(`${pathUrl}/conversations/${currentSender?._id}`);
-                // console.log(res.data.data);
+                console.log(res);
                 setConversations([...res.data.data]);
-            } catch (err) {
-                console.log(err);
-            }
+            // } catch (err) {
+            //     console.log(err);
+            // }
         };
         getConversations();
     }, [currentSender]);
+
+    // Fetching the current sender
+    useEffect(() => {
+        const getCurrentSender = async () => {
+            console.log("current");
+            const res = await axios.get(`${pathUrl}/client/user`, {headers: {Authorization: token}});
+            console.log(res.data.data);
+            setCurrentSender({...res.data.data});
+        }
+        getCurrentSender();
+    }, [token])
     
     // Getting the data of the current sender
     useEffect(() => {
@@ -42,15 +53,17 @@ const Chat = (props) => {
         const getToken = async () => {
             let token = await AsyncStorage.getItem("token");
             setToken(token);
+            console.log("token")
         }
         getToken();
-        // fetching
-        const getCurrentSender = async () => {
-            const res = await axios.get(`${pathUrl}/client/user`, {headers: {Authorization: token}});
-            // console.log(res.data.data);
-            setCurrentSender({...res.data.data});
-        }
-        getCurrentSender();
+        // Fetching the current sender
+        // const getCurrentSender = async () => {
+        //     const res = await axios.get(`${pathUrl}/client/user`, {headers: {Authorization: token}});
+        //     console.log(res.data.data);
+        //     console.log("current");
+        //     setCurrentSender({...res.data.data});
+        // }
+        // getCurrentSender();
 
 
         // const token = async () => {
@@ -60,6 +73,7 @@ const Chat = (props) => {
     }, [token]);
 
     
+    console.log(token);
     console.log(conversations);
 
     return (
@@ -68,7 +82,7 @@ const Chat = (props) => {
             data = {conversations}
             keyExtractor = {(item, index) => index}
             renderItem = {({item, index}) => <View>
-                <Conversations conversation={item} currentSender={currentSender}/>
+                <Conversations conversation={item} currentSender={currentSender} props={props}/>
                 {/* <Conversations/> */}
             </View>}
             />

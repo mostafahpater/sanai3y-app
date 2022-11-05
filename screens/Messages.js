@@ -1,40 +1,113 @@
-import { 
+import {
     StyleSheet,
-    Text, 
-    View, 
+    Text,
+    View,
     TextInput,
-    Image
+    // Button,
+    Image,
+    ScrollView,
+    FlatList
 } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button } from 'react-native-paper'
+import axios from 'axios';
+import { pathUrl } from '../Config/env';
+import TimeAgo from 'react-native-timeago';
 
-const Messages = () => {
+const Messages = (props) => {
 
-    const own = true;
-    const notOwn = false;
+    // Getting The params
+    const params = props.route.params;
+    // The scrollRef
+    const scrollViewRef = useRef();
+
+
+    // The Messages
+    const [messages, setMessages] = useState([]);
+    // The newMessage
+    const [newMessage, setNewMessage] = useState("")
+
+
+    // Fetching the messages of the current conversation
+    useEffect(() => {
+        const conversationId = params.conversation._id;
+        const getMessages = async () => {
+            const res = await axios.get(`${pathUrl}/messages/${conversationId}`);
+            // console.log(res.data.data)
+            setMessages([...res.data.data])
+        }
+        getMessages();
+    }, []);
+
+
+    // Sending New Message
+    const sendNewMessage = async () => {
+        const newMessageBody = {
+            conversationId: params.conversation._id,
+            sender: params.currentSender?._id,
+            text: newMessage
+        }
+
+        try {
+            const res = await axios.post(`${pathUrl}/messages`, newMessageBody);
+            console.log(res.data.data)
+            setMessages([...messages, res.data.data])
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    // // On scrolling 
+    // useEffect(() => {
+    // scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+    //     scrollViewRef.current?.scrollToEnd({ animated: false })
+    // }, [messages])
+
+
+    console.log(messages);
+    // console.log(newMessage);
+    // const own = true;
+    // const notOwn = false;
     return (
         <View style={styles.con}>
+
             <View style={styles.messages}>
-                <View style={own? styles.sent_message: styles.recieved_message}>
-                    <Image style={styles.image} source={require("../assets/noAvatar.png")}/>
-                    <Text style={own? styles.sent_text: styles.recieved_text}>السلام عليكم ورحمة الله وبركاته</Text>
-                    <Text style={styles.time}>1 minute ago</Text>
-                </View>
-                <View style={notOwn? styles.sent_message: styles.recieved_message}>
-                    <Image style={styles.image} source={require("../assets/noAvatar.png")}/>
-                    <Text style={notOwn? styles.sent_text: styles.recieved_text}>السلام عليكم ورحمة الله وبركاته</Text>
-                    <Text style={styles.time}>1 minute ago</Text>
-                </View>
+                {/* <ScrollView ref={scrollViewRef}
+                    onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: false })}
+                // onContentSizeChange={() => {
+                //     let offset = 0
+                //     setInterval(() => {
+                //         offset += 500
+                //         scrollViewRef.current?.scrollTo({ x: 0, y: offset, animated: false })
+                //     }, 5)
+                // }}
+                > */}
+                    <FlatList
+                        ref={scrollViewRef}
+                        data={messages}
+                        keyExtractor={(item, index) => index}
+                        renderItem={({ item, index }) =>
+
+                            <View style={(item.sender === params.currentSender?._id) ? styles.sent_message : styles.recieved_message}>
+                                <Image style={styles.image} source={{uri: params.currentReciever?.img}} />
+                                <Text style={(item.sender === params.currentSender?._id) ? styles.sent_text : styles.recieved_text}>{item.text}</Text>
+                                <Text style={styles.time}><TimeAgo time={item.createdAt} interval={10000} /></Text>
+                            </View>}
+                        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: false, behavior: "smooth" })}
+                    />
+                {/* </ScrollView> */}
             </View>
-            <View style= {styles.send}>
-                <TextInput 
-                style={styles.input} 
-                multiline = {true}
-                numberOfLines = {4}
+            <View style={styles.send}>
+                <TextInput
+                    style={styles.input}
+                    multiline={true}
+                    numberOfLines={4}
+                    onChangeText={(input) => { setNewMessage(input) }}
+                    value={newMessage}
                 />
-                <Button style={styles.button}>sumit</Button>
+                <Button onPress={sendNewMessage} style={styles.button}>sumit</Button>
             </View>
-        </View>
+        </View >
     )
 }
 
@@ -88,8 +161,8 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: "grey",
         margin: 10
-        
-        
+
+
         // lineHeight: 50
     },
     send: {
@@ -108,14 +181,14 @@ const styles = StyleSheet.create({
     sent_message: {
         flexDirection: "row",
         alignItems: "center",
-        
+
         // position: "absolute",
 
     },
     recieved_message: {
         flexDirection: "row-reverse",
         alignItems: "center",
-        
+
     },
     input: {
         borderWidth: 3,

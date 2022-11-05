@@ -13,38 +13,37 @@ import { getImageUrl } from '../Config/imageUrl';
 
 
 
-const Conversations = ({conversation, currentSender}) => {
+const Conversations = ({props, conversation, currentSender}) => {
 
 // The current Reciever
+// console.log(props);
 const [currentReciever, setCurrentReciever] = useState(null); 
-// The image Url
-// const [currentRecieverImage, setCurrentRecieverImage] = useState("");
+
 
 // Getting the data of the current reciever
 useEffect(() => {
-    const currentRecieverId = conversation.members.find((id) => id !== currentSender?._id);
+    const currentRecieverId = conversation.members.find((id) => id !== currentSender._id);
     // console.log(currentRecieverId);
     const getRecieverData = async () => {
         const res = await axios.get(`${pathUrl}/client/users/${currentRecieverId}`);
         let dataImage = getImageUrl(res.data.data.img)
-        // console.log(res.data.data)
-        setCurrentReciever({...res.data.data, newImage: dataImage})
+        setCurrentReciever({...res.data.data, img: dataImage})
         // console.log(dataImage)
+        // console.log(currentReciever)
     }
 
     getRecieverData();
 
-}, []);
+}, [currentSender, conversation]);
 
-console.log(currentReciever)
+// console.log(currentReciever)
 
     return (
         <>
-            <TouchableOpacity style={styles.conv}>
-                <Image source={require("../assets/noAvatar.png")} style={styles.image} />
-                <Text style={styles.recieverName}> محمد</Text>
+            <TouchableOpacity style={styles.conv} onPress={()=> {props.navigation.navigate("messages", {conversation, currentSender, currentReciever})}}>
+                <Image source={{uri: currentReciever?.img}} style={styles.image} />
+                <Text style={styles.recieverName}> {`${currentReciever?.firstName} ${currentReciever?.lastName} `}</Text>
             </TouchableOpacity>
-            <Text>tdrtd</Text>
         </>
     )
 }
