@@ -8,4 +8,4 @@ export const Store = configureStore({
         ClientReducer
     },
 
-})
+});
