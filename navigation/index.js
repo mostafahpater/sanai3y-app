@@ -78,6 +78,16 @@ export default function MainTabs() {
         component={ProfileClient}
         options={{
           tabBarShowLabel:false,
+          headerTitle:"الصفحة الشخصية",
+          headerTitleAlign:"center",
+          headerTitleStyle:{
+            fontSize:25
+          },
+          headerStyle:{
+            backgroundColor:"#fbb150",
+            elevation:15,
+            shadowColor:"#000"
+          },
 
           tabBarIcon: ({ focused }) => (
             <FontAwesome
