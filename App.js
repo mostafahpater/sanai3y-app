@@ -14,30 +14,30 @@ export default function App() {
   const Stack = createStackNavigator()
 
   return (
-    <View style={styles.container}>
-   <WorksForm></WorksForm>
-    </View>
-    // <NavigationContainer>
-    //   <Stack.Navigator  initialRouteName='Home'>
-    //     <Stack.Screen name='Home' component={MainTabs} 
-    //       options={{
-    //         headerShown:false
-    //       }}
-    //     />
-    //     <Stack.Screen name='register' component={RegisterationStack} 
-    //       options={{
-    //         headerShown:true,
-    //         headerBackVisible: false,
-    //       }}
-    //     />
-    //     <Stack.Screen name='login' component={Login} 
-    //       options={{
-    //         headerShown:false
-    //       }}
-    //     />
-    //     <Stack.Screen name='messages' component={Messages}/>
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+  //   <View style={styles.container}>
+  //  <WorksForm></WorksForm>
+  //   </View>
+    <NavigationContainer>
+      <Stack.Navigator  initialRouteName='Home'>
+        <Stack.Screen name='Home' component={MainTabs} 
+          options={{
+            headerShown:false
+          }}
+        />
+        <Stack.Screen name='register' component={RegisterationStack} 
+          options={{
+            headerShown:true,
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen name='login' component={Login} 
+          options={{
+            headerShown:false
+          }}
+        />
+        <Stack.Screen name='messages' component={Messages}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   
   );
 }
