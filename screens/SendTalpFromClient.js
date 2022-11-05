@@ -10,29 +10,60 @@ import {
   StatusBar,
   SafeAreaView,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { get } from "lodash";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function SendTalpFromClient() {
   const { params } = useRoute();
-  const id = get(params, "test");
-  console.log(id);
+  const detailJob = get(params, "one");
+  // console.log(detailJob);
+
+  const [proposal , setProposal] = useState("")
+
+//  disChange = (testOne) => {
+//     // setProposal(event)
+//     console.log(testOne.nativeEvent.text)
+//   }
+
+  // function sendProposal (id){
+  //   let body ={
+  //     sanai3yProposal: proposal
+  //   }
+  //   console.log(body)
+  //   axios.put(`http://localhost:7000/jobs/addproposal/${id}`,body,{headers:headers})
+  //   .then(res=>{
+  //     // console.log(res.data.Data)
+  //     if(res.status == 200){
+  //       window.location.reload(true)
+        
+  //     }
+  //   })
+  // }
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         {/* Start Box Posts */}
         <View style={[styles.box, styles.shadowProp]}>
-          <View style={{ flexDirection: "row", justifyContent: "flex-start", marginLeft:10}}>
-          <Image
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              marginLeft: 10,
+            }}
+          >
+            <Image
               style={styles.tinyLogo}
               source={{
                 uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
               }}
             />
-            <View style={{marginLeft:10}}>
+            <View style={{ marginLeft: 10 }}>
               <Text
                 style={{
                   marginRight: 10,
@@ -42,20 +73,27 @@ export default function SendTalpFromClient() {
                   fontWeight: "bold",
                 }}
               >
-                عبدالحاقظ
+                {detailJob.clientData.firstName +
+                  " " +
+                  detailJob.clientData.lastName}
               </Text>
               <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
-                اسوان
+                {detailJob.city}
               </Text>
             </View>
-
           </View>
           <Image
             style={styles.tinyLogotest}
             source={{
-              uri: "https://media.lactualite.com/2019/12/361ba8f8-istock-1084346110-1200x675.jpg",
+              uri: 'http://192.168.1.6'+detailJob.image.split('http://localhost')[1],
             }}
           />
+
+          <Text
+            style={{ paddingVertical: 10, paddingHorizontal: 10, fontSize: 12 }}
+          >
+               {detailJob.title}   
+          </Text>
 
           <Text
             style={{
@@ -64,9 +102,7 @@ export default function SendTalpFromClient() {
               borderBottomColor: "#eee",
             }}
           >
-            بالعربية تغطية بالصور والفيديو لأهم أخبار العالم والدول العربية
-            والخليج والشرق الأوسط، مع موضوعات حصرية بينها سياسة واقتصاد وصحة
-            ورياضة وسياحة ..
+        {detailJob.description}
           </Text>
 
           <View
@@ -83,6 +119,7 @@ export default function SendTalpFromClient() {
             multiline={true}
             numberOfLines={2}
             placeholder={"ازاي تقدر تحل المشكلة"}
+            // onChange={disChange}
             style={{
               padding: 10,
               height: 100,
@@ -92,8 +129,8 @@ export default function SendTalpFromClient() {
               // elevation: 1,
               borderRadius: 5,
               marginTop: 50,
-              borderWidth:2,
-              borderColor:'#eee'
+              borderWidth: 2,
+              borderColor: "#eee",
             }}
           />
         </View>
@@ -115,7 +152,7 @@ export default function SendTalpFromClient() {
                 color: "#000",
                 width: "100%",
                 fontSize: 18,
-                padding:6,
+                padding: 6,
                 borderRadius: 10,
               }}
             >

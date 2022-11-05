@@ -1,12 +1,33 @@
-import { View, Text, StyleSheet, TextInput, Image, Button } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet, TextInput, Image, Button, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import axios from 'axios';
+import {pathUrl} from '../Config/env' 
+
+
 
 export default function Home() {
   const navigation = useNavigation();
 
+  const [allJob, setAllJob] = useState()
+
+
+  useEffect(() => {
+
+    axios.get(`${pathUrl}/jobs/all`).then((response) => {
+
+      console.log('**************************************************************')
+      setAllJob(response.data.data)
+      
+      // console.log(allJob)
+
+    })
+
+  }, [])
+
   return (
+
     <View style={styles.container}>
       {/* Start Search */}
       <View style={{ flexDirection: "row" }}>
@@ -26,65 +47,83 @@ export default function Home() {
       </View>
 
       {/* Start Box Posts */}
-      <View style={[styles.box, styles.shadowProp]}>
-        <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-          <Image
-            style={styles.tinyLogo}
-            source={{
-              uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
-            }}
-          />
-          <View style={{marginLeft:10}}>
-            <Text
+
+      <FlatList 
+          data={allJob}
+          keyExtractor={(item, index) => index}
+          renderItem={({item}) => (
+              
+            <View style={[styles.box, styles.shadowProp]}>
+              
+            <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+              <Image
+                style={styles.tinyLogo}
+                source={{
+                  uri: 'http://192.168.1.6'+item.clientData.img.split('http://localhost')[1]
+                  
+                }}
+              />
+              <View style={{marginLeft:10}}>
+                <Text
+                  style={{
+                    marginRight: 10,
+                    paddingRight: 10,
+                    borderRightWidth: 1,
+                    borderRightColor: "#ffb200",
+                    fontWeight: "bold",
+                  }}
+                >
+                 {item.clientData.firstName + " " + item.clientData.lastName} 
+                </Text>
+                <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
+                 {item.city}
+                </Text>
+              </View>
+            </View>
+            <AntDesign name="closecircle" style={styles.test} />
+                  
+            <Text style={{ paddingVertical:5,paddingHorizontal:10, fontSize:12 }}>
+                  {item.title}
+            </Text>      
+
+            <Text style={{ padding: 10 }}>
+                  {item.description}
+            </Text>
+    
+            <View
               style={{
-                marginRight: 10,
-                paddingRight: 10,
-                borderRightWidth: 1,
-                borderRightColor: "#ffb200",
-                fontWeight: "bold",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "baseline",
               }}
             >
-              عبدالحاقظ
-            </Text>
-            <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
-              اسوان
-            </Text>
+              <Text
+                style={{
+                  backgroundColor: "#EEE",
+                  width: 80,
+                  textAlign: "center",
+                  borderRadius: 10,
+                  fontSize:12
+                }}
+              >
+               {item.category}
+              </Text>
+              <Button
+                title='التفاصيل'
+                color="#ffb200"
+                style={{ borderRadius: 50 }}
+                onPress={() => navigation.navigate("SendTalp", { one: item })}
+              />
+            </View>
           </View>
-        </View>
-        <AntDesign name="closecircle" style={styles.test} />
 
-        <Text style={{ padding: 10 }}>
-          بالعربية تغطية بالصور والفيديو لأهم أخبار العالم والدول العربية
-          والخليج والشرق الأوسط، مع موضوعات حصرية بينها سياسة واقتصاد وصحة
-          ورياضة وسياحة ..
-        </Text>
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-          }}
-        >
-          <Text
-            style={{
-              backgroundColor: "#EEE",
-              width: 80,
-              textAlign: "center",
-              borderRadius: 10,
-              fontSize:12
-            }}
-          >
-            كهربائي
-          </Text>
-          <Button
-            title="ارسال طلب"
-            color="#ffb200"
-            style={{ borderRadius: 50 }}
-            onPress={() => navigation.navigate("SendTalp", { test: { id: 1 } })}
-          />
-        </View>
-      </View>
+          )}
+
+        
+        />
+
+
       {/* End Box Posts */}
     </View>
   );
@@ -106,8 +145,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 15,
     elevation: 1,
-    shadowColor: "#EEE",
-    borderRadius: 10,
+    shadowColor: "#99999982",
+    borderRadius: 5,
   },
   input: {
     height: 40,
