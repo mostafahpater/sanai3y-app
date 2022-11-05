@@ -2,37 +2,41 @@ import { StatusBar } from 'expo-status-bar';
 import {  StyleSheet, Text, View } from 'react-native';
 import * as React from 'react';
 import Login from './screens/Login';
+import Works from './screens/Works';
 import { NavigationContainer  } from "@react-navigation/native"
 import MainTabs from './navigation';
 import { createStackNavigator } from '@react-navigation/stack';
 import RegisterationStack from './navigation/RegisterationStack';
+import WorksForm from './screens/WorksForm';
 
 export default function App() {
   const Stack = createStackNavigator()
+
   return (
-  //   <View style={styles.container}>
-  //  <Login></Login>
-  //   </View>
-    <NavigationContainer>
-      <Stack.Navigator  initialRouteName='register'>
-        <Stack.Screen name='Home' component={MainTabs} 
-          options={{
-            headerShown:false
-          }}
-        />
-        <Stack.Screen name='register' component={RegisterationStack} 
-          options={{
-            headerShown:true,
-            headerBackVisible: false,
-          }}
-        />
-        <Stack.Screen name='login' component={Login} 
-          options={{
-            headerShown:false
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    
+    <View style={styles.container}>
+   <WorksForm></WorksForm>
+    </View>
+    // <NavigationContainer>
+    //   <Stack.Navigator  initialRouteName='register'>
+    //     <Stack.Screen name='Home' component={MainTabs} 
+    //       options={{
+    //         headerShown:false
+    //       }}
+    //     />
+    //     <Stack.Screen name='register' component={RegisterationStack} 
+    //       options={{
+    //         headerShown:true,
+    //         headerBackVisible: false,
+    //       }}
+    //     />
+    //     <Stack.Screen name='login' component={Login} 
+    //       options={{
+    //         headerShown:false
+    //       }}
+    //     />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
   
   );
 }
