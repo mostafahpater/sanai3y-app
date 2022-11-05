@@ -12,7 +12,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Button } from 'react-native-paper'
 import axios from 'axios';
 import { pathUrl } from '../Config/env';
-// import TimeAgo from 'react-native-timeago';
 import  {io}  from "socket.io-client";
 
 const Messages = (props) => {
