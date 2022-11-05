@@ -56,11 +56,14 @@ export default function MainTabs() {
 
       {/* Start Add Jop Screen  */}
       <Screen
-        name="addjop"
+        name="اضف مشكلتك"
         component={AddJop}
         options={{
           tabBarShowLabel:false,
-
+          headerStyle: {
+            backgroundColor: "#ffb20069",
+          },
+          headerTitleAlign:'center',
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name="add-circle"
