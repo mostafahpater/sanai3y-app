@@ -56,11 +56,14 @@ export default function MainTabs() {
 
       {/* Start Add Jop Screen  */}
       <Screen
-        name="addjop"
+        name="اضف مشكلتك"
         component={AddJop}
         options={{
           tabBarShowLabel:false,
-
+          headerStyle: {
+            backgroundColor: "#ffb20069",
+          },
+          headerTitleAlign:'center',
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name="add-circle"
@@ -78,6 +81,16 @@ export default function MainTabs() {
         component={ProfileClient}
         options={{
           tabBarShowLabel:false,
+          headerTitle:"الصفحة الشخصية",
+          headerTitleAlign:"center",
+          headerTitleStyle:{
+            fontSize:25
+          },
+          headerStyle:{
+            backgroundColor:"#fbb150",
+            elevation:15,
+            shadowColor:"#000"
+          },
 
           tabBarIcon: ({ focused }) => (
             <FontAwesome
