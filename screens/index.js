@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Fragment } from 'react';
 import { Provider, useDispatch } from 'react-redux';
-import { Store } from '../Redux/Store';
+import { Store } from '../Redux/store';
 
 import Login from '../screens/Login';
 import Messages from './Messages';
@@ -34,17 +34,20 @@ export default function Index() {
     
   }, [])
   // console.log(route)
+
+  const recieverName = "Ahmed"
+
   return (
     <Fragment>
 
         <NavigationContainer>
           <Stack.Navigator initialRouteName={route}>
-            <Stack.Screen name='Home' component={MainTabs}
+            <Stack.Screen name='login' component={Login}
               options={{
                 headerShown: false
               }}
             />
-            <Stack.Screen name='login' component={Login}
+            <Stack.Screen name='Home' component={MainTabs}
               options={{
                 headerShown: false
               }}
@@ -56,7 +59,24 @@ export default function Index() {
               }}
             />
 
-            <Stack.Screen name='messages' component={Messages} />
+            <Stack.Screen name='messages' component={Messages}
+              // options={{
+              //   // headerShown: false,
+              //   // headerBackVisible: false,
+              // }}
+              options={{
+                title: recieverName,
+                headerStyle: {
+                  backgroundColor: "#fbb150",
+                  elevation: 15,
+                  shadowColor: "#000"
+                },
+                headerTitleAlign: 'center',
+                headerTintColor: '#000'
+      
+      
+              }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
     </Fragment>

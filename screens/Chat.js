@@ -49,12 +49,16 @@ const Chat = (props) => {
             console.log("token")
         }
         getToken();
-        // const token = async () => {
+        // const setToken = async () => {
         //     await AsyncStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjYzNWZlNDEzYmVkM2QxN2E2OGU3M2ZiZiIsImVtYWlsIjoibUBnbWFpbC5jb20iLCJpYXQiOjE2NjcyMjg2OTF9.XgGTAnZyEEl3wFUeoraAN1h4gpUGTO04zI7Zca9MwrY")
         // }
-        // token();
+        // setToken();
     }, [token]);
 
+    // // When you need to clear the AsyncStorage
+    // AsyncStorage.clear().then(res => console.log("cleared"));
+
+    
 
     console.log(token);
     console.log(conversations);

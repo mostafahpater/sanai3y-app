@@ -149,8 +149,29 @@ export default function MainTabs() {
         <Screen
           name="chat"
           component={Chat}
+          // options={{
+          //   tabBarShowLabel:false,
+          //   tabBarIcon: ({ focused }) => (
+          //     <Entypo
+          //       name="chat"
+          //       color={focused ? "#ffb200" : ""}
+          //       size={25}
+          //     />
+          //   ),
+          // }}
           options={{
             tabBarShowLabel:false,
+            headerTitle:"المراسلات",
+            headerTitleAlign:"center",
+            headerTitleStyle:{
+              fontSize:25
+            },
+            headerStyle:{
+              backgroundColor:"#fbb150",
+              elevation:15,
+              shadowColor:"#000"
+            },
+
             tabBarIcon: ({ focused }) => (
               <Entypo
                 name="chat"
