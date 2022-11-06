@@ -8,5 +8,4 @@ export const Store = configureStore({
         ClientReducer
     },
 
-});
-// Redux App
+})
