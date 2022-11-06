@@ -25,16 +25,18 @@ export default function SendTalpFromClient() {
 
   const [proposal , setProposal] = useState("")
   const [role , setRole]= useState('')
+  const [token , setToken]= useState('')
  const navigate = useNavigation()
 
  useEffect(()=>{
   AsyncStorage.getItem('snai3yRole').then((i)=> setRole(i))
+  AsyncStorage.getItem('token').then((i)=> setToken(i))
  },[])
 
 
   let headers={
-    'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzYW5haTN5SWQiOiI2MzYxYWM3OWEyYjVhM2Y1YTg4YmYxNzciLCJlbWFpbCI6ImFobWVkQGdtYWlsLmNvbSIsImlhdCI6MTY2NzM0NTUyOX0.xuWniHXxtShBeQlN5ucfBsVJ1v1-kcZjmrzlxja7iu8"
-}
+    'Authorization': token
+  }
 
   function sendProposal (id){
     let body ={
@@ -47,7 +49,6 @@ export default function SendTalpFromClient() {
       if(res.status == 200){
         navigate.navigate('HomePost')
         console.log('Done Proposal')
-        
       }
     })
 
