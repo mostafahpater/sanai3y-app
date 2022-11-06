@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Fragment } from 'react';
 import { Provider, useDispatch } from 'react-redux';
-import { Store } from '../Redux/store';
+import { Store } from '../Redux/Store';
 import Login from '../screens/Login';
 import Messages from './Messages';
 import RegisterationStack from '../navigation/RegisterationStack';
