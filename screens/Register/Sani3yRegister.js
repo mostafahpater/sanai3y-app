@@ -8,9 +8,11 @@ import SelectDropdown from 'react-native-select-dropdown'
 import axios from 'axios';
 import { schemaCrafts } from './RegisterSchema';
 import { pathUrl } from '../../Config/env';
+import { useNavigation } from '@react-navigation/native';
 
 const RegisterSnai3y = () => {
     let [regErr , setRegErr] = useState(false)
+    const navigate = useNavigation()
     // Data for Address
     let dataAddress = [
         { value: 'أسوان' },
@@ -68,7 +70,6 @@ const RegisterSnai3y = () => {
                         skills: values.skills
                     }
                     const regUser = async ()=>{
-                        
                         try {
                             
                             const res = await axios.post(`${pathUrl}/sanai3y/signup`,data)
@@ -76,6 +77,9 @@ const RegisterSnai3y = () => {
                             if(res.status != 200){
                                 console.log(data)
                                 setRegErr(true)
+                            }
+                            else{
+                                navigate.navigate(('login'))
                             }
                         } 
                         catch (err) {

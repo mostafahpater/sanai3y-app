@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Button } f
 import React, { useState } from 'react'
 import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
 import Modal from "react-native-modal";
+import * as ImagePicker from "expo-image-picker";
 export default function ProfileSnai3y() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
@@ -11,6 +12,23 @@ export default function ProfileSnai3y() {
   };
   // End Modal
 
+  // Start Image in Modal
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+  // End Image in Modal
   return (
 
     <ScrollView style={{ backgroundColor: "#fff" }}>
@@ -36,12 +54,67 @@ export default function ProfileSnai3y() {
               </TouchableOpacity>
 
               <Modal isVisible={isModalVisible}>
-                <View style={{}}>
-                  <View>
+                    <TouchableOpacity onPress={toggleModal} style={{ padding:5,justifyContent:"center",alignItems:"flex-start"}}>
+                          <AntDesign name='closecircleo'  style={{backgroundColor:"#fff",borderRadius:50,fontSize:24}}/>
+                    </TouchableOpacity>
+                <View style={{ backgroundColor: "#eee" , borderRadius:5}}>
+                  <View style={{alignItems:"center",flexDirection:"column"}}>
+                    <View
+                      style={{
+                        alignItems: "center",
+                        width: "50%",
+                      }}
+                    >
+                      <TouchableOpacity
+                        style={{
+                          paddingVertical: 2,
+                          marginTop: 10,
+                          alignItems: "center",
+                          borderRadius: 10,
+                          marginBottom: 40,
+                          flexDirection: "row",
+                          backgroundColor: "#fff",
+                          justifyContent: "center",
+                          borderWidth: 1,
+                          borderColor: '#999'
+                        }}
+                      >
+                        <View>
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "#000",
+                              fontSize: 15,
+                              padding: 6,
+                            }}
+                            onPress={pickImage}
+                          >
+                            اضافة صورة
+                          </Text>
+                        </View>
+                        <View>
+                          <AntDesign
+                            name="download"
+                            style={{ padding: 10, fontSize: 14, fontWeight: "bold" }}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{ width: "90%" , alignItems:"center" }}>
+                      {image && (
+                        <Image
+                          source={{ uri: image }}
+                          style={{ width: "100%", height: 200 , resizeMode:"cover" }}
+                        />
+                      )}
+                    </View>
 
+                    <TouchableOpacity style={[styles.button , {marginVertical:20}]}>
+                      <Text style={styles.buttonText}>إضافة</Text>
+                    </TouchableOpacity>
                   </View>
-
-                  <Button title="Hide modal" onPress={toggleModal} />
+                    
+                    
                 </View>
               </Modal>
             </View>
