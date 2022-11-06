@@ -25,7 +25,10 @@ const Messages = (props) => {
 
     // The user 
     const user = params.currentSender;
-    console.log(user)
+    const currentChat = params.conversation;
+    const currentReciever = params.currentReciever;
+
+    console.log(currentReciever)
 
 
     // The Messages
@@ -34,6 +37,8 @@ const Messages = (props) => {
     const [newMessage, setNewMessage] = useState("")
     // The online users
     const [onlineUsers, setOnlineUsers] = useState([])
+    // The recieved Message
+    const [recievedMessage, setRecievedMessage] = useState(null);
 
 
     // Setting socket current
@@ -42,40 +47,42 @@ const Messages = (props) => {
     }, [socket])
 
 
-    // // Listening from srever
-    // useEffect(() => {
-    //     socket.current.emit("addUser", user?._id);
-    //     socket.current.on("getUsers", (users) => {
-    //         setOnlineUsers([...users])
-    //         // console.log(users)
+    // Listening from srever
+    useEffect(() => {
+        socket.current.emit("addUser", user?._id);
+        socket.current.on("getUsers", (users) => {
+            setOnlineUsers([...users])
+            // console.log(users)
 
 
-    //     })
+        })
 
-    //     // Recieving the message
-    //     socket.current.on("recieveMessage", ({ senderId, text }) => {
-    //         // console.log("uuuuuuuuuuu")
-    //         setRecievedMessage({
-    //             conversationId: currentChat?._id,
-    //             sender: senderId,
-    //             text: text,
-    //             createdAt: Date.now()
-    //         });
-    //     })
+        // Recieving the message
+        socket.current.on("recieveMessage", ({ senderId, text }) => {
+            // console.log("uuuuuuuuuuu")
+            setRecievedMessage({
+                conversationId: currentChat?._id,
+                sender: senderId,
+                text: text,
+                createdAt: Date.now()
+            });
+        })
 
-    // }, [currentChat, recievedMessage, user])
-    // // console.log(onlineUsers)
-    // useEffect(() => {
-    //     if (recievedMessage && currentChat?.members.includes(recievedMessage.sender)) {
+    }, [currentChat, recievedMessage, user])
+    // console.log(onlineUsers)
 
-    //         setMessages((prev) => [...prev, recievedMessage]);
-    //     }
-    //     // recievedMessage &&
-    //     // currentChat?.members.includes(recievedMessage.sender) &&
-    //     // setMessages((prev) => [...prev, recievedMessage]);
+    // Updating the messages
+    useEffect(() => {
+        if (recievedMessage && currentChat?.members.includes(recievedMessage.sender)) {
 
-    //     // console.log("hgtfc")
-    // }, [currentChat, recievedMessage])
+            setMessages((prev) => [...prev, recievedMessage]);
+        }
+        // recievedMessage &&
+        // currentChat?.members.includes(recievedMessage.sender) &&
+        // setMessages((prev) => [...prev, recievedMessage]);
+
+        // console.log("hgtfc")
+    }, [currentChat, recievedMessage])
 
 
     // Fetching the messages of the current conversation
@@ -99,17 +106,18 @@ const Messages = (props) => {
         }
 
         // Emitting event using socket
-        // socket.current.emit("sendMessage", {
-        //     senderId: user?._id,
-        //     recieverId: currentChat?.members.find((id) => id !== user?._id),
-        //     // recieverId: currentReciever?._id,
-        //     text: newMessage
-        // })
+        socket.current.emit("sendMessage", {
+            senderId: user?._id,
+            recieverId: currentReciever._id,
+            // recieverId: currentReciever?._id,
+            text: newMessage
+        })
 
         try {
             const res = await axios.post(`${pathUrl}/messages`, newMessageBody);
             console.log(res.data.data)
-            setMessages([...messages, res.data.data])
+            setMessages([...messages, res.data.data]);
+            setNewMessage("");
         } catch (err) {
             console.log(err)
         }
