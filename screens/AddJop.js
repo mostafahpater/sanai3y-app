@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as yup from 'yup';
 import axios from 'axios';
 
@@ -16,26 +16,40 @@ import { Formik } from "formik";
 import SelectDropdown from "react-native-select-dropdown";
 import { Button } from "react-native-paper";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { pathUrl } from "../Config/env";
+import { useNavigation } from "@react-navigation/native";
 // import { launchImageLibrary,  } from "react-native-image-picker";
 
 const AddJop = () => {
   let [regErr, setRegErr] = useState(false);
   const [image, setImage] = useState(null);
+  const [showImage, setShowImage] = useState(null);
+  const [tok, setTok] = useState('')
+  const navigation = useNavigation()
+  useEffect(()=>{
+    AsyncStorage.getItem('token').then((res) => setTok(res))
+
+  },[])
+console.log(tok);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+  
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      selectionLimit:1
     });
 
     if (!result.cancelled) {
       setImage(result.uri);
+      setShowImage(result.fileName)
+      // console.log(showImage)
     }
   };
-
+  // console.log(image)
   // Data for Address
   let dataAddress = [
     { value: "أسوان" },
@@ -81,23 +95,37 @@ const AddJop = () => {
         })}
         onSubmit={(values) => {
           let data = {
-            titleJob: values.titleJob,
-            address: values.address,
-            skills: values.skills,
-            detailsAboutJob: values.detailsAboutJob,
-            image: values.image
+            title: values.titleJob,
+            city: values.address,
+            category: values.skills,
+            description: values.detailsAboutJob,
+            address: values.addresJob,
+            jobImage: showImage,
           };
+          
+            console.log(data)
+
+          
           const regUser = async () => {
             try {
-              const res = await axios.post(`${pathUrl}/sanai3y/signup`, data);
+              const res = await axios.post(`${pathUrl}/jobs/postjob`,data, 
+              {headers:
+                {"authorization":tok}
+              }
+              );
 
-              if (res.status != 200) {
-                console.log(data);
-                setRegErr(true);
+
+              console.log('y')
+              console.log(res)
+              if (res.status == 200) {
+                console.log(res.status);
+                // setRegErr(true);
+                navigation.navigate('HomeScreen')
               }
             } catch (err) {
-              setRegErr(true);
-              console.log(err);
+              // setRegErr(true);
+              console.log(err)
+              
             }
           };
 
@@ -297,11 +325,7 @@ const AddJop = () => {
                   <Image
                     source={{ uri: image }}
                     style={{ width: 170, height: 100 }}
-                    value={values.image}
-                    onChangeText={handleChange('titleJob')}
-                    onBlur={handleBlur('titleJob')}
-                    
-                   
+                    // value={values.image}
                   />
                 )}
               </View>
