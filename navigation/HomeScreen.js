@@ -4,18 +4,15 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const { Navigator, Screen } = createBottomTabNavigator();
 
 // Import Screens
-import Login from "../screens/Login";
 import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
 import Chat from "../screens/Chat";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";
 import ProfileClient from "../screens/ProfileClient";
-import ProfileSnai3y from "../screens/ProfileSnai3y";
 import AddJop from "../screens/AddJop";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getDataClient } from "../Redux/Slices/ClientReducer";
+import ProfileSani3yStack from "./ProfileSani3yStack";
 export default function MainTabs() {
 
   let [role , setRole] = useState('')
@@ -119,8 +116,8 @@ export default function MainTabs() {
         {/* End Profile Client  */}
         {/* Start Profile Client  */}
         {role == "sanai3y" && <Screen
-          name="ProfileSnai3y"
-          component={ProfileSnai3y}
+          name="ProfileS"
+          component={ProfileSani3yStack}
           options={{
             tabBarShowLabel:false,
             headerTitle:"الصفحة الشخصية",

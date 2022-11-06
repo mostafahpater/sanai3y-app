@@ -183,7 +183,7 @@ export default function ProfileClient() {
         <FlatList
           data={jobs}
           keyExtractor= {(index) => index}
-          renderItem={item => 
+          renderItem={(item) => 
             <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={{ width: "50%" }}>
@@ -217,10 +217,10 @@ export default function ProfileClient() {
               {/* jop des */}
               <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
                 <View>
-                  <Text style={styles.text}>عنوان الوظيفة :</Text>
+                  <Text style={styles.text}>عنوان الوظيفة : {item.title}</Text>
                 </View>
                 <View>
-                  <Text style={[styles.text, { marginTop: 10 }]}>الوصف :</Text>
+                  <Text style={[styles.text, { marginTop: 10 }]}>الوصف : {item.descripthion}</Text>
                 </View>
               </View>
               {/* img Jop */}

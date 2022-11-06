@@ -3,10 +3,11 @@ import React, { useState } from 'react'
 import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
 import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from '@react-navigation/native';
 export default function ProfileSnai3y() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
-
+  const navigation = useNavigation()
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -167,7 +168,7 @@ export default function ProfileSnai3y() {
           </View>
 
           <View style={styles.row}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('ShowWorks') }>
               <Text style={styles.buttonText}>معرض الأعمال</Text>
             </TouchableOpacity>
           </View>

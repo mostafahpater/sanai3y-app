@@ -27,9 +27,8 @@ export default function works() {
      
       <View style={styles.cont}>
       <View>
-        <TouchableOpacity style={styles.buttonStyle}>
+        <TouchableOpacity style={styles.buttonStyle} onPress={()=> navigation.navigate('AddWorks') }>
           <Text style={styles.buttonTextStyle}
-          onPress={() => navigation.navigate("worksform")}
           >اضافة عمل</Text>
         </TouchableOpacity>
 
