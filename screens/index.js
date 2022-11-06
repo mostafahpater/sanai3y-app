@@ -28,10 +28,12 @@ export default function Index() {
       if(res == "client")
       {
         AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+        console.log("client dispatch");
       }
       else 
       {
         AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
+        console.log("sni3y dispatch");
       }
       // 
     }
@@ -48,7 +50,7 @@ export default function Index() {
   return (
       <>
 
-         <NavigationContainer>
+        <NavigationContainer>
             <Stack.Navigator initialRouteName={"startApp"}>
               <Stack.Screen name='startApp' component={IntuoialScreen}
                 options={{

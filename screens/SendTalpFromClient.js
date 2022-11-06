@@ -10,12 +10,13 @@ import {
   StatusBar,
   SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { get } from "lodash";
 import { AntDesign } from "@expo/vector-icons";
 import { pathUrl } from "../Config/env";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SendTalpFromClient() {
   const { params } = useRoute();
@@ -23,15 +24,19 @@ export default function SendTalpFromClient() {
 
 
   const [proposal , setProposal] = useState("")
-
+  const [role , setRole]= useState('')
+  const [token , setToken]= useState('')
  const navigate = useNavigation()
 
- 
+ useEffect(()=>{
+  AsyncStorage.getItem('snai3yRole').then((i)=> setRole(i))
+  AsyncStorage.getItem('token').then((i)=> setToken(i))
+ },[])
 
 
   let headers={
-    'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzYW5haTN5SWQiOiI2MzYxYWM3OWEyYjVhM2Y1YTg4YmYxNzciLCJlbWFpbCI6ImFobWVkQGdtYWlsLmNvbSIsImlhdCI6MTY2NzM0NTUyOX0.xuWniHXxtShBeQlN5ucfBsVJ1v1-kcZjmrzlxja7iu8"
-}
+    'Authorization': token
+  }
 
   function sendProposal (id){
     let body ={
@@ -44,7 +49,6 @@ export default function SendTalpFromClient() {
       if(res.status == 200){
         navigate.navigate('HomePost')
         console.log('Done Proposal')
-        
       }
     })
 
@@ -124,7 +128,7 @@ export default function SendTalpFromClient() {
           ></View>
         </View>
         {/* End Box Posts */}
-        <View style={{ alignItems: "center" }}>
+        {role != "client" &&<View style={{ alignItems: "center" }}>
           <TextInput
             multiline={true}
             numberOfLines={2}
@@ -143,9 +147,9 @@ export default function SendTalpFromClient() {
               borderColor: "#eee",
             }}
           />
-        </View>
+        </View>}
 
-        <View style={{ alignItems: "center" }}>
+        {role != "client" &&<View style={{ alignItems: "center" }}>
           <TouchableOpacity
             style={{
               width: "50%",
@@ -171,7 +175,7 @@ export default function SendTalpFromClient() {
               ارسال الطلب
             </Text>
           </TouchableOpacity>
-        </View>
+        </View>}
       </ScrollView>
     </SafeAreaView>
   );

@@ -74,6 +74,7 @@ const Messages = (props) => {
     // Updating the messages
     useEffect(() => {
         if (recievedMessage && currentChat?.members.includes(recievedMessage.sender)) {
+        // if (recievedMessage) {
 
             setMessages((prev) => [...prev, recievedMessage]);
         }
@@ -154,9 +155,9 @@ const Messages = (props) => {
                         keyExtractor={(item, index) => index}
                         renderItem={({ item, index }) =>
 
-                            <View style={(item.sender === params.currentSender?._id) ? styles.sent_message : styles.recieved_message}>
+                            <View style={(item?.sender === params.currentSender?._id) ? styles.sent_message : styles.recieved_message}>
                                 <Image style={styles.image} source={{uri: params.currentReciever?.img}} />
-                                <Text style={(item.sender === params.currentSender?._id) ? styles.sent_text : styles.recieved_text}>{item.text}</Text>
+                                <Text style={(item?.sender === params.currentSender?._id) ? styles.sent_text : styles.recieved_text}>{item?.text}</Text>
                                 {/* <Text style={styles.time}><TimeAgo time={item.createdAt} interval={10000} /></Text> */}
                                 <Text style={styles.time}>1 hour ago</Text>
                             </View>}
