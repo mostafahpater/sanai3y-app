@@ -4,6 +4,7 @@ import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
 import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 export default function ProfileSnai3y() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
@@ -13,6 +14,8 @@ export default function ProfileSnai3y() {
   };
   // End Modal
 
+  const data = useSelector(state => state.Snai3yReducer.dataSani3y)
+  console.log(data);
   // Start Image in Modal
   const [image, setImage] = useState(null);
 
@@ -38,7 +41,7 @@ export default function ProfileSnai3y() {
         <View style={styles.image}>
           <View style={styles.imgProfile}>
             <View>
-              <Image source={{ uri: ('https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80') }}
+              <Image source={{ uri: data.img }}
                 style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
               />
             </View>

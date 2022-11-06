@@ -62,7 +62,7 @@ export default function Home() {
               <Image
                 style={styles.tinyLogo}
                 source={{
-                  uri: `${pathUrl}${item.clientData.img.slice(21)}`
+                  // uri: `${pathUrl}${item.clientData.img.slice(21)}`
                 }}
               />
               <View style={{marginLeft:10}}>

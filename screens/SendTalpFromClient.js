@@ -10,12 +10,13 @@ import {
   StatusBar,
   SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { get } from "lodash";
 import { AntDesign } from "@expo/vector-icons";
 import { pathUrl } from "../Config/env";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SendTalpFromClient() {
   const { params } = useRoute();
@@ -23,10 +24,12 @@ export default function SendTalpFromClient() {
 
 
   const [proposal , setProposal] = useState("")
-
+  const [role , setRole]= useState('')
  const navigate = useNavigation()
 
- 
+ useEffect(()=>{
+  AsyncStorage.getItem('snai3yRole').then((i)=> setRole(i))
+ },[])
 
 
   let headers={
@@ -124,7 +127,7 @@ export default function SendTalpFromClient() {
           ></View>
         </View>
         {/* End Box Posts */}
-        <View style={{ alignItems: "center" }}>
+        {role != "client" &&<View style={{ alignItems: "center" }}>
           <TextInput
             multiline={true}
             numberOfLines={2}
@@ -143,9 +146,9 @@ export default function SendTalpFromClient() {
               borderColor: "#eee",
             }}
           />
-        </View>
+        </View>}
 
-        <View style={{ alignItems: "center" }}>
+        {role != "client" &&<View style={{ alignItems: "center" }}>
           <TouchableOpacity
             style={{
               width: "50%",
@@ -171,7 +174,7 @@ export default function SendTalpFromClient() {
               ارسال الطلب
             </Text>
           </TouchableOpacity>
-        </View>
+        </View>}
       </ScrollView>
     </SafeAreaView>
   );

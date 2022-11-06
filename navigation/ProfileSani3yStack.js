@@ -12,14 +12,23 @@ const ProfileSani3yStack = () => {
         <Screen 
             name='ProfileSnai3y'
             component={ProfileSnai3y}
+            options={{
+                headerShown:false
+            }}
         />
         <Screen 
             name='ShowWorks'
             component={works}
+            options={{
+                headerShown:false
+            }}
         />
         <Screen 
             name='AddWorks'
             component={WorksForm}
+            options={{
+                headerShown:false
+            }}
         />
     </Navigator>
   )
