@@ -49,7 +49,7 @@ export default function Index() {
   return (
       <>
 
-         <NavigationContainer>
+        <NavigationContainer>
             <Stack.Navigator initialRouteName={"startApp"}>
               <Stack.Screen name='startApp' component={IntuoialScreen}
                 options={{

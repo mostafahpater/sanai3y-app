@@ -1,13 +1,13 @@
 import { StyleSheet } from "react-native";
 import { Provider } from "react-redux";
-import { store } from "./Redux/store";
+import { Store } from "./Redux/store";
 import Index from "./screens/index";
 
 export default function App() {
 
   return (
     <>
-      <Provider store={store}>
+      <Provider store={Store}>
 
         <Index />
       </Provider>
