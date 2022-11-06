@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Provider } from "react-redux";
-import { Store } from "./Redux/Store";
+import { Store } from "./Redux/store";
 import Index from "./screens/index";
 
 export default function App() {

@@ -18,6 +18,7 @@ export default function ProfileClient() {
 
   // Start Image in Modal
   const [image, setImage] = useState(null);
+  const [jopData, setJopData] = useState([]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -37,11 +38,16 @@ export default function ProfileClient() {
   // Start Fetch Data Client
   let data = useSelector(state => state.ClientReducer.clintdata)
   let jobs = useSelector(state => state.ClientReducer.jops)
+  useEffect(()=>{
+
+    setJopData(jobs)
+
+    // console.log(jopData.map(i => console.log(i.title)))
+  },[])
   // let [data, setData] = useState({})
   // let [jobs , setJops] = useState([])
   let [id , setId] = useState('')
 
-  console.log(jobs)
   return (
 
     <ScrollView style={{ backgroundColor: "#fff" }}>
@@ -50,7 +56,7 @@ export default function ProfileClient() {
         <View style={styles.image}>
         <View style={styles.imgProfile}>
             <View>
-              <Image source={data.img}
+              <Image source={{uri : data?.img}}
                 style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
               />
             </View>
@@ -180,23 +186,21 @@ export default function ProfileClient() {
         </View>
 
         {/* Card Style */}
-        <FlatList
-          data={jobs}
-          keyExtractor= {(index) => index}
-          renderItem={item => 
-            <View style={styles.card}>
+        
+        {jopData.map((item,index)=> 
+            <View style={styles.card} key={index}>
             <View style={styles.cardHeader}>
-              <View style={{ width: "50%" }}>
+               <View style={{ width: "50%" }}>
                 <View style={styles.userDetails}>
-                  <Image source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" }}
+                   <Image source={{ uri: data.img }}
                     style={[styles.imageCard, { resizeMode: "contain" }]}
                   />
                   <View>
                     <Text style={[styles.text, { borderEndWidth: 10, borderStyle: "solid", borderEndColor: "red" }]}>
-                      الاسم
+                      {`${data.firstName} ${data.lastName}`}
                     </Text>
                     <Text style={[styles.text, { fontSize: 12 }]}>
-                      العنوان
+                      {data.address}
                     </Text>
                   </View>
                 </View>
@@ -204,7 +208,6 @@ export default function ProfileClient() {
               <View style={styles.iconCard}>
                 <TouchableOpacity>
                   <Entypo name='edit' style={styles.childIcon} />
-
                 </TouchableOpacity>
                 <TouchableOpacity>
                   <FontAwesome name='remove' style={styles.childIcon} />
@@ -217,10 +220,13 @@ export default function ProfileClient() {
               {/* jop des */}
               <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
                 <View>
-                  <Text style={styles.text}>عنوان الوظيفة :</Text>
+                  <Text style={styles.text}>{item.title}</Text>
                 </View>
                 <View>
-                  <Text style={[styles.text, { marginTop: 10 }]}>الوصف :</Text>
+                  <Text style={[styles.text, { marginTop: 10 }]}> الوصف : {item.description}</Text>
+                </View>
+                <View>
+                  <Text style={[styles.text, { marginTop: 10 }]}> العنوان : {item.city}</Text>
                 </View>
               </View>
               {/* img Jop */}
@@ -237,11 +243,7 @@ export default function ProfileClient() {
             </View>
 
           </View>
-          }
-        >
-
-          
-        </FlatList>
+        )}
       </View>
     </ScrollView>
   )
@@ -333,7 +335,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    marginStart: 5
+    marginStart: 5,
   },
   iconCard: {
     width: "50%",

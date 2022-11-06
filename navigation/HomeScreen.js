@@ -4,24 +4,21 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const { Navigator, Screen } = createBottomTabNavigator();
 
 // Import Screens
-import Login from "../screens/Login";
 import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
 import Chat from "../screens/Chat";
 import AllUser from "../screens/AllUser";
 import HomeStack from "./HomeStack";
 import ProfileClient from "../screens/ProfileClient";
-import ProfileSnai3y from "../screens/ProfileSnai3y";
 import AddJop from "../screens/AddJop";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getDataClient } from "../Redux/Slices/ClientReducer";
+import ProfileSani3yStack from "./ProfileSani3yStack";
 export default function MainTabs() {
 
   let [role , setRole] = useState('')
   const dispatch = useDispatch()
   AsyncStorage.getItem("snai3yRole").then(res =>{
-    // console.log(res);
+    console.log(res);
     setRole(res)
   })
     console.log("index");
@@ -68,7 +65,7 @@ export default function MainTabs() {
         {/* End User Screen  */}
 
         {/* Start Add Jop Screen  */}
-        {role == "client" && <Screen
+         <Screen
           name="اضف مشكلتك"
           component={AddJop}
           options={{
@@ -85,7 +82,7 @@ export default function MainTabs() {
               />
             ),
           }}
-        />}
+        />
         {/* End Add Jop Screen  */}
 
         {/* Start Profile Client  */}
@@ -105,6 +102,7 @@ export default function MainTabs() {
               elevation:15,
               shadowColor:"#000"
             },
+            
 
             tabBarIcon: ({ focused }) => (
               <FontAwesome
@@ -118,8 +116,8 @@ export default function MainTabs() {
         {/* End Profile Client  */}
         {/* Start Profile Client  */}
         {role == "sanai3y" && <Screen
-          name="ProfileSnai3y"
-          component={ProfileSnai3y}
+          name="ProfileS"
+          component={ProfileSani3yStack}
           options={{
             tabBarShowLabel:false,
             headerTitle:"الصفحة الشخصية",
@@ -149,8 +147,29 @@ export default function MainTabs() {
         <Screen
           name="chat"
           component={Chat}
+          // options={{
+          //   tabBarShowLabel:false,
+          //   tabBarIcon: ({ focused }) => (
+          //     <Entypo
+          //       name="chat"
+          //       color={focused ? "#ffb200" : ""}
+          //       size={25}
+          //     />
+          //   ),
+          // }}
           options={{
             tabBarShowLabel:false,
+            headerTitle:"المراسلات",
+            headerTitleAlign:"center",
+            headerTitleStyle:{
+              fontSize:25
+            },
+            headerStyle:{
+              backgroundColor:"#fbb150",
+              elevation:15,
+              shadowColor:"#000"
+            },
+
             tabBarIcon: ({ focused }) => (
               <Entypo
                 name="chat"

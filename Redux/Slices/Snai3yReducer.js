@@ -3,30 +3,26 @@ import {  createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { useState } from "react";
 import { pathUrl } from "../../Config/env";
+import { getImageUrl } from "../../Config/imageUrl";
 
 export const Snai3yReducer = createSlice({
     name:"Snai3yData",
-    initialState:{data:{}},
+    initialState:{dataSani3y:{}},
     reducers:{
         setData: (state,action)=>{
-
-            // console.log("jjiijjijii")
             state.data=action.payload
-        },
-        logOutSnai3y:(state)=>{
-            state.data.status = "busy"
-        }
-        
+        },     
     }
 })
 
-let  id = '';
-AsyncStorage.getItem("id").then((res)=> id = res)
-console.log(id)
-export const getSnai3y =()=> async (dispatch) =>{
+
+export const getDataSnai3y =(id)=> async (dispatch) =>{
         const res = await axios.get(`${pathUrl}/sanai3y/sanai3ies/${id}`);
         // console.log(res.data.Data);
+        // let imageUrl = getImageUrl(res.data.Data.img)
+        // dispatch(setData({...res.data.Data, img: imageUrl}));
         dispatch(setData(res.data.Data));
+        console.log(res.data.Data);
 }
 
 

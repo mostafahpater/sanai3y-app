@@ -17,14 +17,17 @@ export default function Home() {
 
     axios.get(`${pathUrl}/jobs/all`).then((response) => {
 
-      console.log('**************************************************************')
       setAllJob(response.data.data)
       
-      // console.log(allJob)
+      console.log(allJob)
 
+      setAllJob(response.data.data)
+
+    }).catch((err)=>{
+      console.log(err)
     })
 
-  }, [])
+  }, [setAllJob])
 
   return (
 
@@ -59,8 +62,7 @@ export default function Home() {
               <Image
                 style={styles.tinyLogo}
                 source={{
-                  uri: 'http://192.168.1.6'+item.clientData.img.split('http://localhost')[1]
-                  
+                  // uri: `${pathUrl}${item.clientData.img.slice(21)}`
                 }}
               />
               <View style={{marginLeft:10}}>
@@ -73,7 +75,7 @@ export default function Home() {
                     fontWeight: "bold",
                   }}
                 >
-                 {item.clientData.firstName + " " + item.clientData.lastName} 
+                 {/* {item.clientData.firstName + " " + item.clientData.lastName}  */}
                 </Text>
                 <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
                  {item.city}

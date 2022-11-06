@@ -12,6 +12,7 @@ export default function HomeStack() {
         name='HomePost'
         component={Home}
         options={{
+          
           title: 'المنشورات',
           headerStyle: {
             backgroundColor: "#fbb150",
@@ -20,7 +21,6 @@ export default function HomeStack() {
           },
           headerTitleAlign: 'center',
           headerTintColor: '#000'
-
 
         }} />
 

@@ -61,7 +61,7 @@ const LoginScreen = () => {
 
       } catch (err) {
         console.log(err)
-        // setLogErr(true)
+        setLogErr(true)
       }
     }
 
