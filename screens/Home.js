@@ -17,7 +17,9 @@ export default function Home() {
 
     axios.get(`${pathUrl}/jobs/all`).then((response) => {
 
-      console.log('**************************************************************')
+      setAllJob(response.data.data)
+      
+      console.log(allJob)
 
       setAllJob(response.data.data)
 
@@ -25,7 +27,7 @@ export default function Home() {
       console.log(err)
     })
 
-  }, [])
+  }, [setAllJob])
 
   return (
 
@@ -73,7 +75,7 @@ export default function Home() {
                     fontWeight: "bold",
                   }}
                 >
-                 {item.clientData.firstName + " " + item.clientData.lastName} 
+                 {/* {item.clientData.firstName + " " + item.clientData.lastName}  */}
                 </Text>
                 <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
                  {item.city}

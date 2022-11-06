@@ -64,6 +64,5 @@ const styles = StyleSheet.create({
     },
     recieverName: {
         fontSize: 20,
-        backgroundColor: "green",
     }
 })

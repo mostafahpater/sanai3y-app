@@ -11,36 +11,46 @@ import {
   SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { get } from "lodash";
 import { AntDesign } from "@expo/vector-icons";
+import { pathUrl } from "../Config/env";
+import axios from "axios";
 
 export default function SendTalpFromClient() {
   const { params } = useRoute();
   const detailJob = get(params, "one");
-  // console.log(detailJob);
+
 
   const [proposal , setProposal] = useState("")
 
-//  disChange = (testOne) => {
-//     // setProposal(event)
-//     console.log(testOne.nativeEvent.text)
-//   }
+ const navigate = useNavigation()
 
-  // function sendProposal (id){
-  //   let body ={
-  //     sanai3yProposal: proposal
-  //   }
-  //   console.log(body)
-  //   axios.put(`http://localhost:7000/jobs/addproposal/${id}`,body,{headers:headers})
-  //   .then(res=>{
-  //     // console.log(res.data.Data)
-  //     if(res.status == 200){
-  //       window.location.reload(true)
+ 
+
+
+  let headers={
+    'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzYW5haTN5SWQiOiI2MzYxYWM3OWEyYjVhM2Y1YTg4YmYxNzciLCJlbWFpbCI6ImFobWVkQGdtYWlsLmNvbSIsImlhdCI6MTY2NzM0NTUyOX0.xuWniHXxtShBeQlN5ucfBsVJ1v1-kcZjmrzlxja7iu8"
+}
+
+  function sendProposal (id){
+    let body ={
+      sanai3yProposal: proposal
+    }
+    // console.log(body)
+    axios.put(`${pathUrl}/jobs/addproposal/${id}`,body,{headers:headers})
+    .then(res=>{
+     
+      if(res.status == 200){
+        navigate.navigate('HomePost')
+        console.log('Done Proposal')
         
-  //     }
-  //   })
-  // }
+      }
+    })
+
+
+  
+  }
 
 
 
@@ -119,7 +129,7 @@ export default function SendTalpFromClient() {
             multiline={true}
             numberOfLines={2}
             placeholder={"ازاي تقدر تحل المشكلة"}
-            // onChange={disChange}
+            onChangeText={newtext =>setProposal(newtext) }
             style={{
               padding: 10,
               height: 100,
@@ -144,6 +154,7 @@ export default function SendTalpFromClient() {
               borderRadius: 10,
               marginBottom: 40,
             }}
+            onPress={() => sendProposal(detailJob._id)}
           >
             <Text
               style={{
@@ -155,6 +166,7 @@ export default function SendTalpFromClient() {
                 padding: 6,
                 borderRadius: 10,
               }}
+              
             >
               ارسال الطلب
             </Text>

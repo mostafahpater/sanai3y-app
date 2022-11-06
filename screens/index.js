@@ -41,21 +41,26 @@ export default function Index() {
     // AsyncStorage.getItem('id').then(res => dispatch(getDataSnai3y(res)))
     
   }, [])
+  // console.log(route)
+
+  const recieverName = "Ahmed"
+
   return (
       <>
-          <NavigationContainer>
+
+         <NavigationContainer>
             <Stack.Navigator initialRouteName={"startApp"}>
               <Stack.Screen name='startApp' component={IntuoialScreen}
                 options={{
                   headerShown: false
                 }}
               />
-              <Stack.Screen name='Home' component={MainTabs}
+              <Stack.Screen name='login' component={Login}
                 options={{
                   headerShown: false
                 }}
               />
-              <Stack.Screen name='login' component={Login}
+              <Stack.Screen name='Home' component={MainTabs}
                 options={{
                   headerShown: false
                 }}
@@ -67,13 +72,29 @@ export default function Index() {
                 }}
               />
 
-              <Stack.Screen name='messages' component={Messages} />
+            <Stack.Screen name='messages' component={Messages}
+              // options={{
+              //   // headerShown: false,
+              //   // headerBackVisible: false,
+              // }}
+              options={{
+                title: recieverName,
+                headerStyle: {
+                  backgroundColor: "#fbb150",
+                  elevation: 15,
+                  shadowColor: "#000"
+                },
+                headerTitleAlign: 'center',
+                headerTintColor: '#000'
+      
+      
+                }}
+            />
             </Stack.Navigator>
           </NavigationContainer>
           
       </>
-
-  )
+   )
 }
 const styles = StyleSheet.create({
   container: {
