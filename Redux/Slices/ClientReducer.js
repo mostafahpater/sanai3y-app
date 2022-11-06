@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { pathUrl } from "../../Config/env";
+import { getImageUrl } from "../../Config/imageUrl";
 import { setData } from "./Snai3yReducer";
 
 const ClientReducer = createSlice({
@@ -21,9 +22,11 @@ const ClientReducer = createSlice({
 
 export const getDataClient = (idd)=> async (dispatch)=>{
     const res = await axios.get(`${pathUrl}/client/clients/${idd}`)
+    let imageUrl =  getImageUrl(res.data.Data.img)
+    dispatch(setDataClient({...res.data.Data, img:imageUrl}))
 
-    dispatch(setDataClient(res.data.Data))
-    dispatch(setJops(res.data.Data.jobs))
+    let jobsImg = getImageUrl(res.data.Data.jobs.image)
+    dispatch(setJops({...res.data.Data.jobs, image: jobsImg}))
     console.log(res.data.Data)
 }
 

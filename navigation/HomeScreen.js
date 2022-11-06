@@ -21,7 +21,7 @@ export default function MainTabs() {
   let [role , setRole] = useState('')
   const dispatch = useDispatch()
   AsyncStorage.getItem("snai3yRole").then(res =>{
-    // console.log(res);
+    console.log(res);
     setRole(res)
   })
     console.log("index");
@@ -105,6 +105,7 @@ export default function MainTabs() {
               elevation:15,
               shadowColor:"#000"
             },
+            
 
             tabBarIcon: ({ focused }) => (
               <FontAwesome
