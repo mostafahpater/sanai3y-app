@@ -23,19 +23,20 @@ const AddJop = () => {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+  
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      selectionLimit:1
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      setImage(result.fileName);
     }
   };
-
+  console.log(image)
   // Data for Address
   let dataAddress = [
     { value: "أسوان" },
@@ -85,19 +86,23 @@ const AddJop = () => {
             address: values.address,
             skills: values.skills,
             detailsAboutJob: values.detailsAboutJob,
-            image: values.image
+            image: image
           };
+
+          // console.log(data)
           const regUser = async () => {
             try {
-              const res = await axios.post(`${pathUrl}/sanai3y/signup`, data);
+              const res = await axios.post(`${pathUrl}/jobs/postjob`, data, {headers:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjYzNjFhOTQ1YTJiNWEzZjVhODhiZjEwMiIsImVtYWlsIjoiYWJkb0BnbWFpbC5jb20iLCJpYXQiOjE2NjczNDQ3MDl9.Rjo2K1rUv6MWQ3-2cd3HBPQlOYKvd8hfVTpXWsKjUHo"});
 
-              if (res.status != 200) {
-                console.log(data);
-                setRegErr(true);
-              }
+              console.log(res)
+              // if (res.status == 200) {
+              //   console.log(res.status);
+              //   // setRegErr(true);
+              // }
             } catch (err) {
-              setRegErr(true);
-              console.log(err);
+              // setRegErr(true);
+              console.log('not')
+              
             }
           };
 
@@ -298,8 +303,8 @@ const AddJop = () => {
                     source={{ uri: image }}
                     style={{ width: 170, height: 100 }}
                     value={values.image}
-                    onChangeText={handleChange('titleJob')}
-                    onBlur={handleBlur('titleJob')}
+                   
+                    
                     
                    
                   />

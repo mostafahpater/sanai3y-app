@@ -68,7 +68,7 @@ export default function MainTabs() {
         {/* End User Screen  */}
 
         {/* Start Add Jop Screen  */}
-        {role == "client" && <Screen
+         <Screen
           name="اضف مشكلتك"
           component={AddJop}
           options={{
@@ -85,7 +85,7 @@ export default function MainTabs() {
               />
             ),
           }}
-        />}
+        />
         {/* End Add Jop Screen  */}
 
         {/* Start Profile Client  */}
