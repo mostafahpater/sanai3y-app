@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TextInput, Image, Button, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import axios from 'axios';
 import {pathUrl} from '../Config/env' 
 
@@ -9,26 +9,22 @@ import {pathUrl} from '../Config/env'
 
 export default function Home() {
   const navigation = useNavigation();
-
   const [allJob, setAllJob] = useState()
 
 
   useEffect(() => {
 
     axios.get(`${pathUrl}/jobs/all`).then((response) => {
-
       setAllJob(response.data.data)
-      
-      console.log(allJob)
-
-      setAllJob(response.data.data)
-
     }).catch((err)=>{
       console.log(err)
     })
 
-  }, [setAllJob])
+  }, [])
 
+
+
+  // Start JSX
   return (
 
     <View style={styles.container}>
@@ -55,14 +51,12 @@ export default function Home() {
           data={allJob}
           keyExtractor={(item, index) => index}
           renderItem={({item}) => (
-              
             <View style={[styles.box, styles.shadowProp]}>
-              
             <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
               <Image
                 style={styles.tinyLogo}
                 source={{
-                  uri: `${pathUrl}${item.clientData.img.slice(21)}`
+                  uri: `${pathUrl}${item.clientData?.img.slice(21)}`
                 }}
               />
               <View style={{marginLeft:10}}>
@@ -75,7 +69,7 @@ export default function Home() {
                     fontWeight: "bold",
                   }}
                 >
-                 {/* {item.clientData.firstName + " " + item.clientData.lastName}  */}
+                 {item.clientData?.firstName + " " + item.clientData?.lastName} 
                 </Text>
                 <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
                  {item.city}
@@ -118,15 +112,12 @@ export default function Home() {
               />
             </View>
           </View>
-
-
           )}
-
-        
         />
-
-
       {/* End Box Posts */}
+
+
+
     </View>
   );
 }
@@ -139,9 +130,6 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   box: {
-    // borderWidth: 1,
-    // borderStyle: "solid",
-    // borderColor: "#000",
 
     position: "relative",
     marginTop: 10,
@@ -172,8 +160,3 @@ const styles = StyleSheet.create({
   },
 });
 
-// Test Code
-
-//   borderWidth:2,
-//   borderStyle:'solid',
-//   borderColor:'#000'
