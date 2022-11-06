@@ -50,7 +50,7 @@ export default function ProfileClient() {
         <View style={styles.image}>
         <View style={styles.imgProfile}>
             <View>
-              <Image source={data.img}
+              <Image source={{uri : data?.img}}
                 style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
               />
             </View>
@@ -193,10 +193,10 @@ export default function ProfileClient() {
                   />
                   <View>
                     <Text style={[styles.text, { borderEndWidth: 10, borderStyle: "solid", borderEndColor: "red" }]}>
-                      الاسم
+                      {`${data.firstName} ${data.lastName}`}
                     </Text>
                     <Text style={[styles.text, { fontSize: 12 }]}>
-                      العنوان
+                      {data.address}
                     </Text>
                   </View>
                 </View>
