@@ -202,7 +202,7 @@ const Messages = (props) => {
                 />
                 {/* <Button onPress={sendNewMessage} style={styles.button}><FontAwesome name="send" style={styles.icon} color={"#ffb200"} size={20}/></Button> */}
                 <TouchableOpacity onPress={sendNewMessage} style={styles.button}>
-                    <FontAwesome name="send" style={styles.icon} color={"#ffb200"} size={50}/>
+                    <FontAwesome name="send" style={styles.icon} color={"#ffb200"} size={40}/>
                 </TouchableOpacity>
             </View>
         </View >
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         // backgroundColor: "green"
     },
     messages: {
-        height: "90%",
+        height: "93%",
         // backgroundColor: "yellow",
         // position: "relative"
     },
@@ -264,8 +264,8 @@ const styles = StyleSheet.create({
         // lineHeight: 50
     },
     send: {
-        padding: 5,
-        height: "10%",
+        padding: 2,
+        height: "7%",
         backgroundColor: "#fbb150",
         flexDirection: "row",
         justifyContent: "space-between",
@@ -293,14 +293,14 @@ const styles = StyleSheet.create({
         borderColor: "white",
         borderRadius: 10,
         width: "90%",
-        height: "90%",
+        height: "80%",
         fontSize: 20,
-        padding: 10,
+        padding: 7,
         backgroundColor: "white"
     },
     button: {
         width: "7%",
-        height: "90%",
+        height: "80%",
         backgroundColor: "white",
         borderRadius: 10,
         // fontSize: "large",
