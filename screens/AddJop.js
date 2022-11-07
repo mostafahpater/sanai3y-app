@@ -103,7 +103,7 @@ const AddJop = () => {
             jobImage: showImage,
           };
           
-            console.log(data)
+            // console.log(data)
 
           
           const regUser = async () => {
@@ -112,7 +112,7 @@ const AddJop = () => {
               {headers:
                 {"authorization":tok}
               }
-              );
+              )
 
 
               console.log('y')
@@ -120,6 +120,7 @@ const AddJop = () => {
               if (res.status == 200) {
                 console.log(res.status);
                 // setRegErr(true);
+                
                 navigation.navigate('HomeScreen')
               }
             } catch (err) {

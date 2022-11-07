@@ -38,7 +38,7 @@ export default function ProfileClient() {
   // End Image in Modal
 
   // Start Fetch Data Client
-  let data = useSelector(state => state.ClientReducer.clintdata)
+  
   let jobs = useSelector(state => state.ClientReducer.jops)
   useEffect(()=>{
 
@@ -54,8 +54,11 @@ export default function ProfileClient() {
 
 
   // Get Jobs The Client
+  let datas = useSelector(state => state.ClientReducer.clintdata)
   const [getAllJobs, setGetAllJob] = useState([]);
+  const [data, setData] = useState({});
   useEffect(() => {
+    setData(datas)
     AsyncStorage.getItem('token').then((res) => {
       axios
       .get(`${pathUrl}/client/jobs/`, {
@@ -64,6 +67,7 @@ export default function ProfileClient() {
       .then((res) => {
         let jobClient = res.data.Data;
         setGetAllJob([...jobClient]);
+        console.log(jobClient)
       });
     })
   }, [])
@@ -338,6 +342,7 @@ const styles = StyleSheet.create({
   },
   textcol: {
     fontSize: 15,
+    textAlign:"left"
   },
   iconCol: {
     fontSize: 20,
