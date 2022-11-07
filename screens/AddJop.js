@@ -23,8 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const AddJop = () => {
   let [regErr, setRegErr] = useState(false);
-  const [image, setImage] = useState(null);
-  const [showImage, setShowImage] = useState(null);
+  const [image, setImage] = useState("");
   const [tok, setTok] = useState('')
   const navigation = useNavigation()
   useEffect(()=>{
@@ -45,8 +44,6 @@ const AddJop = () => {
 
     if (!result.cancelled) {
       setImage(result.uri);
-      setShowImage(result.fileName)
-      // console.log(showImage)
     }
   };
   // console.log(image)
@@ -94,25 +91,28 @@ const AddJop = () => {
 
         })}
         onSubmit={(values) => {
-          let data = {
-            title: values.titleJob,
-            city: values.address,
-            category: values.skills,
-            description: values.detailsAboutJob,
-            address: values.addresJob,
-            jobImage: showImage,
-          };
-          
-            console.log(data)
-
-          
+          const formData = new FormData()
+          formData.append("title", values.titleJob)
+          formData.append("city", values.address)
+          formData.append("category", values.skills)
+          formData.append("description", values.detailsAboutJob)
+          formData.append("address", values.addresJob)
+          formData.append("jobImage",{
+            name: image,
+            type:"image/*",
+            uri:image
+          })
           const regUser = async () => {
             try {
-              const res = await axios.post(`${pathUrl}/jobs/postjob`,data, 
+              const res = await axios.post(`${pathUrl}/jobs/postjob`,formData, 
               {headers:
-                {"authorization":tok}
+                {
+                  "authorization":tok,
+                  Accept: 'application/json',
+                  "Content-Type": "multipart/form-data",
+                }
               }
-              );
+              )
 
 
               console.log('y')
@@ -120,6 +120,7 @@ const AddJop = () => {
               if (res.status == 200) {
                 console.log(res.status);
                 // setRegErr(true);
+                
                 navigation.navigate('HomeScreen')
               }
             } catch (err) {

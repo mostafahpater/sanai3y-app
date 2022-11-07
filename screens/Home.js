@@ -23,11 +23,15 @@ export default function Home() {
         return item.status != "in progress"
       })
       setAllJob([...res])
+      // console.log(allJob)
     }).catch((err) => {
       console.log(err)
     })
       // AsyncStorage.clear()
   }, [])
+  useEffect(()=>{
+    console.log(allJob)
+  },[allJob])
   // console.log(val)
   function search(v) {
 
