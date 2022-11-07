@@ -7,6 +7,9 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { pathUrl } from '../Config/env';
 import { useSelector } from 'react-redux';
+import { useRoute } from '@react-navigation/native';
+import { get } from 'lodash';
+import NotFind from '../components/NotFind';
 export default function ShowClient() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
@@ -17,28 +20,30 @@ export default function ShowClient() {
   // End Modal
 
   // Start Image in Modal
-  const [image, setImage] = useState(null);
+  const { params } = useRoute()
+  const data = get(params, "data")
+  // End Image in Modal 
+  const [jobs, setJobs] = useState([])
+  useEffect(() => {
+    setTimeout(() => {
+      axios.get(`${pathUrl}/client/clients/${data.clientData?._id}`)
+        .then((res) => {
+          setJobs(res.data.Data.jobs)
+          console.log(res.data.Data.jobs)
+        }).catch((err) => console.log(err))
+    }, 100);
 
+  }, [])
 
-  // End Image in Modal
-
-  // Start Fetch Data Client
-  let data = useSelector(state => state.ClientReducer.clintdata)
-  let jobs = useSelector(state => state.ClientReducer.jops)
-  // let [data, setData] = useState({})
-  // let [jobs , setJops] = useState([])
-  let [id , setId] = useState('')
-
-  console.log(jobs)
   return (
 
     <ScrollView style={{ backgroundColor: "#fff" }}>
 
       <View style={styles.parent}>
         <View style={styles.image}>
-        <View style={styles.imgProfile}>
+          <View style={styles.imgProfile}>
             <View>
-              <Image source={{uri : data?.img}}
+              <Image source={{ uri: `${pathUrl}${data.clientData?.img.slice(21)}` }}
                 style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
               />
             </View>
@@ -47,7 +52,7 @@ export default function ShowClient() {
           </View>
 
           <View style={styles.userName}>
-            <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data.firstName} ${data.lastName}`}</Text>
+            <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data.clientData?.firstName} ${data.clientData?.lastName}`}</Text>
 
           </View>
         </View>
@@ -56,7 +61,7 @@ export default function ShowClient() {
         <View style={styles.parentList}>
           <View style={styles.row}>
             <View style={styles.col}>
-              <Text style={styles.textcol}>{data.phoneNumber}</Text>
+              <Text style={styles.textcol}>{data.clientData?.phoneNumber}</Text>
             </View>
             <View style={styles.col}>
               <Entypo name='phone' style={styles.iconCol} />
@@ -66,7 +71,7 @@ export default function ShowClient() {
           {/* address */}
           <View style={styles.row}>
             <View style={styles.col}>
-              <Text style={styles.textcol}>{`العنوان : ${data.address}`}</Text>
+              <Text style={styles.textcol}>{`العنوان : ${data.clientData?.address}`}</Text>
             </View>
             <View style={styles.col}>
               <Entypo name='pencil' style={styles.iconCol} />
@@ -80,47 +85,17 @@ export default function ShowClient() {
         </View>
 
         {/* Card Style */}
-        <FlatList
-          data={jobs}
-          keyExtractor= {(index) => index}
-          renderItem={item => 
-            <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <View style={{ width: "50%" }}>
-                <View style={styles.userDetails}>
-                  <Image source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" }}
-                    style={[styles.imageCard, { resizeMode: "contain" }]}
-                  />
-                  <View>
-                    <Text style={[styles.text, { borderEndWidth: 10, borderStyle: "solid", borderEndColor: "red" }]}>
-                      {`${data.firstName} ${data.lastName}`}
-                    </Text>
-                    <Text style={[styles.text, { fontSize: 12 }]}>
-                      {data.address}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.iconCard}>
-                <TouchableOpacity>
-                  <Entypo name='edit' style={styles.childIcon} />
 
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <FontAwesome name='remove' style={styles.childIcon} />
-
-                </TouchableOpacity>
-
-              </View>
-            </View>
+        {jobs.length > 0 && jobs.map((item,index) =>
+          <View style={styles.card} key={index}>
             <View style={styles.cardBody}>
               {/* jop des */}
               <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
                 <View>
-                  <Text style={styles.text}>عنوان الوظيفة :</Text>
+                  <Text style={styles.text}>عنوان الوظيفة :{item.title}</Text>
                 </View>
                 <View>
-                  <Text style={[styles.text, { marginTop: 10 }]}>الوصف :</Text>
+                  <Text style={[styles.text, { marginTop: 10 }]}>الوصف : {item.description}</Text>
                 </View>
               </View>
               {/* img Jop */}
@@ -129,15 +104,10 @@ export default function ShowClient() {
                   style={{ height: 200, resizeMode: "contain" }} />
               </View>
             </View>
-
-          
-
           </View>
-          }
-        >
+        )}
 
-          
-        </FlatList>
+        {jobs.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
       </View>
     </ScrollView>
   )
@@ -187,6 +157,7 @@ const styles = StyleSheet.create({
   },
   textcol: {
     fontSize: 18,
+    textAlign: "left"
   },
   iconCol: {
     fontSize: 20,

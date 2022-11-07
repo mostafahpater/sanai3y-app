@@ -1,43 +1,44 @@
-import { View, Text, StyleSheet, TextInput, Image, Button, FlatList } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image, Button, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import axios from 'axios';
-import {pathUrl} from '../Config/env' 
+import { pathUrl } from '../Config/env'
 import { set } from "lodash";
+import NotFind from "../components/NotFind";
 
 
 
 export default function Home() {
   const navigation = useNavigation();
   const [allJob, setAllJob] = useState([])
-  const [val , setVal] = useState('')
+  const [val, setVal] = useState('')
 
   useEffect(() => {
 
     axios.get(`${pathUrl}/jobs/all`).then((response) => {
-      const res = response.data.data.filter((item)=>{
-        return  item.status != "in progress"
+      const res = response.data.data.filter((item) => {
+        return item.status != "in progress"
       })
       setAllJob([...res])
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err)
     })
-    
+
   }, [])
   // console.log(val)
-  function search(v){
-    
-    let arr = allJob.filter((e)=> 
-    {  console.log(e.description)
+  function search(v) {
+
+    let arr = allJob.filter((e) => {
+      console.log(e.description)
       return e.description.includes(v)
-    } 
+    }
     )
     setAllJob([...arr])
   }
 
 
-  useEffect(()=>{},[allJob])
+  useEffect(() => { }, [allJob])
   // Start JSX
   return (
 
@@ -61,45 +62,48 @@ export default function Home() {
 
       {/* Start Box Posts */}
 
-      <FlatList 
-          data={allJob}
-          keyExtractor={(item, index) => index}
-          renderItem={({item}) => (
-            <View style={[styles.box, styles.shadowProp]}>
-            <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-              <Image
-                style={styles.tinyLogo}
-                source={{
-                  uri: `${pathUrl}${item.clientData?.img.slice(21)}`
-                }}
-              />
-              <View style={{marginLeft:10}}>
-                <Text
-                  style={{
-                    marginRight: 10,
-                    paddingRight: 10,
-                    borderRightWidth: 1,
-                    borderRightColor: "#ffb200",
-                    fontWeight: "bold",
+      {allJob.length > 0 && <FlatList
+        data={allJob}
+        keyExtractor={(item, index) => index}
+        renderItem={({ item }) => (
+          <View style={[styles.box, styles.shadowProp]}>
+            <TouchableOpacity onPress={()=> navigation.navigate('ClientShow',{data :item})}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+                <Image
+                  style={styles.tinyLogo}
+                  source={{
+                    uri: `${pathUrl}${item.clientData?.img.slice(21)}`
                   }}
-                >
-                 {item.clientData?.firstName + " " + item.clientData?.lastName} 
-                </Text>
-                <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
-                 {item.city}
-                </Text>
+                />
+                <View style={{ marginLeft: 10 }}>
+                  <Text
+                    style={{
+                      marginRight: 10,
+                      paddingRight: 10,
+                      borderRightWidth: 1,
+                      borderRightColor: "#ffb200",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {item.clientData?.firstName + " " + item.clientData?.lastName}
+                  </Text>
+                  <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
+                    {item.city}
+                  </Text>
+                </View>
               </View>
-            </View>
+
+            </TouchableOpacity>
             <AntDesign name="closecircle" style={styles.test} />
-                  
-            <Text style={{ paddingVertical:5,paddingHorizontal:10, fontSize:12 }}>
-                  {item.title}
-            </Text>      
+
+            <Text style={{ paddingVertical: 5, paddingHorizontal: 10, fontSize: 12 }}>
+              {item.title}
+            </Text>
 
             <Text style={{ padding: 10 }}>
-                  {item.description}
+              {item.description}
             </Text>
-    
+
             <View
               style={{
                 flexDirection: "row",
@@ -113,10 +117,10 @@ export default function Home() {
                   width: 80,
                   textAlign: "center",
                   borderRadius: 10,
-                  fontSize:12
+                  fontSize: 12
                 }}
               >
-               {item.category}
+                {item.category}
               </Text>
               <Button
                 title='التفاصيل'
@@ -126,10 +130,10 @@ export default function Home() {
               />
             </View>
           </View>
-          )}
-        />
+        )}
+      />}
       {/* End Box Posts */}
-
+      {allJob.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
 
 
     </View>

@@ -21,7 +21,7 @@ export default function Index() {
   const Stack = createStackNavigator()
   const dispatch = useDispatch()
   useEffect(() => {
-    // AsyncStorage.clear()
+    AsyncStorage.clear()
   
     AsyncStorage.getItem('snai3yRole').then(res => 
       {
