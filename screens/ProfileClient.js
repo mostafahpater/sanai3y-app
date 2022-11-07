@@ -1,17 +1,25 @@
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, FlatList } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import Modal from "react-native-modal";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { pathUrl } from '../Config/env';
-import { useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { pathUrl } from "../Config/env";
+import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 export default function ProfileClient() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
-  const navigate = useNavigation()
+  const navigate = useNavigation();
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -45,13 +53,10 @@ export default function ProfileClient() {
     setJopData(jobs)
 
     // console.log(jopData.map(i => console.log(i.title)))
-  },[])
+  }, []);
   // let [data, setData] = useState({})
   // let [jobs , setJops] = useState([])
-  let [id , setId] = useState('')
-
-
-
+  let [id, setId] = useState("");
 
   // Get Jobs The Client
   let datas = useSelector(state => state.ClientReducer.clintdata)
@@ -72,54 +77,80 @@ export default function ProfileClient() {
     })
   }, [])
 
-
-  // Dellet Job With Client 
+  // Dellet Job With Client
   function sendIdJob(id) {
-    AsyncStorage.getItem('token').then((res) => {
+    AsyncStorage.getItem("token").then((res) => {
       axios
-      .put(`${pathUrl}/jobs/delete/${id}`, {}, { headers: { Authorization: res } })
-      .then((res) => {
-        // Logic 
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    })
-
+        .put(
+          `${pathUrl}/jobs/delete/${id}`,
+          {},
+          { headers: { Authorization: res } }
+        )
+        .then((res) => {
+          // Logic
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
   }
 
-
-
   return (
-
     <ScrollView style={{ backgroundColor: "#fff" }}>
-
       <View style={styles.parent}>
         <View style={styles.image}>
-        <View style={styles.imgProfile}>
+          <View style={styles.imgProfile}>
             <View>
-              <Image source={{uri : data?.img}}
-                style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
+              <Image
+                source={{ uri: data?.img }}
+                style={{
+                  width: 200,
+                  height: 200,
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
+                  resizeMode: "cover",
+                }}
               />
             </View>
             {/* Start Modal */}
             <View>
-              <TouchableOpacity title="Show modal" onPress={toggleModal} >
-                <View style={{
-                  justifyContent: "center", alignItems: "center", backgroundColor: "#eee",
-                  padding: 5, borderBottomStartRadius: 5, borderBottomEndRadius: 5
-                }}>
-
-                  <AntDesign name='camera' style={{ fontSize: 25 }} />
+              <TouchableOpacity title="Show modal" onPress={toggleModal}>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#eee",
+                    padding: 5,
+                    borderBottomStartRadius: 5,
+                    borderBottomEndRadius: 5,
+                  }}
+                >
+                  <AntDesign name="camera" style={{ fontSize: 25 }} />
                 </View>
               </TouchableOpacity>
 
               <Modal isVisible={isModalVisible}>
-                    <TouchableOpacity onPress={toggleModal} style={{ padding:5,justifyContent:"center",alignItems:"flex-start"}}>
-                          <AntDesign name='closecircleo'  style={{backgroundColor:"#fff",borderRadius:50,fontSize:24}}/>
-                    </TouchableOpacity>
-                <View style={{ backgroundColor: "#eee" , borderRadius:5}}>
-                  <View style={{alignItems:"center",flexDirection:"column"}}>
+                <TouchableOpacity
+                  onPress={toggleModal}
+                  style={{
+                    padding: 5,
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <AntDesign
+                    name="closecircleo"
+                    style={{
+                      backgroundColor: "#fff",
+                      borderRadius: 50,
+                      fontSize: 24,
+                    }}
+                  />
+                </TouchableOpacity>
+                <View style={{ backgroundColor: "#eee", borderRadius: 5 }}>
+                  <View
+                    style={{ alignItems: "center", flexDirection: "column" }}
+                  >
                     <View
                       style={{
                         alignItems: "center",
@@ -137,7 +168,7 @@ export default function ProfileClient() {
                           backgroundColor: "#fff",
                           justifyContent: "center",
                           borderWidth: 1,
-                          borderColor: '#999'
+                          borderColor: "#999",
                         }}
                       >
                         <View>
@@ -156,37 +187,44 @@ export default function ProfileClient() {
                         <View>
                           <AntDesign
                             name="download"
-                            style={{ padding: 10, fontSize: 14, fontWeight: "bold" }}
+                            style={{
+                              padding: 10,
+                              fontSize: 14,
+                              fontWeight: "bold",
+                            }}
                           />
                         </View>
                       </TouchableOpacity>
                     </View>
-                    <View style={{ width: "90%" , alignItems:"center" }}>
+                    <View style={{ width: "90%", alignItems: "center" }}>
                       {image && (
                         <Image
                           source={{ uri: image }}
-                          style={{ width: "100%", height: 200 , resizeMode:"cover" }}
+                          style={{
+                            width: "100%",
+                            height: 200,
+                            resizeMode: "cover",
+                          }}
                         />
                       )}
                     </View>
 
-                    <TouchableOpacity style={[styles.button , {marginVertical:20}]}>
+                    <TouchableOpacity
+                      style={[styles.button, { marginVertical: 20 }]}
+                    >
                       <Text style={styles.buttonText}>إضافة</Text>
                     </TouchableOpacity>
                   </View>
-                    
-                    
                 </View>
               </Modal>
             </View>
             {/* End Modal */}
-
-
           </View>
 
           <View style={styles.userName}>
-            <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data.firstName} ${data.lastName}`}</Text>
-
+            <Text
+              style={{ textAlign: "center", fontSize: 25 }}
+            >{`${data.firstName} ${data.lastName}`}</Text>
           </View>
         </View>
 
@@ -197,17 +235,19 @@ export default function ProfileClient() {
               <Text style={styles.textcol}>{data.phoneNumber}</Text>
             </View>
             <View style={styles.col}>
-              <Entypo name='phone' style={styles.iconCol} />
+              <Entypo name="phone" style={styles.iconCol} />
             </View>
           </View>
 
           {/* Email */}
           <View style={styles.row}>
-            <View style={[styles.col,{width:"60%",alignItems:"flex-start"}]}>
+            <View
+              style={[styles.col, { width: "60%", alignItems: "flex-start" }]}
+            >
               <Text style={styles.textcol}>{data.email}</Text>
             </View>
-            <View style={[styles.col,{width:"40%"}]}>
-              <Entypo name='email' style={styles.iconCol} />
+            <View style={[styles.col, { width: "40%" }]}>
+              <Entypo name="email" style={styles.iconCol} />
             </View>
           </View>
 
@@ -217,85 +257,87 @@ export default function ProfileClient() {
               <Text style={styles.textcol}>{`العمر : ${data.age}`}</Text>
             </View>
             <View style={styles.col}>
-              <Entypo name='pencil' style={styles.iconCol} />
+              <Entypo name="pencil" style={styles.iconCol} />
             </View>
           </View>
         </View>
 
         {/* Talbat */}
         <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>المنشورات</Text>
+          <Text
+            style={{
+              fontSize: 25,
+              borderBottomColor: "#eee",
+              borderBottomWidth: 2,
+            }}
+          >
+            المنشورات
+          </Text>
         </View>
 
         {/* Card Style And Get All Jobs  */}
-        {getAllJobs.map((item,index)=> 
-            <View style={styles.card} key={index}>
+        {getAllJobs.map((item, index) => (
+          <View style={styles.card} key={index}>
             <View style={styles.cardHeader}>
-               <View style={{ width: "50%" }}>
-                <View style={styles.userDetails}>
-                   <Image source={{ uri: data.img }}
-                    style={[styles.imageCard, { resizeMode: "contain" }]}
-                  />
-                  <View>
-                    <Text style={[styles.text, { borderEndWidth: 10, borderStyle: "solid", borderEndColor: "red" }]}>
-                      {`${data.firstName} ${data.lastName}`}
-                    </Text>
-                    <Text style={[styles.text, { fontSize: 12 }]}>
-                      {data.address}
-                    </Text>
-                  </View>
-                </View>
+              <View style={{ width: "10%" }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigate.navigate("editeJobs", { idJob: item._id })
+                  }
+                >
+                  <Entypo name="edit" style={styles.childIcon} />
+                </TouchableOpacity>
               </View>
-              <View style={styles.iconCard}>
-                <TouchableOpacity
-                onPress={() => navigate.navigate('editeJobs', {idJob:item._id})}
-                >
-                  <Entypo name='edit' style={styles.childIcon} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                
-                onPress={()=> sendIdJob(item._id)}
-                >
-                  <FontAwesome name='remove' style={styles.childIcon} />
 
+              <View style={{ width: "10%" }}>
+                <TouchableOpacity onPress={() => sendIdJob(item._id)}>
+                  <FontAwesome name="remove" style={styles.childIcon} />
                 </TouchableOpacity>
-
               </View>
             </View>
+
             <View style={styles.cardBody}>
               {/* jop des */}
-              <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
-                <View>
-                  <Text style={styles.text}>{item.title}</Text>
+              <View style={{ flex: 1, alignItems: "flex-start", padding: 10 }}>
+
+                <View style={{borderLeftWidth:1, borderLeftColor:'#ffb200'}}>
+                  <Text style={[styles.text, {fontSize:14}]}>{item.title}</Text>
                 </View>
+
                 <View>
-                  <Text style={[styles.text, { marginTop: 10 }]}> الوصف : {item?.description}</Text>
+                  <Text style={[styles.text, { marginTop: 2, fontSize:15, color:'#888' }]}> {item.city}
+                  </Text>
                 </View>
-                <View>
-                  <Text style={[styles.text, { marginTop: 10 }]}> العنوان : {item.city}</Text>
+
+                <View style={{paddingHorizontal:5, borderBottomWidth:1, borderBottomColor:'#FFF', borderTopWidth:1, marginTop:10, borderTopColor:'#FFF'}}>
+                  <Text style={[styles.text, { marginTop: 10, color:'#555', paddingBottom:20 }]}> {item?.description}
+                  </Text>
                 </View>
-              </View>
-              {/* img Jop */}
-              <View style={{ width: "50%" }}>
-                <Image source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" }}
-                  style={{ height: 200, resizeMode: "contain" }} />
+
+
               </View>
             </View>
 
             <View style={styles.parentButton}>
               <TouchableOpacity style={styles.button}>
-                <Text 
-                style={styles.buttonText}
-                onPress={() => navigate.navigate('talpatSending',{proposal: item.proposals})}
-                >الطلبات المقدمة</Text>
+                <Text
+                  style={styles.buttonText}
+                  onPress={() =>
+                    navigate.navigate("talpatSending", {
+                      proposal: item.proposals,
+                    })
+                  }
+                >
+                  الطلبات المقدمة
+                </Text>
               </TouchableOpacity>
             </View>
 
           </View>
-        )}
+        ))}
       </View>
     </ScrollView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -303,14 +345,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
   // Start Secthion on style
   image: {
     justifyContent: "center",
     alignItems: "center",
-    width: '100%',
-    marginTop: 20
+    width: "100%",
+    marginTop: 20,
   },
   imgProfile: {
     marginBottom: 10,
@@ -326,18 +368,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     // flex: 1,
-    marginTop: 20
+    marginTop: 20,
   },
   row: {
     justifyContent: "space-evenly",
     flexDirection: "row",
     width: "80%",
-    marginVertical: 10
+    marginVertical: 10,
   },
   col: {
     width: "50%",
-    borderBottomWidth: 1,
-    borderBottomColor: "gray",
+    borderBottomWidth: 2,
+    borderBottomColor: "#EEE",
     paddingBottom: 10,
   },
   textcol: {
@@ -346,7 +388,7 @@ const styles = StyleSheet.create({
   },
   iconCol: {
     fontSize: 20,
-    color: "#fbb200"
+    color: "#fbb200",
   },
   // End Details Style
 
@@ -355,23 +397,24 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center",
+    // alignItems: "center",
     width: "90%",
     backgroundColor: "#eee",
     marginTop: 20,
-    marginBottom: 30,
+    marginBottom: 10,
     borderRadius: 5,
-    elevation: 5
+    elevation: 5,
   },
   cardHeader: {
+    width: "100%",
     backgroundColor: "#eee",
     borderRadius: 5,
+    paddingVertical: 10,
     flexDirection: "row",
-    justifyContent: "space-evenly",
-    padding: 8,
+    justifyContent: "space-between",
     borderBottomColor: "gray",
-    borderBottomWidth: 2,
-
+    borderBottomWidth: 1,
+    elevation:1
   },
   userDetails: {
     alignItems: "center",
@@ -381,40 +424,38 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginStart: 10,
-    borderRadius: 50
+    borderRadius: 50,
   },
   text: {
-    fontSize: 18,
+    fontSize: 16,
     marginStart: 5,
   },
-  iconCard: {
-    width: "50%",
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center"
-  },
+
   childIcon: {
     color: "#fbb200",
-    marginEnd: 20,
-    fontSize: 20,
-    alignItems: "baseline"
+    textAlign: "center",
+    fontSize: 25,
   },
   cardBody: {
     justifyContent: "space-between",
     flex: 1,
     flexDirection: "row",
     marginTop: 10,
-    marginBottom: 20
+    // marginBottom: 20,
   },
   parentButton: {
-    marginBottom: 25,
-    marginTop: 10
+    flex: 1,
+    marginBottom: 20,
+    // marginTop: 10,
+    flexDirection:'row',
+    justifyContent: "flex-end",
+    marginRight:15
   },
   // Button Style
   button: {
     // flex:1,
-    width: "50%",
-    alignItems: "center",
+    // width: "50%",
+    // alignItems: "center",
     // flexDirection: "c",
     justifyContent: "flex-start",
     backgroundColor: "#fbb200",
@@ -423,8 +464,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 20,
-    color: "#fff"
+    fontSize: 16,
+    color: "#000",
   },
-
-})
+});

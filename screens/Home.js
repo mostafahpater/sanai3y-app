@@ -6,6 +6,7 @@ import axios from 'axios';
 import { pathUrl } from '../Config/env'
 import { set } from "lodash";
 import NotFind from "../components/NotFind";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -25,7 +26,7 @@ export default function Home() {
     }).catch((err) => {
       console.log(err)
     })
-
+      // AsyncStorage.clear()
   }, [])
   useEffect(()=>{
     console.log(allJob)

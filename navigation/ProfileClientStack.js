@@ -3,9 +3,20 @@ import { createStackNavigator } from "@react-navigation/stack";
 import TalpatSendingWithSanai3y from "../screens/TalpatSendingWithSanai3y";
 import ProfileClient from "../screens/ProfileClient";
 import EditeJobsWithClient from "../screens/EditeJobsWithClient";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { DevSettings, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileClientStack = () => {
   const { Navigator, Screen } = createStackNavigator();
+
+function test() {
+
+  AsyncStorage.clear();
+  DevSettings.reload()  
+
+}
+
 
   return (
     <Navigator>
@@ -13,7 +24,14 @@ const ProfileClientStack = () => {
         name="profileClient"
         component={ProfileClient}
         options={{
-          headerLeft: false,
+          headerLeft: () => (
+          <TouchableOpacity>
+            <AntDesign name="login" style={{paddingRight:20, fontSize:20}} 
+            onPress={() => test()}
+            
+            />
+          </TouchableOpacity>
+          ),
           headerTitle: "الصفحة الشخصية",
           headerTitleAlign: "center",
           headerTitleStyle: {

@@ -57,7 +57,7 @@ const Chat = (props) => {
         // setToken();
     }, [token]);
 
-    // // When you need to clear the AsyncStorage
+    // When you need to clear the AsyncStorage
     // AsyncStorage.clear().then(res => console.log("cleared"));
 
     

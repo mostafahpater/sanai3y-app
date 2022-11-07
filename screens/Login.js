@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     color: '#FFFFFF',
     // borderColor: '#000',
-    height: 40,
+    height: 45,
     alignItems: 'center',
     borderRadius: 5,
     marginLeft: 35,
