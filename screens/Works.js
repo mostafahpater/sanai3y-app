@@ -2,16 +2,22 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView }
 import React, { useEffect, useState } from "react";
 import { pathUrl } from '../Config/env';
 import axios from "axios";
-import { NavigationContainer,useNavigation  } from '@react-navigation/native';
-
+import { useNavigation  } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function works() {
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
     const [data , setData]= useState([])
+    const [token, setToken] = useState('')
+    useEffect(()=>{
+      AsyncStorage.getItem('token').then((res) => setToken(res))
+  
+    },[])
     useEffect(  () => {
-        
-      
-             axios.get(`${pathUrl}/jobs/all`).then((res)=>{
-               return setData(res.data.data)
+      // var token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzYW5haTN5SWQiOiI2MzY3ZDQwN2MzZmFkNmM4OWM3YTUyNWEiLCJlbWFpbCI6Im1vc3RhZmFAZ21haWwuY29tIiwiaWF0IjoxNjY3NzQ4ODcxfQ.D9GRzVXHXkcpuGZ3s0hkCpKht3aRfFa-lszXfJjUlyY";
+
+             axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:token}}).then((res)=>{
+  
+              setData(res.data.Data)
             }).catch((erorr)=>{
                 console.log("erorr");
                 console.log(erorr);
