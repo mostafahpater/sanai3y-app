@@ -34,10 +34,6 @@ export default function ProfileSnai3y() {
     });
     if (!result.cancelled) {
       setImage(result.uri);
-      
-      
-      // photo = formdata
-      // setPhoto(formdata)
     }
   };
   // console.log(image)
@@ -46,8 +42,7 @@ export default function ProfileSnai3y() {
   // Data Sani3y
 
   const [snai3yJobs, setSnai3yJobs] = useState([])
-  const [photos, setPhotos] = useState("")
-  // const [datas, setDatas] = useState({})
+
   const datas = useSelector(state => state.Snai3yReducer.dataSani3y)
   // console.log(datas);
   useEffect(() => {
@@ -60,10 +55,9 @@ export default function ProfileSnai3y() {
         setSnai3yJobs(result.data.Data)
       })
     })
-  }, [photos])
+  }, [])
   const dispatch = useDispatch()
   function sendImg() {
-    // let img = image.slice(56)
     AsyncStorage.getItem('token').then((token) => {
       console.log("first")
       const send =  async ()=> {

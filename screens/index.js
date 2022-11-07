@@ -45,7 +45,7 @@ export default function Index() {
     }
     )
     
-  }, [dispatch])
+  }, [])
   // console.log(route)
 
 

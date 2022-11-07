@@ -14,8 +14,9 @@ import Modal from "react-native-modal";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { pathUrl } from "../Config/env";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import { getDataClient } from '../Redux/Slices/ClientReducer';
 export default function ProfileClient() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
@@ -27,7 +28,7 @@ export default function ProfileClient() {
   // End Modal
 
   // Start Image in Modal
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
   const [jopData, setJopData] = useState([]);
 
   const pickImage = async () => {
@@ -46,9 +47,9 @@ export default function ProfileClient() {
   // End Image in Modal
 
   // Start Fetch Data Client
-  
+
   let jobs = useSelector(state => state.ClientReducer.jops)
-  useEffect(()=>{
+  useEffect(() => {
 
     setJopData(jobs)
 
@@ -59,23 +60,22 @@ export default function ProfileClient() {
   let [id, setId] = useState("");
 
   // Get Jobs The Client
-  let datas = useSelector(state => state.ClientReducer.clintdata)
+  let data = useSelector(state => state.ClientReducer.clintdata)
   const [getAllJobs, setGetAllJob] = useState([]);
-  const [data, setData] = useState({});
   useEffect(() => {
-    setData(datas)
+    
     AsyncStorage.getItem('token').then((res) => {
       axios
-      .get(`${pathUrl}/client/jobs/`, {
-        headers: { Authorization: res },
-      })
-      .then((res) => {
-        let jobClient = res.data.Data;
-        setGetAllJob([...jobClient]);
-        console.log(jobClient)
-      });
+        .get(`${pathUrl}/client/jobs/`, {
+          headers: { Authorization: res },
+        })
+        .then((res) => {
+          let jobClient = res.data.Data;
+          setGetAllJob([...jobClient]);
+          console.log(jobClient)
+        });
     })
-  }, [])
+  }, [data])
 
   // Dellet Job With Client
   function sendIdJob(id) {
@@ -93,6 +93,48 @@ export default function ProfileClient() {
           console.log(err);
         });
     });
+  }
+
+  // Add image Client 
+  const dispatch = useDispatch()
+  function addimage() {
+    const formdata = new FormData()
+    formdata.append("clientImage", {
+      name: image,
+      type: "image/*",
+      uri: image
+    })
+    AsyncStorage.getItem("token").then((tok)=>{
+
+      const sendImg = async () =>{
+
+        try {
+          let res = await axios.post(`${pathUrl}/client/addimage`, formdata, {
+            headers: {
+              "Authorization": tok,
+              Accept: 'application/json',
+              "Content-Type": "multipart/form-data",
+            }
+            
+          })
+          console.log("first")
+          if(res.status == 200){
+            toggleModal()
+            AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+          }
+        } catch (error) {
+          console.log(error)
+        }
+        
+      
+      } 
+
+      sendImg()
+
+
+
+    }) 
+
   }
 
   return (
@@ -212,7 +254,7 @@ export default function ProfileClient() {
                     <TouchableOpacity
                       style={[styles.button, { marginVertical: 20 }]}
                     >
-                      <Text style={styles.buttonText}>إضافة</Text>
+                      <Text style={styles.buttonText} onPress={addimage}>إضافة</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -300,17 +342,17 @@ export default function ProfileClient() {
               {/* jop des */}
               <View style={{ flex: 1, alignItems: "flex-start", padding: 10 }}>
 
-                <View style={{borderLeftWidth:1, borderLeftColor:'#ffb200'}}>
-                  <Text style={[styles.text, {fontSize:14}]}>{item.title}</Text>
+                <View style={{ borderLeftWidth: 1, borderLeftColor: '#ffb200' }}>
+                  <Text style={[styles.text, { fontSize: 14 }]}>{item.title}</Text>
                 </View>
 
                 <View>
-                  <Text style={[styles.text, { marginTop: 2, fontSize:15, color:'#888' }]}> {item.city}
+                  <Text style={[styles.text, { marginTop: 2, fontSize: 15, color: '#888' }]}> {item.city}
                   </Text>
                 </View>
 
-                <View style={{paddingHorizontal:5, borderBottomWidth:1, borderBottomColor:'#FFF', borderTopWidth:1, marginTop:10, borderTopColor:'#FFF'}}>
-                  <Text style={[styles.text, { marginTop: 10, color:'#555', paddingBottom:20 }]}> {item?.description}
+                <View style={{ paddingHorizontal: 5, borderBottomWidth: 1, borderBottomColor: '#FFF', borderTopWidth: 1, marginTop: 10, borderTopColor: '#FFF' }}>
+                  <Text style={[styles.text, { marginTop: 10, color: '#555', paddingBottom: 20 }]}> {item?.description}
                   </Text>
                 </View>
 
@@ -384,7 +426,7 @@ const styles = StyleSheet.create({
   },
   textcol: {
     fontSize: 15,
-    textAlign:"left"
+    textAlign: "left"
   },
   iconCol: {
     fontSize: 20,
@@ -414,7 +456,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderBottomColor: "gray",
     borderBottomWidth: 1,
-    elevation:1
+    elevation: 1
   },
   userDetails: {
     alignItems: "center",
@@ -447,9 +489,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 20,
     // marginTop: 10,
-    flexDirection:'row',
+    flexDirection: 'row',
     justifyContent: "flex-end",
-    marginRight:15
+    marginRight: 15
   },
   // Button Style
   button: {

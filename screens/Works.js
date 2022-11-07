@@ -29,7 +29,7 @@ export default function Works() {
   }, 100);
   }, [token])
 
-  // console.log(data);
+  console.log(data);
 
 
   return (
@@ -54,7 +54,7 @@ export default function Works() {
 
               <Image
                 source={{
-                  uri: "https://img.freepik.com/free-photo/smiling-construction-engineer-posing-with-arms-crossed-isolated-grey-background_1258-80415.jpg?w=740&t=st=1667583337~exp=1667583937~hmac=43e9ea21b5a5af7cddfd61356faf51be3f4305e6ed3138bc7003d1289da37dfe",
+                  uri: `${pathUrl}${item?.img.slice(21)}`,
                 }}
                 style={{ width: "100%", height: 200 }}
               />
