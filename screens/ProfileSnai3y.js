@@ -1,15 +1,16 @@
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Button } from 'react-native'
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Button, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
 import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { pathUrl } from '../Config/env';
 import NotFind from '../components/NotFind';
 import { result } from 'lodash';
+import { getDataSnai3y } from '../Redux/Slices/Snai3yReducer';
 export default function ProfileSnai3y() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
@@ -20,8 +21,9 @@ export default function ProfileSnai3y() {
   // End Modal
 
   // Start Image in Modal
-  const [image, setImage] = useState(null);
-
+  const [image, setImage] = useState("");
+  const [photo, setPhoto] = useState({});
+ 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -30,7 +32,6 @@ export default function ProfileSnai3y() {
       aspect: [4, 3],
       quality: 1,
     });
-
     if (!result.cancelled) {
       setImage(result.uri);
     }
@@ -39,28 +40,52 @@ export default function ProfileSnai3y() {
   // End Image in Modal
 
   // Data Sani3y
-  const datas = useSelector(state => state.Snai3yReducer.dataSani3y)
+
   const [snai3yJobs, setSnai3yJobs] = useState([])
+
+  const datas = useSelector(state => state.Snai3yReducer.dataSani3y)
   // console.log(datas);
   useEffect(() => {
+    // setDatas(data)
+    setPhoto(datas.img)
     AsyncStorage.getItem('token').then((res) => {
-    
-        axios.get(`${pathUrl}/sanai3y/jobs`, { headers: { "Authorization": res } }).then((result) => {
-          console.log(result.data)
-          setSnai3yJobs(result.data.Data)
-        })
+      
+      axios.get(`${pathUrl}/sanai3y/jobs`, { headers: { "Authorization": res } }).then((result) => {
+        // console.log("ggg")
+        setSnai3yJobs(result.data.Data)
+      })
     })
   }, [])
-
-  function sendImg (){
-    let img = image.slice(56)
-    AsyncStorage.getItem('token').then((token)=>{
-      const formdata = new FormData()
-      formdata.append("sanai3yImage" , img)
-      axios.post(`${pathUrl}/sanai3y/addimage`,formdata,{headers:{"Authorization":token}})
-      .then((result)=>{
-        console.log(result)
-      }).catch((err)=> console.log(err))
+  const dispatch = useDispatch()
+  function sendImg() {
+    AsyncStorage.getItem('token').then((token) => {
+      console.log("first")
+      const send =  async ()=> {
+        try {
+          const formdata = new FormData()
+          formdata.append("sanai3yImage", {
+            name: image,
+            type: "image/*",
+            uri:image
+          })
+          console.log(image)
+          const res = await axios.post(`${pathUrl}/sanai3y/addimage`,formdata, { 
+            headers: { 
+              "Authorization": token,
+              Accept:'application/json',
+              "Content-Type":"multipart/form-data",
+            } 
+          })
+          if ( res.status == 200){
+            toggleModal()
+            AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      send()
+      
     })
   }
   return (
@@ -146,7 +171,7 @@ export default function ProfileSnai3y() {
                     <TouchableOpacity style={[styles.button, { marginVertical: 20 }]}
                       onPress={sendImg}
                     >
-                      <Text style={styles.buttonText}>إضافة</Text>
+                      <Text style={styles.buttonText}>إرسال</Text>
                     </TouchableOpacity>
                   </View>
 
@@ -215,9 +240,9 @@ export default function ProfileSnai3y() {
         </View>
 
         {/* Card Style */}
-        {snai3yJobs.map((item)=>
-          <View style={{flex:1 , justifyContent:"center"}}>
-          {snai3yJobs.length  > 0 && <View style={styles.card}>
+        {snai3yJobs.map((item) =>
+          <View style={{ flex: 1, justifyContent: "center" }}>
+            {snai3yJobs.length > 0 && <View style={styles.card}>
               <View style={styles.cardHeader}>
                 <View style={{ width: "100%" }}>
                   <View style={styles.userDetails}>
@@ -255,7 +280,7 @@ export default function ProfileSnai3y() {
                 <View style={styles.headerTalp}>
                   <Text style={styles.textHeaderTalp}>طلبك المقدم</Text>
                 </View>
-                {item.proposals.map((p)=>
+                {item.proposals.map((p) =>
 
                   <View>
                     <Text style={styles.textTalp}>
@@ -264,12 +289,12 @@ export default function ProfileSnai3y() {
                   </View>
                 )}
               </View>
-              
+
             </View>}
 
           </View>
         )}
-        {snai3yJobs.length == 0 && <NotFind data={"لاتوجد طلبات مؤكدة"}/>}
+        {snai3yJobs.length == 0 && <NotFind data={"لاتوجد طلبات مؤكدة"} />}
 
       </View>
     </ScrollView>

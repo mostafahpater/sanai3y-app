@@ -1,13 +1,19 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import ProfileSnai3y from '../screens/ProfileSnai3y'
 import WorksForm from '../screens/WorksForm'
 import Works from '../screens/Works'
-import { FontAwesome } from '@expo/vector-icons'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
 
 const ProfileSani3yStack = () => {
     const { Navigator , Screen} = createStackNavigator()
+    function test() {
+
+        AsyncStorage.clear();
+        DevSettings.reload()  
+      
+      }
   return (
     <Navigator>
         <Screen 
@@ -16,10 +22,14 @@ const ProfileSani3yStack = () => {
             options={{
                 headerTitle:"الصفحة الشخصية",
                 headerTitleAlign:"center",
-                headerRight:()=>{
-                    // <FontAwesome name='user' size={25} color="red" style={{color:"#000" , fontSize:24}}/>
-                        <Text style={{color:"#000",fontSize:24}}>hello</Text>
-                }
+                headerLeft: () => (
+                    <TouchableOpacity>
+                      <AntDesign name="login" style={{paddingRight:20, fontSize:20}} 
+                      onPress={() => test()}
+                      
+                      />
+                    </TouchableOpacity>
+                    ),
             }}
         />
         <Screen 

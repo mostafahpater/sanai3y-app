@@ -24,26 +24,26 @@ export default function Index() {
   const Stack = createStackNavigator()
   const dispatch = useDispatch()
   useEffect(() => {
-    AsyncStorage.clear()
+    // AsyncStorage.clear()
   
     AsyncStorage.getItem('snai3yRole').then(res => 
       {
       if(res == "client")
       {
-        AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
         console.log("client dispatch");
+        return AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
       }
-      else 
+      else if(res == "sanai3y") 
       {
-        AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
         console.log("sni3y dispatch");
+        return AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
+      }
+      else{
+        return false
       }
       // 
     }
     )
-
-
-    // AsyncStorage.getItem('id').then(res => dispatch(getDataSnai3y(res)))
     
   }, [])
   // console.log(route)

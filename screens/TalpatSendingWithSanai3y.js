@@ -1,15 +1,21 @@
 import { View, Text, FlatList } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { get } from "lodash";
 import { pathUrl } from "../Config/env";
 import axios from "axios";
 
 export default function TalpatSendingWithSanai3y() {
+  
   const { params } = useRoute();
-  const prop = get(params, "proposal");
-
-
+  const props = get(params, "proposal");
+  const [ prop , setProp] = useState()
+    useEffect(() => {
+      setProp(props)
+    
+      
+    }, [])
+    
   function huntJob(i) {
 
     axios.put(`${pathUrl}/sanai3y/huntjob/${i}`).then((res) => {
@@ -22,7 +28,7 @@ export default function TalpatSendingWithSanai3y() {
   
     })
   }
-
+  console.log(prop );
   return (
     <FlatList
       data={prop}
