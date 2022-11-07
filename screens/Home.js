@@ -4,26 +4,40 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import axios from 'axios';
 import {pathUrl} from '../Config/env' 
+import { set } from "lodash";
 
 
 
 export default function Home() {
   const navigation = useNavigation();
-  const [allJob, setAllJob] = useState()
-
+  const [allJob, setAllJob] = useState([])
+  const [val , setVal] = useState('')
 
   useEffect(() => {
 
     axios.get(`${pathUrl}/jobs/all`).then((response) => {
-      setAllJob(response.data.data)
+      const res = response.data.data.filter((item)=>{
+        return  item.status != "in progress"
+      })
+      setAllJob([...res])
     }).catch((err)=>{
       console.log(err)
     })
-
+    
   }, [])
+  // console.log(val)
+  function search(v){
+    
+    let arr = allJob.filter((e)=> 
+    {  console.log(e.description)
+      return e.description.includes(v)
+    } 
+    )
+    setAllJob([...arr])
+  }
 
 
-
+  useEffect(()=>{},[allJob])
   // Start JSX
   return (
 
@@ -32,7 +46,7 @@ export default function Home() {
       <View style={{ flexDirection: "row" }}>
         <TextInput
           style={styles.input}
-          // onChangeText={}
+          onChangeText={val => search(val)}
           value={Text}
           placeholder="البحث عن المشكلة"
           keyboardType="text"
@@ -144,7 +158,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ffb200",
     padding: 10,
-    textAlign: "center",
+    textAlign: "right",
     width: "80%",
   },
   tinyLogo: {
