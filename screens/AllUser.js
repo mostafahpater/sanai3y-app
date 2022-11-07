@@ -31,9 +31,7 @@ export default function AllSanai3y() {
   const searchFilterFunction = (text) => {
     if (text) {
       const newData = data.filter(function (item) {
-        const itemData = item.firstName
-          ? item.firstName.toUpperCase()
-          : "".toUpperCase()
+        const itemData = item.firstName.toUpperCase()||item.lastName.toUpperCase()||item.address.toUpperCase()||item.skills.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -93,22 +91,17 @@ export default function AllSanai3y() {
                   style={{ color: "#ffb200", fontSize: 16 }}
                   />
                 <Text style={styles.description}>
-                  {Moment(item.joinedDate).format("DD MMMM YYYY")}{" "}
+                  {Moment(item.joinedDate).format("D MMM YYYY")}
                 </Text>
               </View>
               <Text style={styles.description}>{item.gender} </Text>
               <Text
                 style={[
                   styles.description,
-                  {
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    paddingLeft: 7,
-                    textAlign: "center",
-                  },
+                 styles.skills
                 ]}
               >
-                {item.skills}{" "}
+                {item.skills}
               </Text>
             </View>
           </View>
@@ -131,6 +124,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     color: "#000",  
     marginTop: 10,  
+    marginBottom: 15,  
     padding:10,
     borderWidth: 1,
     borderRadius: 5,
@@ -142,9 +136,11 @@ const styles = StyleSheet.create({
   card: {
     //   width: "50%",
 
-    backgroundColor: "gainsboro",
+    backgroundColor: "#fff",
     borderRadius: 10,
     borderColor: "black",
+    borderColor:"#99999982",
+    borderWidth:1,
     justifyContent: "space-between",
     alignContent: "space-between",
     flexDirection: "row",
@@ -152,13 +148,25 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     paddingRight: 15,
+    padding:5,
   },
   description: {
-    padding: 5,
+    margin: 5,
 
-    fontSize: 16,
+    fontSize: 14,
     color: "#000",
   },
+  skills:{
+    // borderWidth: 1,
+    borderRadius: 5,
+    padding:2,
+    paddingHorizontal:12,
+    fontSize:14,
+    color:"#fff",
+    textAlign: "center",
+    backgroundColor:"#ffb200"
+  }
+  ,
   job: {
     paddingTop:10,
     paddingBottom: 10,

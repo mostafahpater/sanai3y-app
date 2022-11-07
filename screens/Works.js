@@ -45,7 +45,7 @@ export default function Works() {
 
         </View>
         {data.length > 0 && <FlatList
-         contentContainerStyle={{ paddingBottom: 190 }}
+         contentContainerStyle={{ paddingBottom: 120 }}
           data={data}
           // keyExtractor={({ item }) => item}
           renderItem={({ item }, index) => (
@@ -61,9 +61,9 @@ export default function Works() {
 
               <Text style={styles.job}>{item.title}</Text>
               <Text style={styles.description}>{item.description} </Text>
-              <TouchableOpacity style={styles.buttonDelete}>
+              {/* <TouchableOpacity style={styles.buttonDelete}>
                 <Text style={styles.buttonTextStyle}> حذف</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
           )}
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     width: 100,
     marginLeft: 35,
     marginRight: 35,
-    marginTop: 50,
+    marginTop: 10,
     marginBottom: 10,
     elevation: 5,
   },

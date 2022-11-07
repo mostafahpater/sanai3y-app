@@ -12,6 +12,7 @@ import ProfileClient from "../screens/ProfileClient";
 import AddJop from "../screens/AddJop";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
+import Sanai3yStack from "./Sanai3yStack";
 import ProfileSani3yStack from "./ProfileSani3yStack";
 import ProfileClientStack from "./ProfileClientStack";
 export default function MainTabs() {
@@ -50,10 +51,10 @@ export default function MainTabs() {
         {/* Start User Screen  */}
         <Screen
           name="Users"
-          component={AllUser}
+          component={Sanai3yStack}
           options={{
             tabBarShowLabel:false,
-
+headerShown:false,
             tabBarIcon: ({ focused }) => (
               <FontAwesome
                 name="users"
