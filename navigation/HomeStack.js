@@ -3,6 +3,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import SendTalpFromClient from '../screens/SendTalpFromClient';
 import Home from '../screens/Home';
+import ShowClient from '../screens/ShowClient';
 const { Navigator, Screen } = createStackNavigator();
 export default function HomeStack() {
   return (
@@ -28,6 +29,21 @@ export default function HomeStack() {
         options={
           {
             headerTitle: "الطلب",
+            // headerTitleAlign:"left",
+            // headerBackTitleStyle:{
+            //   textAlign:"right",
+            //   justifyContent:"flex-end"
+            // }
+          }
+        }
+      />
+
+      {/* Show Client */}
+      <Screen name='ClientShow' component={ShowClient}
+        options={
+          {
+            // headerShown:false
+            headerTitle: "عميل",
             // headerTitleAlign:"left",
             // headerBackTitleStyle:{
             //   textAlign:"right",

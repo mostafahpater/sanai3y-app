@@ -92,7 +92,7 @@ export default function MainTabs() {
           
           options={{
             tabBarShowLabel:false,
-            headerTitle:"الصفحة الشخصية",
+            headerShown:false,
             headerTitleAlign:"center",
             headerTitleStyle:{
               fontSize:25
@@ -120,16 +120,7 @@ export default function MainTabs() {
           component={ProfileSani3yStack}
           options={{
             tabBarShowLabel:false,
-            headerTitle:"الصفحة الشخصية",
-            headerTitleAlign:"center",
-            headerTitleStyle:{
-              fontSize:25
-            },
-            headerStyle:{
-              backgroundColor:"#fbb150",
-              elevation:15,
-              shadowColor:"#000"
-            },
+            headerShown:false,
             tabBarIcon: ({ focused }) => (
               <FontAwesome
                 name="user"
