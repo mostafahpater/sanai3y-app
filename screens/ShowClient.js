@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import { get } from 'lodash';
 import NotFind from '../components/NotFind';
-export default function ShowSanai3y() {
+export default function ShowClient() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -23,22 +23,17 @@ export default function ShowSanai3y() {
   const { params } = useRoute()
   const data = get(params, "data")
   // End Image in Modal 
-//   console.log(data);
-// console.log("ahmed");
-  const [workstore, setWorkstore] = useState([])
-//   console.log(workstore.length);
+  const [jobs, setJobs] = useState([])
   useEffect(() => {
-    // console.log("useeff");
-      axios.get(`${pathUrl}/sanai3y/sanai3ies/${data?._id}`)
+    setTimeout(() => {
+      axios.get(`${pathUrl}/client/clients/${data.clientData?._id}`)
         .then((res) => {
-            // console.log(data._id);
-            setWorkstore(res.data.Data.workStore)
-            // console.log(res.data)
-            // console.log(res.data.Data.workStore);
+          setJobs(res.data.Data.jobs)
+          console.log(res.data.Data.jobs)
         }).catch((err) => console.log(err))
-  
-// console.log("object");
-  }, [data])
+    }, 100);
+
+  }, [])
 
   return (
 
@@ -48,7 +43,7 @@ export default function ShowSanai3y() {
         <View style={styles.image}>
           <View style={styles.imgProfile}>
             <View>
-              <Image source={{ uri: `${pathUrl}${data?.img.slice(21)}` }}
+              <Image source={{ uri: `${pathUrl}${data.clientData?.img.slice(21)}` }}
                 style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
               />
             </View>
@@ -57,7 +52,7 @@ export default function ShowSanai3y() {
           </View>
 
           <View style={styles.userName}>
-            <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data?.firstName} ${data?.lastName}`}</Text>
+            <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data.clientData?.firstName} ${data.clientData?.lastName}`}</Text>
 
           </View>
         </View>
@@ -66,7 +61,7 @@ export default function ShowSanai3y() {
         <View style={styles.parentList}>
           <View style={styles.row}>
             <View style={styles.col}>
-              <Text style={styles.textcol}>{data?.phoneNumber}</Text>
+              <Text style={styles.textcol}>{data.clientData?.phoneNumber}</Text>
             </View>
             <View style={styles.col}>
               <Entypo name='phone' style={styles.iconCol} />
@@ -76,7 +71,7 @@ export default function ShowSanai3y() {
           {/* address */}
           <View style={styles.row}>
             <View style={styles.col}>
-              <Text style={styles.textcol}>{`العنوان : ${data?.address}`}</Text>
+              <Text style={styles.textcol}>{`العنوان : ${data.clientData?.address}`}</Text>
             </View>
             <View style={styles.col}>
               <Entypo name='pencil' style={styles.iconCol} />
@@ -86,18 +81,18 @@ export default function ShowSanai3y() {
 
         {/* Talbat */}
         <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>معرض الاعمال</Text>
+          <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>المنشورات</Text>
         </View>
 
         {/* Card Style */}
 
-        {workstore.length > 0 && workstore.map((item,index) =>
-          <View style={styles.card} key={index} >
-            <View style={styles.cardBody} >
+        {jobs.length > 0 && jobs.map((item,index) =>
+          <View style={styles.card} key={index}>
+            <View style={styles.cardBody}>
               {/* jop des */}
               <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
                 <View>
-                  <Text style={styles.text}>عنوان الوظيفة: {item.title}</Text>
+                  <Text style={styles.text}>عنوان الوظيفة :{item.title}</Text>
                 </View>
                 <View>
                   <Text style={[styles.text, { marginTop: 10 }]}>الوصف : {item.description}</Text>
@@ -112,7 +107,7 @@ export default function ShowSanai3y() {
           </View>
         )}
 
-        {workstore == 0 && <NotFind data={"لاتوجد منشورات "} />}
+        {jobs.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
       </View>
     </ScrollView>
   )

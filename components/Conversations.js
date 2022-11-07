@@ -8,6 +8,8 @@ import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import { pathUrl } from '../Config/env';
 import { getImageUrl } from '../Config/imageUrl';
+import {useDispatch, useSelector} from "react-redux";
+import {sendCurrentReciever} from "../Redux/Chat/ImageUrlSlicer"
 
 
 
@@ -19,6 +21,8 @@ const Conversations = ({props, conversation, currentSender}) => {
 // console.log(props);
 const [currentReciever, setCurrentReciever] = useState(null); 
 
+// useDispatch
+const dispatch = useDispatch();
 
 // Getting the data of the current reciever
 useEffect(() => {
@@ -36,11 +40,11 @@ useEffect(() => {
 
 }, [currentSender, conversation]);
 
-// console.log(currentReciever)
+console.log(currentReciever)
 
     return (
         <>
-            <TouchableOpacity style={styles.conv} onPress={()=> {props.navigation.navigate("messages", {conversation, currentSender, currentReciever})}}>
+            <TouchableOpacity style={styles.conv} onPress={()=> {props.navigation.navigate("messages", {conversation, currentSender, currentReciever}); dispatch(sendCurrentReciever(currentReciever))}}>
                 <Image source={{uri: currentReciever?.img}} style={styles.image} />
                 <Text style={styles.recieverName}> {`${currentReciever?.firstName} ${currentReciever?.lastName} `}</Text>
             </TouchableOpacity>

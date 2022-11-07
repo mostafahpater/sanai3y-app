@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
   search: {
     // flex: 1,
     color: "#000",
-    marginTop: 50,
     textAlign: "right",
     // marginBottom: -15,
     padding: 7,
