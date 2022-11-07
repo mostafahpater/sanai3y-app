@@ -13,6 +13,7 @@ import AddJop from "../screens/AddJop";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import ProfileSani3yStack from "./ProfileSani3yStack";
+import ProfileClientStack from "./ProfileClientStack";
 export default function MainTabs() {
 
   let [role , setRole] = useState('')
@@ -88,22 +89,11 @@ export default function MainTabs() {
         {/* Start Profile Client  */}
         {role == "client" &&<Screen
           name="ProfileClient"
-          component={ProfileClient}
+          component={ProfileClientStack}
           
           options={{
             tabBarShowLabel:false,
-            headerTitle:"الصفحة الشخصية",
-            headerTitleAlign:"center",
-            headerTitleStyle:{
-              fontSize:25
-            },
-            headerStyle:{
-              backgroundColor:"#fbb150",
-              elevation:15,
-              shadowColor:"#000"
-            },
-            
-
+            headerShown:false,
             tabBarIcon: ({ focused }) => (
               <FontAwesome
                 name="user"
@@ -114,6 +104,7 @@ export default function MainTabs() {
           }}
         />}
         {/* End Profile Client  */}
+
         {/* Start Profile Client  */}
         {role == "sanai3y" && <Screen
           name="ProfileS"

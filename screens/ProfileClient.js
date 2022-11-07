@@ -7,9 +7,11 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { pathUrl } from '../Config/env';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 export default function ProfileClient() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
+  const navigate = useNavigation()
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -47,6 +49,42 @@ export default function ProfileClient() {
   // let [data, setData] = useState({})
   // let [jobs , setJops] = useState([])
   let [id , setId] = useState('')
+
+
+
+
+  // Get Jobs The Client
+  const [getAllJobs, setGetAllJob] = useState([]);
+  useEffect(() => {
+    AsyncStorage.getItem('token').then((res) => {
+      axios
+      .get(`${pathUrl}/client/jobs/`, {
+        headers: { Authorization: res },
+      })
+      .then((res) => {
+        let jobClient = res.data.Data;
+        setGetAllJob([...jobClient]);
+      });
+    })
+  }, [])
+
+
+  // Dellet Job With Client 
+  function sendIdJob(id) {
+    AsyncStorage.getItem('token').then((res) => {
+      axios
+      .put(`${pathUrl}/jobs/delete/${id}`, {}, { headers: { Authorization: res } })
+      .then((res) => {
+        // Logic 
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    })
+
+  }
+
+
 
   return (
 
@@ -185,9 +223,8 @@ export default function ProfileClient() {
           <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>المنشورات</Text>
         </View>
 
-        {/* Card Style */}
-        
-        {jopData.map((item,index)=> 
+        {/* Card Style And Get All Jobs  */}
+        {getAllJobs.map((item,index)=> 
             <View style={styles.card} key={index}>
             <View style={styles.cardHeader}>
                <View style={{ width: "50%" }}>
@@ -206,10 +243,15 @@ export default function ProfileClient() {
                 </View>
               </View>
               <View style={styles.iconCard}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => navigate.navigate('editeJobs', {idJob:item._id})}
+                >
                   <Entypo name='edit' style={styles.childIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                
+                onPress={()=> sendIdJob(item._id)}
+                >
                   <FontAwesome name='remove' style={styles.childIcon} />
 
                 </TouchableOpacity>
@@ -223,7 +265,7 @@ export default function ProfileClient() {
                   <Text style={styles.text}>{item.title}</Text>
                 </View>
                 <View>
-                  <Text style={[styles.text, { marginTop: 10 }]}> الوصف : {item.description}</Text>
+                  <Text style={[styles.text, { marginTop: 10 }]}> الوصف : {item?.description}</Text>
                 </View>
                 <View>
                   <Text style={[styles.text, { marginTop: 10 }]}> العنوان : {item.city}</Text>
@@ -238,7 +280,10 @@ export default function ProfileClient() {
 
             <View style={styles.parentButton}>
               <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>الطلبات المقدمة</Text>
+                <Text 
+                style={styles.buttonText}
+                onPress={() => navigate.navigate('talpatSending',{proposal: item.proposals})}
+                >الطلبات المقدمة</Text>
               </TouchableOpacity>
             </View>
 
@@ -292,7 +337,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   textcol: {
-    fontSize: 18,
+    fontSize: 15,
   },
   iconCol: {
     fontSize: 20,
@@ -373,7 +418,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 25,
+    fontSize: 20,
     color: "#fff"
   },
 
