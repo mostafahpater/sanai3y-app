@@ -34,7 +34,7 @@ const Chat = (props) => {
         const getCurrentSender = async () => {
             console.log("current");
             const res = await axios.get(`${pathUrl}/client/user`, { headers: { Authorization: token } });
-            console.log(res.data.data);
+            // console.log(res.data.data);
             setCurrentSender({ ...res.data.data });
         }
         getCurrentSender();
@@ -57,13 +57,13 @@ const Chat = (props) => {
         // setToken();
     }, [token]);
 
-    // // When you need to clear the AsyncStorage
+    // When you need to clear the AsyncStorage
     // AsyncStorage.clear().then(res => console.log("cleared"));
 
     
 
-    console.log(token);
-    console.log(conversations);
+    // console.log(token);
+    // console.log(conversations);
 
     return (
         <View style={styles.con}>

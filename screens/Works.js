@@ -4,20 +4,30 @@ import { pathUrl } from '../Config/env';
 import axios from "axios";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import NotFind from "../components/NotFind";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Works() {
   const navigation = useNavigation();
   const [data, setData] = useState([])
+  const [token, setToken] = useState('')
+  // console.log(data);
+  // console.log(token);
+  useEffect(()=>{
+    AsyncStorage.getItem('token').then((res) => setToken(res))
+
+  },[])
   useEffect(() => {
-
-
-    axios.get(`${pathUrl}/jobs/all`).then((res) => {
-      return setData(res.data.data)
+    // console.log("object");x`
+   
+    axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:token}}).then((res) => {
+      // console.log(res.data);
+      console.log("true");
+       setData(res.data.Data)
     }).catch((erorr) => {
       console.log("erorr");
       console.log(erorr);
-    })
-  }, [])
+   
+  }, 100);
+  }, [token])
 
   // console.log(data);
 
@@ -35,8 +45,9 @@ export default function Works() {
 
         </View>
         {data.length > 0 && <FlatList
+         contentContainerStyle={{ paddingBottom: 190 }}
           data={data}
-          keyExtractor={({ item }) => item}
+          // keyExtractor={({ item }) => item}
           renderItem={({ item }, index) => (
 
             <View key={index} style={styles.card}>
@@ -79,7 +90,8 @@ const styles = StyleSheet.create({
     width: "90%",
     backgroundColor: "gainsboro",
     borderRadius: 10,
-
+    marginHorizontal:5,
+    justifyContent:"center",
     flexDirection: "column",
     elevation: 6,
     marginTop: 15,

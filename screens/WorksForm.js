@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Formik } from "formik";
 import {
   StyleSheet,
@@ -19,10 +19,11 @@ import * as ImagePicker from "expo-image-picker";
 import { pathUrl } from "../Config/env";
 import * as yup from "yup";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoginScreen from "./Login";
 export default function WorksForm() {
   const [image, setImage] = useState(null);
-
+  const [token, setToken] = useState('')
   const handleUpload = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -38,17 +39,23 @@ export default function WorksForm() {
       setImage(result.uri);
     }
   };
+  
   console.log(image);
   const worksSchema = yup.object().shape({
     title: yup.string().required("هذا الحقل مطلوب"),
     description: yup.string().required("هذا الحقل مطلوب"),
-    jobImage: yup.mixed(),
+    // img: yup.mixed(),
   });
+  useEffect(()=>{
+    AsyncStorage.getItem('token').then((res) => setToken(res))
+
+  },[])
   const onSubmit = async (values) => {
     console.log("first");
     // setLoading(true);
-    axios
-      .post(`${pathUrl}/jobs/postjob`, values)
+    console.log(values);
+//  var token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzYW5haTN5SWQiOiI2MzY3ZDQwN2MzZmFkNmM4OWM3YTUyNWEiLCJlbWFpbCI6Im1vc3RhZmFAZ21haWwuY29tIiwiaWF0IjoxNjY3NzQ4ODcxfQ.D9GRzVXHXkcpuGZ3s0hkCpKht3aRfFa-lszXfJjUlyY";
+    axios.post(`${pathUrl}/sanai3y/addwork`, values,{headers:{"authorization":token}})
       .then((res) => {
         console.log(res);
         if (res.status == 200) {
@@ -66,7 +73,7 @@ export default function WorksForm() {
 
   return (
     <Formik
-      initialValues={{ title: "", description: "", jobImage: "" }}
+      initialValues={{ title: "", description: "" }}
       validationSchema={worksSchema}
       onSubmit={onSubmit}
     >
