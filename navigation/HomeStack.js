@@ -15,7 +15,7 @@ export default function HomeStack() {
         name='HomePost'
         component={Home}
         options={{
-          
+          headerLeft:false,
           title: 'المنشورات',
           headerStyle: {
             backgroundColor: "#fbb150",
