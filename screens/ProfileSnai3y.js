@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { pathUrl } from '../Config/env';
+import NotFind from '../components/NotFind';
+import { result } from 'lodash';
 export default function ProfileSnai3y() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
@@ -33,6 +35,7 @@ export default function ProfileSnai3y() {
       setImage(result.uri);
     }
   };
+  // console.log(image)
   // End Image in Modal
 
   // Data Sani3y
@@ -44,9 +47,22 @@ export default function ProfileSnai3y() {
     
         axios.get(`${pathUrl}/sanai3y/jobs`, { headers: { "Authorization": res } }).then((result) => {
           console.log(result.data)
+          setSnai3yJobs(result.data.Data)
         })
     })
   }, [])
+
+  function sendImg (){
+    let img = image.slice(56)
+    AsyncStorage.getItem('token').then((token)=>{
+      const formdata = new FormData()
+      formdata.append("sanai3yImage" , img)
+      axios.post(`${pathUrl}/sanai3y/addimage`,formdata,{headers:{"Authorization":token}})
+      .then((result)=>{
+        console.log(result)
+      }).catch((err)=> console.log(err))
+    })
+  }
   return (
 
     <ScrollView style={{ backgroundColor: "#fff" }}>
@@ -127,7 +143,9 @@ export default function ProfileSnai3y() {
                       )}
                     </View>
 
-                    <TouchableOpacity style={[styles.button, { marginVertical: 20 }]}>
+                    <TouchableOpacity style={[styles.button, { marginVertical: 20 }]}
+                      onPress={sendImg}
+                    >
                       <Text style={styles.buttonText}>إضافة</Text>
                     </TouchableOpacity>
                   </View>
@@ -198,56 +216,61 @@ export default function ProfileSnai3y() {
 
         {/* Card Style */}
         {snai3yJobs.map((item)=>
-        
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <View style={{ width: "100%" }}>
-                <View style={styles.userDetails}>
-                  <Image source={{ uri: item.cliclientData?.img }}
-                    style={[styles.imageCard, { resizeMode: "contain" }]}
-                  />
-                  <View>
-                    <Text style={[styles.text, { borderEndWidth: 10, borderStyle: "solid", borderEndColor: "red" }]}>
-                      {`${item.clientData?.firstName} ${item.clientData?.lastName}`}
-                    </Text>
-                    <Text style={[styles.text, { fontSize: 12 }]}>
-                      {item.clientData?.address}
-                    </Text>
+          <View style={{flex:1 , justifyContent:"center"}}>
+          {snai3yJobs.length  > 0 && <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <View style={{ width: "100%" }}>
+                  <View style={styles.userDetails}>
+                    <Image source={{ uri: item.cliclientData?.img }}
+                      style={[styles.imageCard, { resizeMode: "contain" }]}
+                    />
+                    <View>
+                      <Text style={[styles.text, { borderEndWidth: 10, borderStyle: "solid", borderEndColor: "red" }]}>
+                        {`${item.clientData?.firstName} ${item.clientData?.lastName}`}
+                      </Text>
+                      <Text style={[styles.text, { fontSize: 12 }]}>
+                        {item.clientData?.address}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.cardBody}>
-              {/* jop des */}
-              <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
-                <View>
-                  <Text style={styles.text}>{item?.title}</Text>
+              <View style={styles.cardBody}>
+                {/* jop des */}
+                <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
+                  <View>
+                    <Text style={styles.text}>{item?.title}</Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.text, { marginTop: 10 }]}>{item?.description}</Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={[styles.text, { marginTop: 10 }]}>{item?.description}</Text>
+                {/* img Jop */}
+                <View style={{ width: "50%" }}>
+                  <Image source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" }}
+                    style={{ height: 200, resizeMode: "contain" }} />
                 </View>
               </View>
-              {/* img Jop */}
-              <View style={{ width: "50%" }}>
-                <Image source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" }}
-                  style={{ height: 200, resizeMode: "contain" }} />
-              </View>
-            </View>
-            <View style={styles.cardTalp}>
-              <View style={styles.headerTalp}>
-                <Text style={styles.textHeaderTalp}>طلبك المقدم</Text>
-              </View>
-              {item.proposals.map((p)=>
-                <View>
-                  <Text style={styles.textTalp}>
-                    {p?.sanai3yProposal}
-                  </Text>
+              <View style={styles.cardTalp}>
+                <View style={styles.headerTalp}>
+                  <Text style={styles.textHeaderTalp}>طلبك المقدم</Text>
                 </View>
-              )}
-            </View>
+                {item.proposals.map((p)=>
+
+                  <View>
+                    <Text style={styles.textTalp}>
+                      {p?.sanai3yProposal}
+                    </Text>
+                  </View>
+                )}
+              </View>
+              
+            </View>}
+
           </View>
-        
         )}
+        {snai3yJobs.length == 0 && <NotFind data={"لاتوجد طلبات مؤكدة"}/>}
+
       </View>
     </ScrollView>
   )

@@ -2,8 +2,8 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import ProfileSnai3y from '../screens/ProfileSnai3y'
-import works from '../screens/Works'
 import WorksForm from '../screens/WorksForm'
+import Works from '../screens/Works'
 
 const ProfileSani3yStack = () => {
     const { Navigator , Screen} = createStackNavigator()
@@ -18,7 +18,7 @@ const ProfileSani3yStack = () => {
         />
         <Screen 
             name='ShowWorks'
-            component={works}
+            component={Works}
             options={{
                 headerShown:false
             }}
