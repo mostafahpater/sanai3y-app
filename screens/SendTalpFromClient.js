@@ -99,7 +99,7 @@ export default function SendTalpFromClient() {
           <Image
             style={styles.tinyLogotest}
             source={{
-              uri: 'http://192.168.1.6'+detailJob?.image.split('http://localhost')[1],
+              // uri: 'http://192.168.1.6'+detailJob?.image.split('http://localhost')[1],
             }}
           />
 

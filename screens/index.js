@@ -21,7 +21,7 @@ export default function Index() {
   const Stack = createStackNavigator()
   const dispatch = useDispatch()
   useEffect(() => {
-    AsyncStorage.clear()
+    // AsyncStorage.clear()
   
     AsyncStorage.getItem('snai3yRole').then(res => 
       {
@@ -42,7 +42,7 @@ export default function Index() {
 
     // AsyncStorage.getItem('id').then(res => dispatch(getDataSnai3y(res)))
     
-  }, [])
+  }, [dispatch])
   // console.log(route)
 
   const recieverName = "Ahmed"
