@@ -69,7 +69,7 @@ export default function TalpatSendingWithSanai3y() {
                   borderRadius: 50,
                 }}
               >
-                {item.sanai3yId.skills}
+                {item.sanai3yId?.skills}
               </Text>
 
               <Text
