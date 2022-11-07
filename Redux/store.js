@@ -10,4 +10,4 @@ export const Store = configureStore({
         currentRecieverReducer
     },
 
-})
+})//tyh56hj5
