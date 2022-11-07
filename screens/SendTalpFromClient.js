@@ -25,16 +25,18 @@ export default function SendTalpFromClient() {
 
   const [proposal , setProposal] = useState("")
   const [role , setRole]= useState('')
+  const [token , setToken]= useState('')
  const navigate = useNavigation()
 
  useEffect(()=>{
   AsyncStorage.getItem('snai3yRole').then((i)=> setRole(i))
+  AsyncStorage.getItem('token').then((i)=> setToken(i))
  },[])
 
 
   let headers={
-    'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzYW5haTN5SWQiOiI2MzYxYWM3OWEyYjVhM2Y1YTg4YmYxNzciLCJlbWFpbCI6ImFobWVkQGdtYWlsLmNvbSIsImlhdCI6MTY2NzM0NTUyOX0.xuWniHXxtShBeQlN5ucfBsVJ1v1-kcZjmrzlxja7iu8"
-}
+    'Authorization': token
+  }
 
   function sendProposal (id){
     let body ={
@@ -47,7 +49,6 @@ export default function SendTalpFromClient() {
       if(res.status == 200){
         navigate.navigate('HomePost')
         console.log('Done Proposal')
-        
       }
     })
 
@@ -86,9 +87,9 @@ export default function SendTalpFromClient() {
                   fontWeight: "bold",
                 }}
               >
-                {detailJob.clientData.firstName +
+                {detailJob.clientData?.firstName +
                   " " +
-                  detailJob.clientData.lastName}
+                  detailJob.clientData?.lastName}
               </Text>
               <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
                 {detailJob.city}
@@ -98,14 +99,14 @@ export default function SendTalpFromClient() {
           <Image
             style={styles.tinyLogotest}
             source={{
-              uri: 'http://192.168.1.6'+detailJob.image.split('http://localhost')[1],
+              uri: 'http://192.168.1.6'+detailJob?.image.split('http://localhost')[1],
             }}
           />
 
           <Text
             style={{ paddingVertical: 10, paddingHorizontal: 10, fontSize: 12 }}
           >
-               {detailJob.title}   
+               {detailJob?.title}   
           </Text>
 
           <Text
@@ -115,7 +116,7 @@ export default function SendTalpFromClient() {
               borderBottomColor: "#eee",
             }}
           >
-        {detailJob.description}
+        {detailJob?.description}
           </Text>
 
           <View

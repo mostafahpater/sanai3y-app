@@ -31,7 +31,7 @@ const AddJop = () => {
     AsyncStorage.getItem('token').then((res) => setTok(res))
 
   },[])
-console.log(tok);
+
 
   const pickImage = async () => {
   
