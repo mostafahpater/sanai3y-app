@@ -18,6 +18,7 @@ export default function HomeStack() {
         options={{
           headerLeft:false,
           title: 'المنشورات',
+          headerBackTitleVisible:false,
           headerStyle: {
             backgroundColor: "#fbb150",
             elevation: 15,

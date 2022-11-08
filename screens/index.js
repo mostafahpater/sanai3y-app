@@ -31,7 +31,10 @@ export default function Index() {
       if(res == "client")
       {
         console.log("client dispatch");
-        return AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+        return AsyncStorage.getItem('id').then(result =>
+          console.log(result)
+          // dispatch(getDataClient(result))
+          )
       }
       else if(res == "sanai3y") 
       {

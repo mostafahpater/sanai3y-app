@@ -19,7 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getDataClient } from '../Redux/Slices/ClientReducer';
 import Loader from "../components/Loder";
 export default function ProfileClient() {
-  const [loader , setLoader] = useState(true)
+  const [loader, setLoader] = useState(true)
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
   const navigate = useNavigation();
@@ -63,30 +63,14 @@ export default function ProfileClient() {
   const dispatch = useDispatch()
   // Get Jobs The Client
   let data = useSelector(state => state.ClientReducer.clintdata)
-  const [getAllJobs, setGetAllJob] = useState([]);
+  let getAllJobs = useSelector(state => state.ClientReducer.jops)
+  // const [getAllJobs, setGetAllJob] = useState([]);
   useEffect(() => {
-
-    AsyncStorage.getItem('token').then((res) => {
-      axios
-        .get(`${pathUrl}/client/jobs/`, {
-          headers: { Authorization: res },
-        })
-        .then((res) => {
-          let jobClient = res.data.Data;
-          console.log(jobClient)
-          
-          if(res.status == 200){
-            setGetAllJob([...jobClient]);
-            setTimeout(()=>{
-              setLoader(false)
-
-            },1100)
-          }
-        });
-    })
-
+    setTimeout(() => {
+      setLoader(false)
+    }, 1100);
     AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
-    return ()=>{
+    return () => {
       setLoader(true)
     }
   }, [])
@@ -94,6 +78,8 @@ export default function ProfileClient() {
   // Dellet Job With Client
   function sendIdJob(id) {
     AsyncStorage.getItem("token").then((res) => {
+
+
       axios
         .put(
           `${pathUrl}/jobs/delete/${id}`,
@@ -101,7 +87,13 @@ export default function ProfileClient() {
           { headers: { Authorization: res } }
         )
         .then((res) => {
-          // Logic
+          // Logic  
+          if (res.status == 200) {
+            // var arr = getAllJobs.filter((item) => item._id != id);
+            // setGetAllJob([...arr]);
+            AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+          }
+
         })
         .catch((err) => {
           console.log(err);
@@ -110,7 +102,7 @@ export default function ProfileClient() {
   }
 
   // Add image Client 
-  
+
   function addimage() {
     const formdata = new FormData()
     formdata.append("clientImage", {
@@ -118,9 +110,9 @@ export default function ProfileClient() {
       type: "image/*",
       uri: image
     })
-    AsyncStorage.getItem("token").then((tok)=>{
+    AsyncStorage.getItem("token").then((tok) => {
 
-      const sendImg = async () =>{
+      const sendImg = async () => {
 
         try {
           let res = await axios.post(`${pathUrl}/client/addimage`, formdata, {
@@ -129,31 +121,31 @@ export default function ProfileClient() {
               Accept: 'application/json',
               "Content-Type": "multipart/form-data",
             }
-            
+
           })
           console.log("first")
-          if(res.status == 200){
+          if (res.status == 200) {
             toggleModal()
             AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
           }
         } catch (error) {
           console.log(error)
         }
-        
-      
-      } 
+
+
+      }
 
       sendImg()
 
 
 
-    }) 
+    })
 
   }
 
   return (
     <>
-      {!loader &&<ScrollView style={{ backgroundColor: "#fff" }}>
+      {!loader && <ScrollView style={{ backgroundColor: "#fff" }}>
         <View style={styles.parent}>
           <View style={styles.image}>
             <View style={styles.imgProfile}>
@@ -394,9 +386,9 @@ export default function ProfileClient() {
           ))}
         </View>
       </ScrollView>}
-      
 
-      {loader &&<Loader/>}
+
+      {loader && <Loader />}
     </>
   );
 }

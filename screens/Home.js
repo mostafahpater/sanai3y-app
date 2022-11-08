@@ -19,7 +19,6 @@ export default function Home() {
   const [search, setSearch] = useState("");
   useEffect(() => {
     seTflag(true);
-    if(flag){
       axios.get(`${pathUrl}/jobs/all`).then((response) => {
         const res = response.data.data.filter((item) => {
           return item.status != "in progress"
@@ -37,7 +36,7 @@ export default function Home() {
         console.log(err)
       })
 
-    }
+    
     return () => {
       seTflag(false)
       setLoader(true)
@@ -101,6 +100,7 @@ export default function Home() {
                 onPress={() =>
                   navigation.navigate("ClientShow", { data: item })
                 }
+                style={{width:"50%"}}
               >
                 <View
                   style={{ flexDirection: "row", justifyContent: "flex-start" }}

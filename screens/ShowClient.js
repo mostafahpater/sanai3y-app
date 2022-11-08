@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
+import { AntDesign, Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import * as ImagePicker from "expo-image-picker";
 import Modal from "react-native-modal";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { pathUrl } from '../Config/env';
 import { useSelector } from 'react-redux';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { get } from 'lodash';
 import NotFind from '../components/NotFind';
 import { Ionicons } from '@expo/vector-icons';
@@ -41,10 +41,11 @@ export default function ShowClient(props) {
     const [currentSender, setCurrentSender] = useState({});
     const [conversations, setConversations] = useState([]);
     const [currentReciever, setCurrentReciever] = useState({});
-
+    const [role , setRole]= useState('')
 
     // Getting the token of the current sender (current sanai3y)
     useEffect(() => {
+        AsyncStorage.getItem('snai3yRole').then((i)=> setRole(i))
         const getToken = async () => {
             const toke = await AsyncStorage.getItem("token");
             setToken(toke);
@@ -81,10 +82,10 @@ export default function ShowClient(props) {
     const makeNewConversation = async () => {
         const isConversationFound = conversations.find((conversation) => conversation?.members.includes(currentReciever?._id));
 
-        if(isConversationFound) {
+        if (isConversationFound) {
             // console.log(true)
             // console.log(isConversationFound)
-            props.navigation.navigate("messages", {conversation: isConversationFound, currentSender, currentReciever} );
+            props.navigation.navigate("messages", { conversation: isConversationFound, currentSender, currentReciever });
             dispatch(sendCurrentReciever(currentReciever));
 
         }
@@ -92,11 +93,11 @@ export default function ShowClient(props) {
             // console.log(false)
             // console.log(isConversationFound)
 
-            const newConversation = { senderId: currentSender?._id, recieverId: currentReciever?._id}
+            const newConversation = { senderId: currentSender?._id, recieverId: currentReciever?._id }
 
             const res = await axios.post(`${pathUrl}/conversations`, newConversation);
             let currentNewChat = res.data.data;
-            props.navigation.navigate("messages", {conversation: currentNewChat, currentSender, currentReciever} );
+            props.navigation.navigate("messages", { conversation: currentNewChat, currentSender, currentReciever });
             dispatch(sendCurrentReciever(currentReciever));
 
         }
@@ -108,20 +109,20 @@ export default function ShowClient(props) {
 
 
     // console.log(currentReciever);
-
+    const navigation = useNavigation()
 
     useEffect(() => {
         setTimeout(() => {
             axios.get(`${pathUrl}/client/clients/${data.clientData?._id}`)
                 .then((res) => {
                     setJobs([...res.data.Data.jobs])
-                    // console.log(res.data.Data.jobs)
+                    console.log(jobs[10].image)
 
 
                     // Setting the current reciever data (current client)
                     // console.log(res.data.Data)
                     let newImage = getImageUrl(res.data.Data.img)
-                    setCurrentReciever({...res.data.Data, img: newImage})
+                    setCurrentReciever({ ...res.data.Data, img: newImage })
 
                 }).catch((err) => console.log(err))
         }, 100);
@@ -140,7 +141,20 @@ export default function ShowClient(props) {
                                 style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
                             />
                         </View>
-
+                        <View>
+                            <TouchableOpacity onPress={makeNewConversation}
+                                style={{
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    backgroundColor: "#eee",
+                                    padding: 5,
+                                    borderBottomStartRadius: 5,
+                                    borderBottomEndRadius: 5,
+                                }}
+                            >
+                                <Ionicons name="chatbox-ellipses" size={30} color="#fbb200" />
+                            </TouchableOpacity>
+                        </View>
 
                     </View>
 
@@ -148,21 +162,19 @@ export default function ShowClient(props) {
                         <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data.clientData?.firstName} ${data.clientData?.lastName}`}</Text>
 
                     </View>
-                    <TouchableOpacity onPress={makeNewConversation}>
-                        <Ionicons name="chatbox-ellipses" size={50} color="#fbb200" />
-                    </TouchableOpacity>
+
                 </View>
 
                 {/* Details user */}
                 <View style={styles.parentList}>
-                    <View style={styles.row}>
+                    {role == "client" &&<View style={styles.row}>
                         <View style={styles.col}>
                             <Text style={styles.textcol}>{data.clientData?.phoneNumber}</Text>
                         </View>
                         <View style={styles.col}>
                             <Entypo name='phone' style={styles.iconCol} />
                         </View>
-                    </View>
+                    </View>}
 
                     {/* address */}
                     <View style={styles.row}>
@@ -170,7 +182,15 @@ export default function ShowClient(props) {
                             <Text style={styles.textcol}>{`العنوان : ${data.clientData?.address}`}</Text>
                         </View>
                         <View style={styles.col}>
-                            <Entypo name='pencil' style={styles.iconCol} />
+                            <Entypo name='location-pin' style={styles.iconCol} />
+                        </View>
+                    </View>
+                    <View style={styles.row}>
+                        <View style={styles.col}>
+                            <Text style={styles.textcol}>{`عدد المنشورات : ${jobs?.length}`}</Text>
+                        </View>
+                        <View style={styles.col}>
+                            <MaterialIcons name='post-add' style={styles.iconCol} />
                         </View>
                     </View>
                 </View>
@@ -196,10 +216,44 @@ export default function ShowClient(props) {
                             </View>
                             {/* img Jop */}
                             <View style={{ width: "50%" }}>
-                                <Image source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" }}
+                                <Image
+                                    source={{ uri: `${pathUrl}${item.image?.slice(21)}` }}
                                     style={{ height: 200, resizeMode: "contain" }} />
                             </View>
                         </View>
+                        {role != "client" && <View
+                            style={{
+                                flex:1,
+                                justifyContent:"flex-end",
+                                alignItems:"center",
+                                marginBottom:10
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={{
+                                    width:"30%",
+                                    // justifyContent:"flex-end",
+                                    alignItems:"center"
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        backgroundColor: "#ffb200",
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 10,
+                                        borderRadius: 5,
+                                        // alignItems:"center",
+                                        justifyContent:"center"
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate("SendTalp", { one: item })
+                                    }
+                                >
+                                    تقديم طلب
+                                </Text>
+                            </TouchableOpacity>
+
+                        </View>}
                     </View>
                 )}
 
@@ -266,7 +320,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         justifyContent: "space-between",
-        alignItems: "center",
+        // alignItems: "center",
         width: "90%",
         backgroundColor: "#eee",
         marginTop: 20,

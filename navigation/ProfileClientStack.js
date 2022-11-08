@@ -6,14 +6,16 @@ import EditeJobsWithClient from "../screens/EditeJobsWithClient";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { DevSettings, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const ProfileClientStack = () => {
   const { Navigator, Screen } = createStackNavigator();
-
+  const navigation = useNavigation()
 function test() {
 
   AsyncStorage.clear();
-  DevSettings.reload()  
+  // DevSettings.reload()  
+  navigation.replace('login')
 
 }
 
