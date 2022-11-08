@@ -19,16 +19,21 @@ import * as ImagePicker from "expo-image-picker";
 import { pathUrl } from "../Config/env";
 import * as yup from "yup";
 import axios from "axios";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { get } from "lodash";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getDataClient } from '../Redux/Slices/ClientReducer';
+import { useDispatch } from "react-redux";
+
+
 export default function EditeJobsWithClient() {
   const { params } = useRoute();
   const id = get(params, "idJob");
   console.log(id);
 
   const [image, setImage] = useState(null);
-
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
   const handleUpload = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -59,7 +64,8 @@ export default function EditeJobsWithClient() {
         .then((res) => {
           console.log(res);
           if (res.status == 200) {
-            // window.location.reload(true);
+            AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+            navigation.navigate("profileClient")
           }
         });
     });

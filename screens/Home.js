@@ -17,7 +17,6 @@ export default function Home() {
 
   useEffect(() => {
     seTflag(true);
-    if(flag){
       axios.get(`${pathUrl}/jobs/all`).then((response) => {
         const res = response.data.data.filter((item) => {
           return item.status != "in progress"
@@ -34,7 +33,7 @@ export default function Home() {
         console.log(err)
       })
 
-    }
+    
     return () => {
       seTflag(false)
       setLoader(true)
@@ -46,7 +45,7 @@ export default function Home() {
   function search(v) {
 
     let arr = allJob.filter((e) => {
-      console.log(e.description)
+      // console.log(e.description)
       return e.description.includes(v)
     }
     )
@@ -92,6 +91,7 @@ export default function Home() {
                 onPress={() =>
                   navigation.navigate("ClientShow", { data: item })
                 }
+                style={{width:"50%"}}
               >
                 <View
                   style={{ flexDirection: "row", justifyContent: "flex-start" }}

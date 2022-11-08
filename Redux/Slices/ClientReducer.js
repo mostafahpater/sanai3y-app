@@ -8,7 +8,7 @@ import { setData } from "./Snai3yReducer";
 
 const ClientReducer = createSlice({
     name:"ClientData",
-    initialState:{clintdata:{} , jops:{}},
+    initialState:{clintdata:{} , jops:[]},
     reducers:{
         setDataClient: (state,action)=>{
             state.clintdata = action.payload
@@ -16,6 +16,8 @@ const ClientReducer = createSlice({
         setJops:(state , acthion)=>{
             // state.jops.push(acthion.payload)
             state.jops = acthion.payload
+            // console.log("*******************************")
+            // console.log(state.jops[0].description)
         }
     }
 })
@@ -29,7 +31,7 @@ export const getDataClient = (idd)=> async (dispatch)=>{
         dispatch(setDataClient({...res.data.Data, img:imageUrl}))
         // let jobsImg = getImageUrl(res.data.Data.jobs.image)
         dispatch(setJops(res.data.Data.jobs))
-        // console.log(res.data.Data.jobs)
+        // console.log(res.data.Data.jobs[0].description)
     } catch (error) {
         console.log(error)
     }

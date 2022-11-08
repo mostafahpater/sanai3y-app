@@ -6,14 +6,16 @@ import WorksForm from '../screens/WorksForm'
 import Works from '../screens/Works'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useNavigation } from '@react-navigation/native'
 
 const ProfileSani3yStack = () => {
     const { Navigator , Screen} = createStackNavigator()
+    const navigation = useNavigation()
     function test() {
 
         AsyncStorage.clear();
-        DevSettings.reload()  
-      
+        // DevSettings.reload()  
+        navigation.replace('login')
       }
   return (
     <Navigator>

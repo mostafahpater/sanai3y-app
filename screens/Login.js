@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React, { useState, createRef } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -22,18 +22,44 @@ import * as yup from 'yup'
 import { Formik } from 'formik'
 import { pathUrl } from '../Config/env';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
+import Loader from '../components/Loder';
+import { useDispatch } from 'react-redux';
 // import Loader from './Components/Loader';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [logErr, setLogErr] = useState(false)
-
+   const dispatch = useDispatch()
   const loginSchema = yup.object().shape({
     email: yup.string().email("البريد الإلكتروني غير صحيح").required("هذا الحقل مطلوب"),
     password: yup.string().required("هذا الحقل مطلوب"),
   })
   // Local Storage
+  useEffect(() => {
+    setTimeout(() => {
+      setLoader(false)
+    }, 1100);
+
+    return () => {
+      AsyncStorage.getItem('snai3yRole').then(res => {
+        if (res == "client") {
+          console.log("client dispatch");
+          return AsyncStorage.getItem('id').then(result =>dispatch(getDataClient(result)))
+        }
+        else if (res == "sanai3y") {
+          console.log("sni3y dispatch");
+          return AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
+        }
+        else {
+          return false
+        }
+      }
+
+      )
+      setLoader(true)
+    }
+  }, [])
 
 
   const onSubmit = async (values) => {
@@ -52,7 +78,7 @@ const LoginScreen = () => {
             console.log("true");
           }
           stor()
-          console.log(res)
+          // console.log(res)
           navigation.navigate('Home')
           setLogErr(false)
         } else {
@@ -70,124 +96,129 @@ const LoginScreen = () => {
     // console.log(token)
   };
 
-  
+
   // console.log(pathUrl)
   return (
-    <Formik
-      initialValues={{ email: '', password: '' }}
-      // onSubmit={login}
-      validationSchema={loginSchema}
-      onSubmit={onSubmit}
-    >
-      {({ handleSubmit, handleChange, errors, touched, values, setFieldTouched }) => (
-        <View style={styles.mainBody}>
-          {/* <Loader loading={loading} /> */}
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{
-              flex: 1,
-              justifyContent: 'center',
-              alignContent: 'center',
-            }}>
-            <View>
-              <View style={{ alignItems: 'center', justifyContent: "flex-end", height: 200 }}>
-                <Image
-                  source={require('../assets/logo.png')}
-                  style={{
-                    width: '50%',
-                    height: "100%",
-                    resizeMode: 'contain',
-                    margin: 30,
+    <>
+    {!loader &&<Formik
+        initialValues={{ email: '', password: '' }}
+        // onSubmit={login}
+        validationSchema={loginSchema}
+        onSubmit={onSubmit}
+      >
+        {({ handleSubmit, handleChange, errors, touched, values, setFieldTouched }) => (
+          <View style={styles.mainBody}>
+            {/* <Loader loading={loading} /> */}
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{
+                flex: 1,
+                justifyContent: 'center',
+                alignContent: 'center',
+              }}>
+              <View>
+                <View style={{ alignItems: 'center', justifyContent: "flex-end", height: 200 }}>
+                  <Image
+                    source={require('../assets/logo.png')}
+                    style={{
+                      width: '50%',
+                      height: "100%",
+                      resizeMode: 'contain',
+                      margin: 30,
+                    }}
+                  />
+
+                </View>
+                {logErr && <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "center", marginBottom: 10 }}>
+                  <View style={{ backgroundColor: "#dc2626", padding: 5, borderRadius: 5, width: "80%" }}>
+                    <Text style={{ color: "#fff", fontSize: 18, textAlign: "center" }}>البريد الألكتروني أو كلمة السر غير صحيحه</Text>
+                  </View>
+                </View>}
+                <KeyboardAvoidingView enabled>
+                  <Text style={{
+                    color: "#000",
+                    fontSize: 25,
+                    fontWeight: "700",
+
+                    textAlign: 'center'
                   }}
-                />
 
-              </View>
-              {logErr && <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "center", marginBottom: 10 }}>
-                <View style={{ backgroundColor: "#dc2626", padding: 5, borderRadius: 5, width: "80%" }}>
-                  <Text style={{ color: "#fff", fontSize: 18, textAlign: "center" }}>البريد الألكتروني أو كلمة السر غير صحيحه</Text>
-                </View>
-              </View>}
-              <KeyboardAvoidingView enabled>
-                <Text style={{
-                  color: "#000",
-                  fontSize: 25,
-                  fontWeight: "700",
+                  >تسجيل الدخول</Text>
 
-                  textAlign: 'center'
-                }}
+                  {/* <Entypo name='login' style={{
+                    color: "#000",
+                    fontSize: 30,
+                    fontWeight: "700",
+                    textAlign: 'center'
+                  }}/> */}
+                  <View style={styles.SectionStyle}>
+                    <Icon name='user' style={styles.styleUser} />
 
-                >تسجيل الدخول</Text>
-
-                {/* <Entypo name='login' style={{
-                  color: "#000",
-                  fontSize: 30,
-                  fontWeight: "700",
-                  textAlign: 'center'
-                }}/> */}
-                <View style={styles.SectionStyle}>
-                  <Icon name='user' style={styles.styleUser} />
-
-                  <TextInput
-                    style={styles.inputStyle}
-                    onChangeText={handleChange('email')}
-                    value={values.email}
-                    placeholder="ادخل البريد الالكتروني" //dummy@abc.com
-                    placeholderTextColor="#8b9cb5"
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    onBlur={() => setFieldTouched('email')}
-                  />
-                </View>
-                {touched.email && errors.email && (
-                  <Text style={styles.errorTextStyle}>
-                    {errors.email}
-                  </Text>
-                )}
-                <View style={styles.SectionStyle}>
-                  <Icon name='lock' style={styles.styleUser} />
-                  <TextInput
-                    style={styles.inputStyle}
-                    placeholder="ادخل كلمة السر" //12345
-                    placeholderTextColor="#8b9cb5"
-                    keyboardType="default"
-                    value={values.password}
-                    onChangeText={handleChange('password')}
-                    onSubmitEditing={Keyboard.dismiss}
-                    blurOnSubmit={false}
-                    secureTextEntry={true}
-                    returnKeyType="next"
-                    onBlur={() => setFieldTouched('password')}
-                  />
-                </View>
-                {touched.password && errors.password && (
-                  <Text style={styles.errorTextStyle}>
-                    {errors.password}
-                  </Text>
-                )}
-                <TouchableOpacity
-                  style={styles.buttonStyle}
-                  activeOpacity={0.5}
-                  onPress={handleSubmit}>
-                  <Text style={styles.buttonTextStyle}>تسجيل الدخول</Text>
-                </TouchableOpacity>
-                <Text
-                  style={styles.registerTextStyle}
-                  onPress={() => navigation.navigate("register")}>
+                    <TextInput
+                      style={styles.inputStyle}
+                      onChangeText={handleChange('email')}
+                      value={values.email}
+                      placeholder="ادخل البريد الالكتروني" //dummy@abc.com
+                      placeholderTextColor="#8b9cb5"
+                      autoCapitalize="none"
+                      keyboardType="email-address"
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                      onBlur={() => setFieldTouched('email')}
+                    />
+                  </View>
+                  {touched.email && errors.email && (
+                    <Text style={styles.errorTextStyle}>
+                      {errors.email}
+                    </Text>
+                  )}
+                  <View style={styles.SectionStyle}>
+                    <Icon name='lock' style={styles.styleUser} />
+                    <TextInput
+                      style={styles.inputStyle}
+                      placeholder="ادخل كلمة السر" //12345
+                      placeholderTextColor="#8b9cb5"
+                      keyboardType="default"
+                      value={values.password}
+                      onChangeText={handleChange('password')}
+                      onSubmitEditing={Keyboard.dismiss}
+                      blurOnSubmit={false}
+                      secureTextEntry={true}
+                      returnKeyType="next"
+                      onBlur={() => setFieldTouched('password')}
+                    />
+                  </View>
+                  {touched.password && errors.password && (
+                    <Text style={styles.errorTextStyle}>
+                      {errors.password}
+                    </Text>
+                  )}
+                  <TouchableOpacity
+                    style={styles.buttonStyle}
+                    activeOpacity={0.5}
+                    onPress={handleSubmit}>
+                    <Text style={styles.buttonTextStyle}>تسجيل الدخول</Text>
+                  </TouchableOpacity>
                   <Text
-                    style={{ color: "#000" }}
-                  > ليس لديك حساب؟  </Text>
-                  التسجيل
-                </Text>
-              </KeyboardAvoidingView>
-            </View>
+                    style={styles.registerTextStyle}
+                    onPress={() => navigation.navigate("register")}>
+                    <Text
+                      style={{ color: "#000" }}
+                    > ليس لديك حساب؟  </Text>
+                    التسجيل
+                  </Text>
+                </KeyboardAvoidingView>
+              </View>
 
-          </ScrollView>
-        </View>
-      )}
+            </ScrollView>
+          </View>
+        )}
 
-    </Formik>
+      </Formik>}
+
+
+      {loader &&<Loader/>}
+    </>
 
   );
 };
@@ -262,6 +293,6 @@ const styles = StyleSheet.create({
 
     padding: 5,
     paddingTop: 9,
-    paddingEnd:10
+    paddingEnd: 10
   },
 });

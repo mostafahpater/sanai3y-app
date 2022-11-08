@@ -114,7 +114,7 @@ const Messages = (props) => {
 
     // Fetching the messages of the current conversation
     useEffect(() => {
-        const conversationId = params.conversation._id;
+        const conversationId = params.conversation?._id;
         const getMessages = async () => {
             const res = await axios.get(`${pathUrl}/messages/${conversationId}`);
             // console.log(res.data.data)
