@@ -29,7 +29,7 @@ export default function Works() {
   }, 100);
   }, [token])
 
-  console.log(data);
+  // console.log(data);
 
 
   return (
@@ -54,9 +54,9 @@ export default function Works() {
 
               <Image
                 source={{
-                  uri: `${pathUrl}${item?.img.slice(21)}`,
+                  uri: `${pathUrl}${item.img?.slice(21)}`,
                 }}
-                style={{ width: "100%", height: 200 }}
+                style={{ height: 200,borderRadius:6 }}
               />
 
               <Text style={styles.job}>{item.title}</Text>
@@ -88,7 +88,9 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "90%",
-    backgroundColor: "gainsboro",
+    backgroundColor: "#fff",
+    borderColor:"#99999982",
+    borderWidth:1,
     borderRadius: 10,
     marginHorizontal:5,
     justifyContent:"center",
@@ -96,18 +98,29 @@ const styles = StyleSheet.create({
     elevation: 6,
     marginTop: 15,
     marginBottom: 15,
+    
   },
   description: {
-    padding: 10,
+    padding: 15,
     fontSize: 16,
-    color: "#000"
+    color: "#000",
+    // backgroundColor:"#D4D4D4"
 
   },
   job: {
     padding: 10,
+    // borderBottomWidth:1,
+    // borderColor:"#99999982",
+    elevation:5,
+  //  flex:2,
     fontSize: 18,
+    color:"#000",
+    fontWeight:"bold",
     fontWeight: "700",
-    color: "#ffb200",
+    backgroundColor: "#FFC133",
+    // borderBottomColor:"#ffb200",
+    // borderBottomWidth:1,
+    // width:,
     // borderTopWidth:1,
   },
   buttonStyle: {
@@ -143,5 +156,6 @@ const styles = StyleSheet.create({
     color: "white",
     paddingVertical: 10,
     fontSize: 16,
+    fontWeight:"bold",
   },
 });

@@ -9,12 +9,14 @@ import NotFind from "../components/NotFind";
 import dateformat, { masks } from "dateformat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../components/Loder";
+import { Searchbar } from "react-native-paper";
 export default function Home() {
   const navigation = useNavigation(); 
   const [flag,seTflag]=useState(false); // re render to component 
   const [ loader , setLoader] = useState(true)
   const [allJob, setAllJob] = useState([]) // All Jops
-
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [search, setSearch] = useState("");
   useEffect(() => {
     seTflag(true);
       axios.get(`${pathUrl}/jobs/all`).then((response) => {
@@ -22,6 +24,7 @@ export default function Home() {
           return item.status != "in progress"
         })
         setAllJob([...res])
+        setFilteredDataSource([...res])
         // console.log(allJob)
         if(response.status == 200){
           setTimeout(() => {
@@ -42,15 +45,25 @@ export default function Home() {
   }, [])
   
   // console.log(val)
-  function search(v) {
-
-    let arr = allJob.filter((e) => {
-      // console.log(e.description)
-      return e.description.includes(v)
+  const searchFilterFunction = (text) => {
+    if (text) {
+      const newData = allJob.filter(function (item) {
+        const itemfirstName = item.firstName?.toUpperCase()
+        const itemlastName = item.lastName?.toUpperCase()
+        const itemTitle = item.title?.toUpperCase()
+        const itemDscription = item.description?.toUpperCase()
+        const itemCity = item.city?.toUpperCase()
+        const itemCatogry = item.category?.toUpperCase()
+        const textData = text.toUpperCase();
+        return itemfirstName?.indexOf(textData) >=0 || itemlastName?.indexOf(textData) >=0 || itemTitle?.indexOf(textData) >=0 ||itemDscription?.indexOf(textData) >=0 ||itemCity?.indexOf(textData) >=0 ||itemCatogry?.indexOf(textData) >=0
+      });
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else {
+      setFilteredDataSource(allJob);
+      setSearch(text);
     }
-    )
-    setAllJob([...arr])
-  }
+  };
 
 
   useEffect(() => { }, [allJob])
@@ -63,27 +76,23 @@ export default function Home() {
   return (
     <View style={styles.container}>
       {/* Start Search */}
-      <View style={{ flexDirection: "row",borderBottomWidth:2,borderBottomColor:'#EEE'}}>
-      <View style={{ justifyContent: "center" }}>
-          <AntDesign
-            name="search1"
-            style={{ fontSize: 30, color: "#ffb200" }}
-          />
-        </View>
-        <TextInput
-          style={styles.input}
-          onChangeText={(val) => search(val)}
-          value={Text}
-          placeholder="البحث عن المشكلة"
-          // keyboardType="text"
+
+      <Searchbar
+        onChangeText={(text) => searchFilterFunction(text)}
+        style={styles.search}
+        value={search}
+        iconColor="#ffb200"
+        keyboardType="default"
+        placeholderTextColor="#8b9cb5"
+        placeholder="بحث"
         />
-      </View>
+      
 
         {/* Start Box Posts */}
 
       {allJob.length > 0 && (
         <FlatList
-          data={allJob}
+        data={filteredDataSource}
           keyExtractor={(item, index) => index}
           renderItem={({ item }) => (
             <View style={[styles.box, styles.shadowProp]}>
@@ -241,6 +250,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     color: "#000",
   },
+  search: {
+    // flex: 1,
+    color: "#000",  
+    marginVertical: 10,  
+    // padding:10,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: "#fff",
+    // borderRadius: 5,
+    borderColor: "#ffb200",
+    elevation: 2,
+    
+  },
   box: {
 
     position: "relative",
@@ -250,6 +272,7 @@ const styles = StyleSheet.create({
     shadowColor: "#99999982",
     borderRadius: 5,
   },
+
   input: {
     height: 40,
     margin: 12,

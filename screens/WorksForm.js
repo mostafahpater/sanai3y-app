@@ -21,8 +21,10 @@ import * as yup from "yup";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoginScreen from "./Login";
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { StackActions } from "@react-navigation/native";
 export default function WorksForm() {
+  const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [token, setToken] = useState('')
   const handleUpload = async () => {
@@ -72,6 +74,7 @@ export default function WorksForm() {
         if (res.status == 200) {
           console.log("true");
           StackActions.pop()
+          navigation.navigate('ShowWorks')
         } else {
           console.log("erorr");
           console.log("Please check your email id or password");
@@ -81,6 +84,7 @@ export default function WorksForm() {
         console.log("erorr");
         console.log(err);
       });
+      
   };
 
   return (
@@ -148,6 +152,7 @@ export default function WorksForm() {
                     placeholder="ادخل وصف العمل" //12345
                     placeholderTextColor="#8b9cb5"
                     keyboardType="default"
+                multiline={true}
                     value={values.description}
                     onChangeText={handleChange("description")}
                     onSubmitEditing={Keyboard.dismiss}
@@ -191,6 +196,7 @@ export default function WorksForm() {
                   style={styles.buttonStyle}
                   activeOpacity={0.5}
                   onPress={handleSubmit}
+
                 >
                   <Text style={styles.buttonTextStyle} >اضافة</Text>
                 </TouchableOpacity>
