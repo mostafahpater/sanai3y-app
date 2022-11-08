@@ -4,22 +4,32 @@ import { pathUrl } from '../Config/env';
 import axios from "axios";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import NotFind from "../components/NotFind";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Works() {
   const navigation = useNavigation();
   const [data, setData] = useState([])
+  const [token, setToken] = useState('')
+  // console.log(data);
+  // console.log(token);
+  useEffect(()=>{
+    AsyncStorage.getItem('token').then((res) => setToken(res))
+
+  },[])
   useEffect(() => {
-
-
-    axios.get(`${pathUrl}/jobs/all`).then((res) => {
-      return setData(res.data.data)
+    // console.log("object");x`
+   
+    axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:token}}).then((res) => {
+      // console.log(res.data);
+      console.log("true");
+       setData(res.data.Data)
     }).catch((erorr) => {
       console.log("erorr");
       console.log(erorr);
-    })
-  }, [])
+   
+  }, 100);
+  }, [token])
 
-  // console.log(data);
+  console.log(data);
 
 
   return (
@@ -35,24 +45,25 @@ export default function Works() {
 
         </View>
         {data.length > 0 && <FlatList
+         contentContainerStyle={{ paddingBottom: 120 }}
           data={data}
-          keyExtractor={({ item }) => item}
+          // keyExtractor={({ item }) => item}
           renderItem={({ item }, index) => (
 
             <View key={index} style={styles.card}>
 
               <Image
                 source={{
-                  uri: "https://img.freepik.com/free-photo/smiling-construction-engineer-posing-with-arms-crossed-isolated-grey-background_1258-80415.jpg?w=740&t=st=1667583337~exp=1667583937~hmac=43e9ea21b5a5af7cddfd61356faf51be3f4305e6ed3138bc7003d1289da37dfe",
+                  uri: `${pathUrl}${item?.img.slice(21)}`,
                 }}
                 style={{ width: "100%", height: 200 }}
               />
 
               <Text style={styles.job}>{item.title}</Text>
               <Text style={styles.description}>{item.description} </Text>
-              <TouchableOpacity style={styles.buttonDelete}>
+              {/* <TouchableOpacity style={styles.buttonDelete}>
                 <Text style={styles.buttonTextStyle}> حذف</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
           )}
@@ -79,7 +90,8 @@ const styles = StyleSheet.create({
     width: "90%",
     backgroundColor: "gainsboro",
     borderRadius: 10,
-
+    marginHorizontal:5,
+    justifyContent:"center",
     flexDirection: "column",
     elevation: 6,
     marginTop: 15,
@@ -109,7 +121,7 @@ const styles = StyleSheet.create({
     width: 100,
     marginLeft: 35,
     marginRight: 35,
-    marginTop: 50,
+    marginTop: 10,
     marginBottom: 10,
     elevation: 5,
   },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import {
   StyleSheet,
@@ -19,12 +19,16 @@ import * as ImagePicker from "expo-image-picker";
 import { pathUrl } from "../Config/env";
 import * as yup from "yup";
 import axios from "axios";
+import { useRoute } from "@react-navigation/native";
+import { get } from "lodash";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LoginScreen from "./Login";
-import { StackActions } from "@react-navigation/native";
-export default function WorksForm() {
+export default function EditeJobsWithClient() {
+  const { params } = useRoute();
+  const id = get(params, "idJob");
+  console.log(id);
+
   const [image, setImage] = useState(null);
-  const [token, setToken] = useState('')
+
   const handleUpload = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -34,64 +38,36 @@ export default function WorksForm() {
       quality: 1,
     });
 
+    console.log(result);
+
     if (!result.cancelled) {
       setImage(result.uri);
     }
   };
-
   console.log(image);
   const worksSchema = yup.object().shape({
     title: yup.string().required("هذا الحقل مطلوب"),
     description: yup.string().required("هذا الحقل مطلوب"),
-    // img: yup.mixed(),
+    jobImage: yup.mixed(),
   });
-  useEffect(() => {
-    AsyncStorage.getItem('token').then((res) => setToken(res))
-
-  }, [])
   const onSubmit = async (values) => {
-    const formData = new FormData()
-    formData.append("title", values.title)
-    formData.append("description", values.description)
-    formData.append("workImage", {
-      name: image,
-      uri: image,
-      type: "image/*"
-    })
-
-    axios.post(`${pathUrl}/sanai3y/addwork`, formData,
-      {
-        headers: {
-          "authorization": token,
-          Accept: 'application/json',
-          "Content-Type": "multipart/form-data",
-        }
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.status == 200) {
-          console.log("true");
-          StackActions.pop()
-        } else {
-          console.log("erorr");
-          console.log("Please check your email id or password");
-        }
-      })
-      .catch((err) => {
-        console.log("erorr");
-        console.log(err);
-      });
+    AsyncStorage.getItem("token").then((res) => {
+      axios
+        .put(`${pathUrl}/jobs/update/${id}`, values, {
+          headers: { Authorization: res },
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.status == 200) {
+            // window.location.reload(true);
+          }
+        });
+    });
   };
 
   return (
     <Formik
-      initialValues={
-        {
-          title: "",
-          description: "",
-          workImage: ""
-        }
-      }
+      initialValues={{ title: "", description: "", jobImage: "" }}
       validationSchema={worksSchema}
       onSubmit={onSubmit}
     >
@@ -115,16 +91,6 @@ export default function WorksForm() {
           >
             <View>
               <KeyboardAvoidingView enabled>
-                <Text
-                  style={{
-                    color: "#000",
-                    fontSize: 25,
-                    fontWeight: "700",
-                    textAlign: "center",
-                  }}
-                >
-                  اضافة عمل جديد
-                </Text>
                 <View style={styles.SectionStyle}>
                   <TextInput
                     style={styles.inputStyle}
@@ -166,24 +132,7 @@ export default function WorksForm() {
                     flexDirection: "row",
                     justifyContent: "space-around",
                   }}
-                >
-                  <TouchableOpacity
-                    style={styles.buttonPhoto}
-                    activeOpacity={0.5}
-                    onPress={handleUpload}
-                  >
-                    <Text style={[styles.buttonTextStyle, { color: "black" }]}>
-                      اضف صورة
-                    </Text>
-                    <Icon name="upload" style={styles.styleUser} />
-                  </TouchableOpacity>
-                  {image && (
-                    <Image
-                      source={{ uri: image }}
-                      style={{ height: 200, width: 200, margin: 10 }}
-                    />
-                  )}
-                </View>
+                ></View>
                 {touched.jobImage && errors.jobImage && (
                   <Text style={styles.errorTextStyle}>{errors.jobImage}</Text>
                 )}
@@ -192,7 +141,7 @@ export default function WorksForm() {
                   activeOpacity={0.5}
                   onPress={handleSubmit}
                 >
-                  <Text style={styles.buttonTextStyle} >اضافة</Text>
+                  <Text style={styles.buttonTextStyle}>تعديل</Text>
                 </TouchableOpacity>
               </KeyboardAvoidingView>
             </View>
@@ -237,8 +186,8 @@ const styles = StyleSheet.create({
   },
   buttonTextStyle: {
     color: "white",
-    paddingVertical: 10,
-    fontSize: 19,
+
+    fontSize: 18,
   },
   buttonPhoto: {
     backgroundColor: "white",

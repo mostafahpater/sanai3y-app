@@ -64,7 +64,8 @@ const RegisterClient = () => {
                                 setRegErr(true)
                             }
                             else{
-                                navigate.navigate(('login'))
+                                navigate.navigate('login')
+                                console.log(res);
                             }
                         }
                         catch (err) {

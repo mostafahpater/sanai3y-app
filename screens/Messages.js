@@ -6,13 +6,17 @@ import {
     // Button,
     Image,
     ScrollView,
-    FlatList
+    FlatList,
+    TouchableOpacity
 } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import { Button } from 'react-native-paper'
 import axios from 'axios';
 import { pathUrl } from '../Config/env';
+import { getImageUrl } from '../Config/imageUrl';
 import  {io}  from "socket.io-client";
+import moment from 'moment';
+import { FontAwesome } from '@expo/vector-icons';
 
 const Messages = (props) => {
 
@@ -23,14 +27,21 @@ const Messages = (props) => {
     // The Socket
     const socket = useRef();
 
-    // The user 
-    const user = params.currentSender;
-    const currentChat = params.conversation;
-    const currentReciever = params.currentReciever;
+    // The user
+    
+    // console.log(newUserImage);
+    // let user = {...params.currentSender, img: newUserImage};
+    // let user = params.currentSender;
+    // const currentChat = params.conversation;
+    // const currentReciever = params.currentReciever;
 
-    console.log(currentReciever)
-
-
+    
+    // The user
+    const [user, setUser] = useState({})
+    // The currentChat
+    const [currentChat, setCurrentChat] = useState({})
+    // The currentReciever
+    const [currentReciever, setCurrentReciever] = useState({})
     // The Messages
     const [messages, setMessages] = useState([]);
     // The newMessage
@@ -40,12 +51,27 @@ const Messages = (props) => {
     // The recieved Message
     const [recievedMessage, setRecievedMessage] = useState(null);
 
+    // setting the socket variables
+    useEffect(() => {
+        // The user variable
+        let newUserImage = getImageUrl(params.currentSender.img);
+        setUser({...params.currentSender, img: newUserImage});
 
+        // The currentChat variable
+        setCurrentChat({...params.conversation});
+        
+        // The currentReciever
+        let newCurrentRecieverImage = getImageUrl(params.currentReciever.img)
+        setCurrentReciever({...params.currentReciever, img: newCurrentRecieverImage})
+
+    }, [])
+
+    
     // Setting socket current
     useEffect(() => {
         socket.current = (io(pathUrl));
     }, [socket])
-
+    
 
     // Listening from srever
     useEffect(() => {
@@ -67,17 +93,17 @@ const Messages = (props) => {
                 createdAt: Date.now()
             });
         })
-
+        
     }, [currentChat, recievedMessage, user])
     // console.log(onlineUsers)
 
     // Updating the messages
     useEffect(() => {
         if (recievedMessage && currentChat?.members.includes(recievedMessage.sender)) {
-        // if (recievedMessage) {
+            // if (recievedMessage) {
 
-            setMessages((prev) => [...prev, recievedMessage]);
-        }
+                setMessages((prev) => [...prev, recievedMessage]);
+            }
         // recievedMessage &&
         // currentChat?.members.includes(recievedMessage.sender) &&
         // setMessages((prev) => [...prev, recievedMessage]);
@@ -123,14 +149,15 @@ const Messages = (props) => {
             console.log(err)
         }
     }
-
+    
     // // On scrolling 
     // useEffect(() => {
     // scrollRef.current?.scrollIntoView({ behavior: "smooth" })
     //     scrollViewRef.current?.scrollToEnd({ animated: false })
     // }, [messages])
-
-
+    
+    
+    console.log(user)
     // console.log(messages);
     // console.log(newMessage);
     // const own = true;
@@ -156,10 +183,10 @@ const Messages = (props) => {
                         renderItem={({ item, index }) =>
 
                             <View style={(item?.sender === params.currentSender?._id) ? styles.sent_message : styles.recieved_message}>
-                                <Image style={styles.image} source={{uri: params.currentReciever?.img}} />
+                                <Image style={styles.image} source={(item?.sender === params.currentSender?._id)? {uri: user?.img}: {uri: params.currentReciever?.img}} />
                                 <Text style={(item?.sender === params.currentSender?._id) ? styles.sent_text : styles.recieved_text}>{item?.text}</Text>
                                 {/* <Text style={styles.time}><TimeAgo time={item.createdAt} interval={10000} /></Text> */}
-                                <Text style={styles.time}>1 hour ago</Text>
+                                <Text style={styles.time}>{moment(item.createdAt).fromNow(true) + " ago"}</Text>
                             </View>}
                         onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: false, behavior: "smooth" })}
                     />
@@ -173,7 +200,10 @@ const Messages = (props) => {
                     onChangeText={(input) => { setNewMessage(input) }}
                     value={newMessage}
                 />
-                <Button onPress={sendNewMessage} style={styles.button}>sumit</Button>
+                {/* <Button onPress={sendNewMessage} style={styles.button}><FontAwesome name="send" style={styles.icon} color={"#ffb200"} size={20}/></Button> */}
+                <TouchableOpacity onPress={sendNewMessage} style={styles.button}>
+                    <FontAwesome name="send" style={styles.icon} color={"#ffb200"} size={40}/>
+                </TouchableOpacity>
             </View>
         </View >
     )
@@ -185,17 +215,17 @@ const styles = StyleSheet.create({
     con: {
         flex: 1,
         height: "100%",
-        backgroundColor: "green"
+        // backgroundColor: "green"
     },
     messages: {
-        height: "90%",
-        backgroundColor: "yellow",
+        height: "93%",
+        // backgroundColor: "yellow",
         // position: "relative"
     },
     image: {
-        width: 40,
-        height: 40,
-        borderRadius: 40,
+        width: 60,
+        height: 60,
+        borderRadius: 60,
         margin: 10
     },
     sent_text: {
@@ -205,9 +235,9 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 10,
         borderWidth: 3,
-        borderColor: "red",
+        borderColor: "white",
         margin: 5,
-        backgroundColor: "#3838f0",
+        backgroundColor: "#fbb150",
         color: "white"
 
     },
@@ -218,7 +248,7 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 10,
         borderWidth: 3,
-        borderColor: "red",
+        borderColor: "white",
         margin: 5,
         backgroundColor: "#9b9090",
         color: "white"
@@ -234,9 +264,9 @@ const styles = StyleSheet.create({
         // lineHeight: 50
     },
     send: {
-        padding: 10,
-        height: "10%",
-        backgroundColor: "#97f197",
+        padding: 2,
+        height: "7%",
+        backgroundColor: "#fbb150",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center"
@@ -260,21 +290,34 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 3,
-        borderColor: "red",
+        borderColor: "white",
         borderRadius: 10,
         width: "90%",
-        height: "90%",
+        height: "80%",
         fontSize: 20,
-        padding: 10
+        padding: 7,
+        backgroundColor: "white"
     },
     button: {
         width: "7%",
-        height: "90%",
-        backgroundColor: "orange",
-        borderRadius: 0,
+        height: "80%",
+        backgroundColor: "white",
+        borderRadius: 10,
+        // fontSize: "large",
         textAlign: "center",
         textAlignVertical: "center",
-        margin: 5
-    }
+        margin: 5,
+        justifyContent: "center",
+        alignItems: "center"
+        // padding: 10
+    },
+    // icon: {
+    //     height: 30,
+    //     width: 30,
+    //     // marginTop: 20
+    //     backgroundColor: "green",
+    //     fontSize: 30,
+    //     padding: 30
+    // }
 
 })

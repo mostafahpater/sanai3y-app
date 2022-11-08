@@ -87,9 +87,9 @@ export default function SendTalpFromClient() {
                   fontWeight: "bold",
                 }}
               >
-                {detailJob.clientData.firstName +
+                {detailJob.clientData?.firstName +
                   " " +
-                  detailJob.clientData.lastName}
+                  detailJob.clientData?.lastName}
               </Text>
               <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
                 {detailJob.city}
@@ -99,14 +99,15 @@ export default function SendTalpFromClient() {
           <Image
             style={styles.tinyLogotest}
             source={{
-              uri: 'http://192.168.1.6'+detailJob.image.split('http://localhost')[1],
+              // uri: 'http://192.168.1.6'+detailJob?.image?.split('http://localhost')[1],
+              uri:`${pathUrl}${detailJob?.image.slice(21)}`
             }}
           />
 
           <Text
             style={{ paddingVertical: 10, paddingHorizontal: 10, fontSize: 12 }}
           >
-               {detailJob.title}   
+               {detailJob?.title}   
           </Text>
 
           <Text
@@ -116,7 +117,7 @@ export default function SendTalpFromClient() {
               borderBottomColor: "#eee",
             }}
           >
-        {detailJob.description}
+        {detailJob?.description}
           </Text>
 
           <View
