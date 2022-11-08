@@ -17,7 +17,9 @@ import { pathUrl } from "../Config/env";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { getDataClient } from '../Redux/Slices/ClientReducer';
+import Loader from "../components/Loder";
 export default function ProfileClient() {
+  const [loader , setLoader] = useState(true)
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
   const navigate = useNavigation();
@@ -58,12 +60,12 @@ export default function ProfileClient() {
   // let [data, setData] = useState({})
   // let [jobs , setJops] = useState([])
   let [id, setId] = useState("");
-
+  const dispatch = useDispatch()
   // Get Jobs The Client
   let data = useSelector(state => state.ClientReducer.clintdata)
   const [getAllJobs, setGetAllJob] = useState([]);
   useEffect(() => {
-    
+
     AsyncStorage.getItem('token').then((res) => {
       axios
         .get(`${pathUrl}/client/jobs/`, {
@@ -71,11 +73,23 @@ export default function ProfileClient() {
         })
         .then((res) => {
           let jobClient = res.data.Data;
-          setGetAllJob([...jobClient]);
           console.log(jobClient)
+          
+          if(res.status == 200){
+            setGetAllJob([...jobClient]);
+            setTimeout(()=>{
+              setLoader(false)
+
+            },1100)
+          }
         });
     })
-  }, [data])
+
+    AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+    return ()=>{
+      setLoader(true)
+    }
+  }, [])
 
   // Dellet Job With Client
   function sendIdJob(id) {
@@ -96,7 +110,7 @@ export default function ProfileClient() {
   }
 
   // Add image Client 
-  const dispatch = useDispatch()
+  
   function addimage() {
     const formdata = new FormData()
     formdata.append("clientImage", {
@@ -138,247 +152,252 @@ export default function ProfileClient() {
   }
 
   return (
-    <ScrollView style={{ backgroundColor: "#fff" }}>
-      <View style={styles.parent}>
-        <View style={styles.image}>
-          <View style={styles.imgProfile}>
-            <View>
-              <Image
-                source={{ uri: data?.img }}
-                style={{
-                  width: 200,
-                  height: 200,
-                  borderTopLeftRadius: 5,
-                  borderTopRightRadius: 5,
-                  resizeMode: "cover",
-                }}
-              />
-            </View>
-            {/* Start Modal */}
-            <View>
-              <TouchableOpacity title="Show modal" onPress={toggleModal}>
-                <View
+    <>
+      {!loader &&<ScrollView style={{ backgroundColor: "#fff" }}>
+        <View style={styles.parent}>
+          <View style={styles.image}>
+            <View style={styles.imgProfile}>
+              <View>
+                <Image
+                  source={{ uri: data?.img }}
                   style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "#eee",
-                    padding: 5,
-                    borderBottomStartRadius: 5,
-                    borderBottomEndRadius: 5,
+                    width: 200,
+                    height: 200,
+                    borderTopLeftRadius: 5,
+                    borderTopRightRadius: 5,
+                    resizeMode: "cover",
                   }}
-                >
-                  <AntDesign name="camera" style={{ fontSize: 25 }} />
-                </View>
-              </TouchableOpacity>
-
-              <Modal isVisible={isModalVisible}>
-                <TouchableOpacity
-                  onPress={toggleModal}
-                  style={{
-                    padding: 5,
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <AntDesign
-                    name="closecircleo"
-                    style={{
-                      backgroundColor: "#fff",
-                      borderRadius: 50,
-                      fontSize: 24,
-                    }}
-                  />
-                </TouchableOpacity>
-                <View style={{ backgroundColor: "#eee", borderRadius: 5 }}>
+                />
+              </View>
+              {/* Start Modal */}
+              <View>
+                <TouchableOpacity title="Show modal" onPress={toggleModal}>
                   <View
-                    style={{ alignItems: "center", flexDirection: "column" }}
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "#eee",
+                      padding: 5,
+                      borderBottomStartRadius: 5,
+                      borderBottomEndRadius: 5,
+                    }}
                   >
-                    <View
+                    <AntDesign name="camera" style={{ fontSize: 25 }} />
+                  </View>
+                </TouchableOpacity>
+
+                <Modal isVisible={isModalVisible}>
+                  <TouchableOpacity
+                    onPress={toggleModal}
+                    style={{
+                      padding: 5,
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <AntDesign
+                      name="closecircleo"
                       style={{
-                        alignItems: "center",
-                        width: "50%",
+                        backgroundColor: "#fff",
+                        borderRadius: 50,
+                        fontSize: 24,
                       }}
+                    />
+                  </TouchableOpacity>
+                  <View style={{ backgroundColor: "#eee", borderRadius: 5 }}>
+                    <View
+                      style={{ alignItems: "center", flexDirection: "column" }}
                     >
-                      <TouchableOpacity
+                      <View
                         style={{
-                          paddingVertical: 2,
-                          marginTop: 10,
                           alignItems: "center",
-                          borderRadius: 10,
-                          marginBottom: 40,
-                          flexDirection: "row",
-                          backgroundColor: "#fff",
-                          justifyContent: "center",
-                          borderWidth: 1,
-                          borderColor: "#999",
+                          width: "50%",
                         }}
                       >
-                        <View>
-                          <Text
+                        <TouchableOpacity
+                          style={{
+                            paddingVertical: 2,
+                            marginTop: 10,
+                            alignItems: "center",
+                            borderRadius: 10,
+                            marginBottom: 40,
+                            flexDirection: "row",
+                            backgroundColor: "#fff",
+                            justifyContent: "center",
+                            borderWidth: 1,
+                            borderColor: "#999",
+                          }}
+                        >
+                          <View>
+                            <Text
+                              style={{
+                                textAlign: "center",
+                                color: "#000",
+                                fontSize: 15,
+                                padding: 6,
+                              }}
+                              onPress={pickImage}
+                            >
+                              اضافة صورة
+                            </Text>
+                          </View>
+                          <View>
+                            <AntDesign
+                              name="download"
+                              style={{
+                                padding: 10,
+                                fontSize: 14,
+                                fontWeight: "bold",
+                              }}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                      <View style={{ width: "90%", alignItems: "center" }}>
+                        {image && (
+                          <Image
+                            source={{ uri: image }}
                             style={{
-                              textAlign: "center",
-                              color: "#000",
-                              fontSize: 15,
-                              padding: 6,
-                            }}
-                            onPress={pickImage}
-                          >
-                            اضافة صورة
-                          </Text>
-                        </View>
-                        <View>
-                          <AntDesign
-                            name="download"
-                            style={{
-                              padding: 10,
-                              fontSize: 14,
-                              fontWeight: "bold",
+                              width: "100%",
+                              height: 200,
+                              resizeMode: "cover",
                             }}
                           />
-                        </View>
+                        )}
+                      </View>
+
+                      <TouchableOpacity
+                        style={[styles.button, { marginVertical: 20 }]}
+                      >
+                        <Text style={styles.buttonText} onPress={addimage}>إضافة</Text>
                       </TouchableOpacity>
                     </View>
-                    <View style={{ width: "90%", alignItems: "center" }}>
-                      {image && (
-                        <Image
-                          source={{ uri: image }}
-                          style={{
-                            width: "100%",
-                            height: 200,
-                            resizeMode: "cover",
-                          }}
-                        />
-                      )}
-                    </View>
-
-                    <TouchableOpacity
-                      style={[styles.button, { marginVertical: 20 }]}
-                    >
-                      <Text style={styles.buttonText} onPress={addimage}>إضافة</Text>
-                    </TouchableOpacity>
                   </View>
-                </View>
-              </Modal>
+                </Modal>
+              </View>
+              {/* End Modal */}
             </View>
-            {/* End Modal */}
+
+            <View style={styles.userName}>
+              <Text
+                style={{ textAlign: "center", fontSize: 25 }}
+              >{`${data.firstName} ${data.lastName}`}</Text>
+            </View>
           </View>
 
-          <View style={styles.userName}>
+          {/* Details user */}
+          <View style={styles.parentList}>
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <Text style={styles.textcol}>{data.phoneNumber}</Text>
+              </View>
+              <View style={styles.col}>
+                <Entypo name="phone" style={styles.iconCol} />
+              </View>
+            </View>
+
+            {/* Email */}
+            <View style={styles.row}>
+              <View
+                style={[styles.col, { width: "60%", alignItems: "flex-start" }]}
+              >
+                <Text style={styles.textcol}>{data.email}</Text>
+              </View>
+              <View style={[styles.col, { width: "40%" }]}>
+                <Entypo name="email" style={styles.iconCol} />
+              </View>
+            </View>
+
+            {/* Age */}
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <Text style={styles.textcol}>{`العمر : ${data.age}`}</Text>
+              </View>
+              <View style={styles.col}>
+                <Entypo name="pencil" style={styles.iconCol} />
+              </View>
+            </View>
+          </View>
+
+          {/* Talbat */}
+          <View style={{ alignItems: "center", marginTop: 20 }}>
             <Text
-              style={{ textAlign: "center", fontSize: 25 }}
-            >{`${data.firstName} ${data.lastName}`}</Text>
-          </View>
-        </View>
-
-        {/* Details user */}
-        <View style={styles.parentList}>
-          <View style={styles.row}>
-            <View style={styles.col}>
-              <Text style={styles.textcol}>{data.phoneNumber}</Text>
-            </View>
-            <View style={styles.col}>
-              <Entypo name="phone" style={styles.iconCol} />
-            </View>
-          </View>
-
-          {/* Email */}
-          <View style={styles.row}>
-            <View
-              style={[styles.col, { width: "60%", alignItems: "flex-start" }]}
+              style={{
+                fontSize: 25,
+                borderBottomColor: "#eee",
+                borderBottomWidth: 2,
+              }}
             >
-              <Text style={styles.textcol}>{data.email}</Text>
-            </View>
-            <View style={[styles.col, { width: "40%" }]}>
-              <Entypo name="email" style={styles.iconCol} />
-            </View>
+              المنشورات
+            </Text>
           </View>
 
-          {/* Age */}
-          <View style={styles.row}>
-            <View style={styles.col}>
-              <Text style={styles.textcol}>{`العمر : ${data.age}`}</Text>
-            </View>
-            <View style={styles.col}>
-              <Entypo name="pencil" style={styles.iconCol} />
-            </View>
-          </View>
-        </View>
+          {/* Card Style And Get All Jobs  */}
+          {getAllJobs.map((item, index) => (
+            <View style={styles.card} key={index}>
+              <View style={styles.cardHeader}>
+                <View style={{ width: "10%" }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigate.navigate("editeJobs", { idJob: item._id })
+                    }
+                  >
+                    <Entypo name="edit" style={styles.childIcon} />
+                  </TouchableOpacity>
+                </View>
 
-        {/* Talbat */}
-        <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text
-            style={{
-              fontSize: 25,
-              borderBottomColor: "#eee",
-              borderBottomWidth: 2,
-            }}
-          >
-            المنشورات
-          </Text>
-        </View>
+                <View style={{ width: "10%" }}>
+                  <TouchableOpacity onPress={() => sendIdJob(item._id)}>
+                    <FontAwesome name="remove" style={styles.childIcon} />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
-        {/* Card Style And Get All Jobs  */}
-        {getAllJobs.map((item, index) => (
-          <View style={styles.card} key={index}>
-            <View style={styles.cardHeader}>
-              <View style={{ width: "10%" }}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigate.navigate("editeJobs", { idJob: item._id })
-                  }
-                >
-                  <Entypo name="edit" style={styles.childIcon} />
+              <View style={styles.cardBody}>
+                {/* jop des */}
+                <View style={{ flex: 1, alignItems: "flex-start", padding: 10 }}>
+
+                  <View style={{ borderLeftWidth: 1, borderLeftColor: '#ffb200' }}>
+                    <Text style={[styles.text, { fontSize: 14 }]}>{item.title}</Text>
+                  </View>
+
+                  <View>
+                    <Text style={[styles.text, { marginTop: 2, fontSize: 15, color: '#888' }]}> {item.city}
+                    </Text>
+                  </View>
+
+                  <View style={{ paddingHorizontal: 5, borderBottomWidth: 1, borderBottomColor: '#FFF', borderTopWidth: 1, marginTop: 10, borderTopColor: '#FFF' }}>
+                    <Text style={[styles.text, { marginTop: 10, color: '#555', paddingBottom: 20 }]}> {item?.description}
+                    </Text>
+                  </View>
+
+
+                </View>
+              </View>
+
+              <View style={styles.parentButton}>
+                <TouchableOpacity style={styles.button}>
+                  <Text
+                    style={styles.buttonText}
+                    onPress={() =>
+                      navigate.navigate("talpatSending", {
+                        proposal: item.proposals,
+                      })
+                    }
+                  >
+                    الطلبات المقدمة
+                  </Text>
                 </TouchableOpacity>
               </View>
 
-              <View style={{ width: "10%" }}>
-                <TouchableOpacity onPress={() => sendIdJob(item._id)}>
-                  <FontAwesome name="remove" style={styles.childIcon} />
-                </TouchableOpacity>
-              </View>
             </View>
+          ))}
+        </View>
+      </ScrollView>}
+      
 
-            <View style={styles.cardBody}>
-              {/* jop des */}
-              <View style={{ flex: 1, alignItems: "flex-start", padding: 10 }}>
-
-                <View style={{ borderLeftWidth: 1, borderLeftColor: '#ffb200' }}>
-                  <Text style={[styles.text, { fontSize: 14 }]}>{item.title}</Text>
-                </View>
-
-                <View>
-                  <Text style={[styles.text, { marginTop: 2, fontSize: 15, color: '#888' }]}> {item.city}
-                  </Text>
-                </View>
-
-                <View style={{ paddingHorizontal: 5, borderBottomWidth: 1, borderBottomColor: '#FFF', borderTopWidth: 1, marginTop: 10, borderTopColor: '#FFF' }}>
-                  <Text style={[styles.text, { marginTop: 10, color: '#555', paddingBottom: 20 }]}> {item?.description}
-                  </Text>
-                </View>
-
-
-              </View>
-            </View>
-
-            <View style={styles.parentButton}>
-              <TouchableOpacity style={styles.button}>
-                <Text
-                  style={styles.buttonText}
-                  onPress={() =>
-                    navigate.navigate("talpatSending", {
-                      proposal: item.proposals,
-                    })
-                  }
-                >
-                  الطلبات المقدمة
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+      {loader &&<Loader/>}
+    </>
   );
 }
 

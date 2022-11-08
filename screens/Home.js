@@ -1,36 +1,46 @@
 import { View, Text, StyleSheet, TextInput, Image, Button, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useRoute } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import axios from 'axios';
 import { pathUrl } from '../Config/env'
 import { set } from "lodash";
 import NotFind from "../components/NotFind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-
-
+import Loader from "../components/Loder";
 export default function Home() {
-  const navigation = useNavigation();
-  const [allJob, setAllJob] = useState([])
-  const [val, setVal] = useState('')
+  const navigation = useNavigation(); 
+  const [flag,seTflag]=useState(false); // re render to component 
+  const [ loader , setLoader] = useState(true)
+  const [allJob, setAllJob] = useState([]) // All Jops
 
   useEffect(() => {
-
-    axios.get(`${pathUrl}/jobs/all`).then((response) => {
-      const res = response.data.data.filter((item) => {
-        return item.status != "in progress"
+    seTflag(true);
+    if(flag){
+      axios.get(`${pathUrl}/jobs/all`).then((response) => {
+        const res = response.data.data.filter((item) => {
+          return item.status != "in progress"
+        })
+        setAllJob([...res])
+        // console.log(allJob)
+        if(response.status == 200){
+          setTimeout(() => {
+            setLoader(false)
+            
+          }, 1100);
+        }
+      }).catch((err) => {
+        console.log(err)
       })
-      setAllJob([...res])
-      // console.log(allJob)
-    }).catch((err) => {
-      console.log(err)
-    })
-      // AsyncStorage.clear()
+
+    }
+    return () => {
+      seTflag(false)
+      setLoader(true)
+    }
+
   }, [])
-  useEffect(()=>{
-    console.log(allJob)
-  },[allJob])
+  
   // console.log(val)
   function search(v) {
 
@@ -42,106 +52,107 @@ export default function Home() {
     setAllJob([...arr])
   }
 
-
-  // useEffect(() => { }, [allJob])
   // Start JSX
   return (
-
-    <View style={styles.container}>
-      {/* Start Search */}
-      <View style={{ flexDirection: "row" }}>
-        <TextInput
-          style={styles.input}
-          onChangeText={val => search(val)}
-          value={Text}
-          placeholder="البحث عن المشكلة"
-          keyboardType="text"
-        />
-        <View style={{ justifyContent: "center" }}>
-          <AntDesign
-            name="search1"
-            style={{ fontSize: 30, color: "#ffb200" }}
+    <>
+      <View style={styles.container}>
+        {/* Start Search */}
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            style={styles.input}
+            onChangeText={val => search(val)}
+            value={Text}
+            placeholder="البحث عن المشكلة"
+            keyboardType="text"
           />
+          <View style={{ justifyContent: "center" }}>
+            <AntDesign
+              name="search1"
+              style={{ fontSize: 30, color: "#ffb200" }}
+            />
+          </View>
         </View>
-      </View>
 
-      {/* Start Box Posts */}
+        {/* Start Box Posts */}
 
-      {allJob.length > 0 && <FlatList
-        data={allJob}
-        keyExtractor={(item, index) => index}
-        renderItem={({ item }) => (
-          <View style={[styles.box, styles.shadowProp]}>
-            <TouchableOpacity onPress={()=> navigation.navigate('ClientShow',{data :item})}>
-              <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-                <Image
-                  style={styles.tinyLogo}
-                  source={{
-                    uri: `${pathUrl}${item.clientData?.img.slice(21)}`
-                  }}
-                />
-                <View style={{ marginLeft: 10 }}>
-                  <Text
-                    style={{
-                      marginRight: 10,
-                      paddingRight: 10,
-                      borderRightWidth: 1,
-                      borderRightColor: "#ffb200",
-                      fontWeight: "bold",
+        {!loader && allJob.length > 0 && <FlatList
+          data={allJob}
+          keyExtractor={(item, index) => index}
+          renderItem={({ item }) => (
+            <View style={[styles.box, styles.shadowProp]}>
+              <TouchableOpacity style={{width:"50%"}} onPress={()=> navigation.navigate('ClientShow',{data :item})}>
+                <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+                  <Image
+                    style={styles.tinyLogo}
+                    source={{
+                      uri: `${pathUrl}${item.clientData?.img.slice(21)}`
                     }}
-                  >
-                    {item.clientData?.firstName + " " + item.clientData?.lastName}
-                  </Text>
-                  <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
-                    {item.city}
-                  </Text>
+                  />
+                  <View style={{ marginLeft: 10 }}>
+                    <Text
+                      style={{
+                        marginRight: 10,
+                        paddingRight: 10,
+                        borderRightWidth: 1,
+                        borderRightColor: "#ffb200",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.clientData?.firstName + " " + item.clientData?.lastName}
+                    </Text>
+                    <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
+                      {item.city}
+                    </Text>
+                  </View>
                 </View>
-              </View>
 
-            </TouchableOpacity>
-            <AntDesign name="closecircle" style={styles.test} />
+              </TouchableOpacity>
 
-            <Text style={{ paddingVertical: 5, paddingHorizontal: 10, fontSize: 12 }}>
-              {item.title}
-            </Text>
+              <AntDesign name="closecircle" style={styles.test} />
 
-            <Text style={{ padding: 10 }}>
-              {item.description}
-            </Text>
+              <Text style={{ paddingVertical: 5, paddingHorizontal: 10, fontSize: 12 }}>
+                {item.title}
+              </Text>
 
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "baseline",
-              }}
-            >
-              <Text
+              <Text style={{ padding: 10 }}>
+                {item.description}
+              </Text>
+
+              <View
                 style={{
-                  backgroundColor: "#EEE",
-                  width: 80,
-                  textAlign: "center",
-                  borderRadius: 10,
-                  fontSize: 12
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
                 }}
               >
-                {item.category}
-              </Text>
-              <Button
-                title='التفاصيل'
-                color="#ffb200"
-                style={{ borderRadius: 50 }}
-                onPress={() => navigation.navigate("SendTalp", { one: item })}
-              />
+                <Text
+                  style={{
+                    backgroundColor: "#EEE",
+                    width: 80,
+                    textAlign: "center",
+                    borderRadius: 10,
+                    fontSize: 12
+                  }}
+                >
+                  {item.category}
+                </Text>
+                <Button
+                  title='التفاصيل'
+                  color="#ffb200"
+                  style={{ borderRadius: 50 }}
+                  onPress={() => navigation.navigate("SendTalp", { one: item })}
+                />
+              </View>
             </View>
-          </View>
-        )}
-      />}
-      {/* End Box Posts */}
-      {allJob.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
+          )}
+        />}
+        {/* End Box Posts */}
+        {allJob.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
+        
+        {loader && <Loader/>}
 
-
-    </View>
+      </View>
+    </>
   );
 }
 
