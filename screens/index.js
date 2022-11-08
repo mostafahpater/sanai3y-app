@@ -15,7 +15,7 @@ import { getDataSnai3y } from '../Redux/Slices/Snai3yReducer';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import IntuoialScreen from './IntouialScrean';
-
+import Coursel from './CourselScreen'
 export default function Index() {
 
   const Stack = createStackNavigator()
