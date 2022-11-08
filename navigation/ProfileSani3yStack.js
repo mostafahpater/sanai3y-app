@@ -37,14 +37,26 @@ const ProfileSani3yStack = () => {
             name='ShowWorks'
             component={Works}
             options={{
-                headerShown:false
+                headerShown:true,
+                headerTitle:"معرض الاعمال",
+                headerStyle: {
+                    backgroundColor: "#fbb150",
+                    elevation: 15,
+                    shadowColor: "#000"
+                  },
             }}
         />
         <Screen 
             name='AddWorks'
             component={WorksForm}
             options={{
-                headerShown:false
+                headerShown:true,
+                headerTitle:"اضافة عمل جديد",
+                headerStyle: {
+                    backgroundColor: "#fbb150",
+                    elevation: 15,
+                    shadowColor: "#000"
+                  },
             }}
         />
     </Navigator>
