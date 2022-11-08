@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TextInput, Image, Button, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useRoute } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import axios from 'axios';
 import { pathUrl } from '../Config/env'
@@ -8,33 +8,43 @@ import { set } from "lodash";
 import NotFind from "../components/NotFind";
 import dateformat, { masks } from "dateformat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Loader from "../components/Loder";
 import { Searchbar } from "react-native-paper";
-
-
-
 export default function Home() {
-  const navigation = useNavigation();
-  const [allJob, setAllJob] = useState([])
-  const [val, setVal] = useState('')
+  const navigation = useNavigation(); 
+  const [flag,seTflag]=useState(false); // re render to component 
+  const [ loader , setLoader] = useState(true)
+  const [allJob, setAllJob] = useState([]) // All Jops
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [search, setSearch] = useState("");
   useEffect(() => {
-
-    axios.get(`${pathUrl}/jobs/all`).then((response) => {
-      const res = response.data.data.filter((item) => {
-        return item.status != "in progress"
+    seTflag(true);
+    if(flag){
+      axios.get(`${pathUrl}/jobs/all`).then((response) => {
+        const res = response.data.data.filter((item) => {
+          return item.status != "in progress"
+        })
+        setAllJob([...res])
+        setFilteredDataSource([...res])
+        // console.log(allJob)
+        if(response.status == 200){
+          setTimeout(() => {
+            setLoader(false)
+            
+          }, 1100);
+        }
+      }).catch((err) => {
+        console.log(err)
       })
-      setAllJob([...res])
-      setFilteredDataSource([...res])
-      // console.log(allJob)
-    }).catch((err) => {
-      console.log(err)
-    })
-      // AsyncStorage.clear()
+
+    }
+    return () => {
+      seTflag(false)
+      setLoader(true)
+    }
+
   }, [])
-  useEffect(()=>{
-    console.log(allJob)
-  },[allJob])
+  
   // console.log(val)
   const searchFilterFunction = (text) => {
     if (text) {
@@ -79,7 +89,7 @@ export default function Home() {
         />
       
 
-      {/* Start Box Posts */}
+        {/* Start Box Posts */}
 
       {allJob.length > 0 && (
         <FlatList

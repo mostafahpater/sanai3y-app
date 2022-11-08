@@ -74,10 +74,10 @@ export default function SendTalpFromClient() {
             <Image
               style={styles.tinyLogo}
               source={{
-                uri: "https://icones.pro/wp-content/uploads/2021/03/avatar-de-personne-icone-homme.png",
+                uri: `${pathUrl}${detailJob.clientData?.img.slice(21)}`,
               }}
             />
-            <View style={{ marginLeft: 10 }}>
+            <View style={{ marginLeft: 10 , justifyContent:"center"}}>
               <Text
                 style={{
                   marginRight: 10,

@@ -148,14 +148,13 @@ const AddJop = () => {
             <View style={[styles.SectionStyle, { marginTop: 70 }]}>
               <View style={{ flex: 1, height: 80 }}>
                 <TextInput
-                  style={[styles.inputStyle]}
-                  underlineColorAndroid="#f000"
-                  placeholder=" عنوان الوظيفة - مثال ( مشكلة بالتكيف )"
+                  style={styles.inputStyle}
+                  // underlineColorAndroid="#f000"
                   placeholderTextColor="#8b9cb5"
-                  autoCapitalize="sentences"
-                  returnKeyType="next"
-                  blurOnSubmit={false}
-                  keyboardType="text"
+                  placeholder={" عنوان الوظيفة - مثال ( مشكلة بالتكيف )"}
+                  // autoCapitalize="sentences"
+                  // returnKeyType="next"
+                  // keyboardType="text"
                   value={values.titleJob}
                   onChangeText={handleChange('titleJob')}
                   onBlur={handleBlur('titleJob')}
@@ -247,14 +246,14 @@ const AddJop = () => {
             >
               <View style={{ flex: 1, height: 80 }}>
                 <TextInput
-                  style={[styles.inputStyle]}
-                  underlineColorAndroid="#f000"
+                  style={styles.inputStyle}
+                  // underlineColorAndroid="#f000"
                   placeholder=" اكتب عنوانك بالتفصيل - مثال ( بجوار مسجد التوحيد )"
                   placeholderTextColor="#8b9cb5"
-                  autoCapitalize="sentences"
-                  returnKeyType="next"
-                  blurOnSubmit={false}
-                  keyboardType="text"
+                  // autoCapitalize="sentences"
+                  // returnKeyType="next"
+                  // blurOnSubmit={false}
+                  // keyboardType="text"
                   value={values.addresJob}
                   onChangeText={handleChange('addresJob')}
                   onBlur={handleBlur('addresJob')}
@@ -421,7 +420,9 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   inputStyle: {
-    flex: 1,
+    // flex: 1,
+    height: 50,
+    alignItems:"center",
     paddingLeft: 15,
     paddingRight: 15,
     paddingHorizontal: 100,
