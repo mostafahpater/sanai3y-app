@@ -31,9 +31,12 @@ export default function AllSanai3y() {
   const searchFilterFunction = (text) => {
     if (text) {
       const newData = data.filter(function (item) {
-        const itemData = item.firstName.toUpperCase()||item.lastName.toUpperCase()||item.address.toUpperCase()||item.skills.toUpperCase();
+        const itemfirstName = item.firstName?.toUpperCase()
+        const itemlastName = item.lastName?.toUpperCase()
+        const itemaddress = item.address?.toUpperCase()
+        const itemskills = item.skills?.toUpperCase()
         const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
+        return itemfirstName.indexOf(textData) >=0 || itemlastName.indexOf(textData) >=0 || itemaddress.indexOf(textData) >=0 ||itemskills.indexOf(textData) >=0
       });
       setFilteredDataSource(newData);
       setSearch(text);
@@ -45,7 +48,7 @@ export default function AllSanai3y() {
 
   return (
     <View style={styles.cont}>
-        <TextInput
+        {/* <TextInput
           style={styles.search}
           placeholder="بحث"
           placeholderTextColor="#8b9cb5"
@@ -53,6 +56,15 @@ export default function AllSanai3y() {
           value={search}
           onChangeText={(text) => searchFilterFunction(text)}
           returnKeyType="next"
+        /> */}
+        <Searchbar
+        onChangeText={(text) => searchFilterFunction(text)}
+        style={styles.search}
+        value={search}
+        iconColor="#ffb200"
+        keyboardType="default"
+        placeholderTextColor="#8b9cb5"
+        placeholder=" بحث عن صنايعية"
         />
       <FlatList
         data={filteredDataSource}
@@ -65,16 +77,27 @@ export default function AllSanai3y() {
           <View key={index} style={styles.card}>
             <Image
               source={{
-                uri:
-                  "http://192.168.1.9" + item.img.split("http://localhost")[1],
+                uri:`${pathUrl}${item.img?.slice(21)}`                 
               }}
-              style={{ width: 170, height: 180, borderRadius: 5 }}
+              style={{ width: 70, height:70,resizeMode:"cover", borderRadius: 100}}
             />
 
-            <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
+            <View style={{ flexDirection: "column",marginLeft:30, alignItems: "flex-start" }}>
               <Text
                 style={styles.job}
               >{`${item.firstName} ${item.lastName}`}</Text>
+            <View style={{flexDirection:"row"}}>
+                  <Text
+                  style={[
+                    styles.description,
+                   styles.skills,
+                   {marginRight:20}
+                  ]}
+                >
+                  {item.skills}
+                </Text>
+                <Text style={styles.description}>{item.gender} </Text>
+            </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Entypo
                   name="location-pin"
@@ -84,8 +107,8 @@ export default function AllSanai3y() {
                   />
                 <Text style={styles.description}> {item.address} </Text>
               </View>
-
               <View style={{ flexDirection: "row", alignItems: "center" }}>
+              
                 <AntDesign
                   name="clockcircle"
                   style={{ color: "#ffb200", fontSize: 16 }}
@@ -94,15 +117,8 @@ export default function AllSanai3y() {
                   {Moment(item.joinedDate).format("D MMM YYYY")}
                 </Text>
               </View>
-              <Text style={styles.description}>{item.gender} </Text>
-              <Text
-                style={[
-                  styles.description,
-                 styles.skills
-                ]}
-              >
-                {item.skills}
-              </Text>
+           
+            
             </View>
           </View>
       </TouchableOpacity>
@@ -124,8 +140,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     color: "#000",  
     marginTop: 10,  
-    marginBottom: 15,  
-    padding:10,
+    // padding:10,
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: "#fff",
@@ -139,9 +154,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 10,
     borderColor: "black",
-    borderColor:"#99999982",
+    borderColor:"#8b9cb5",
     borderWidth:1,
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     alignContent: "space-between",
     flexDirection: "row",
     elevation: 6,
@@ -152,7 +167,6 @@ const styles = StyleSheet.create({
   },
   description: {
     margin: 5,
-
     fontSize: 14,
     color: "#000",
   },
@@ -164,7 +178,8 @@ const styles = StyleSheet.create({
     fontSize:14,
     color:"#fff",
     textAlign: "center",
-    backgroundColor:"#ffb200"
+    backgroundColor:"#ffb200",
+    marginLeft:0,
   }
   ,
   job: {

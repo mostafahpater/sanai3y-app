@@ -49,7 +49,7 @@ export default function ShowSanai3y() {
           <View style={styles.imgProfile}>
             <View>
               <Image source={{ uri: `${pathUrl}${data?.img.slice(21)}` }}
-                style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
+                style={{ width: 200, height: 200, borderRadius: 5, resizeMode: "cover" }}
               />
             </View>
 
@@ -66,10 +66,10 @@ export default function ShowSanai3y() {
         <View style={styles.parentList}>
           <View style={styles.row}>
             <View style={styles.col}>
-              <Text style={styles.textcol}>{data?.phoneNumber}</Text>
+              <Text style={styles.textcol}>{data?.skills}</Text>
             </View>
             <View style={styles.col}>
-              <Entypo name='phone' style={styles.iconCol} />
+              <Entypo name='tools' style={styles.iconCol} />
             </View>
           </View>
 
@@ -79,7 +79,7 @@ export default function ShowSanai3y() {
               <Text style={styles.textcol}>{`العنوان : ${data?.address}`}</Text>
             </View>
             <View style={styles.col}>
-              <Entypo name='pencil' style={styles.iconCol} />
+              <Entypo name='location-pin' style={[styles.iconCol]} />
             </View>
           </View>
         </View>
@@ -105,7 +105,7 @@ export default function ShowSanai3y() {
               </View>
               {/* img Jop */}
               <View style={{ width: "50%" }}>
-                <Image source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" }}
+                <Image source={{ uri: `${pathUrl}${item.img?.slice(21)}` }}
                   style={{ height: 200, resizeMode: "contain" }} />
               </View>
             </View>
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     textAlign: "left"
   },
   iconCol: {
-    fontSize: 20,
+    fontSize: 22,
     color: "#fbb200"
   },
   // End Details Style
