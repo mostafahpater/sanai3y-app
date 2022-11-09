@@ -142,7 +142,7 @@ const Messages = (props) => {
 
         try {
             const res = await axios.post(`${pathUrl}/messages`, newMessageBody);
-            console.log(res.data.data)
+            // console.log(res.data.data)
             setMessages([...messages, res.data.data]);
             setNewMessage("");
         } catch (err) {
@@ -157,7 +157,7 @@ const Messages = (props) => {
     // }, [messages])
     
     
-    console.log(user)
+    // console.log(user)
     // console.log(messages);
     // console.log(newMessage);
     // const own = true;
@@ -193,17 +193,22 @@ const Messages = (props) => {
                 {/* </ScrollView> */}
             </View>
             <View style={styles.send}>
-                <TextInput
-                    style={styles.input}
-                    multiline={true}
-                    numberOfLines={4}
-                    onChangeText={(input) => { setNewMessage(input) }}
-                    value={newMessage}
-                />
-                {/* <Button onPress={sendNewMessage} style={styles.button}><FontAwesome name="send" style={styles.icon} color={"#ffb200"} size={20}/></Button> */}
-                <TouchableOpacity onPress={sendNewMessage} style={styles.button}>
-                    <FontAwesome name="send" style={styles.icon} color={"#ffb200"} size={40}/>
-                </TouchableOpacity>
+                <View style={{width:"85%"}}>
+                    <TextInput
+                        style={styles.input}
+                        multiline={true}
+                        numberOfLines={4}
+                        onChangeText={(input) => { setNewMessage(input) }}
+                        value={newMessage}
+                    />
+                </View>
+                
+                <View style={{width:"12%" ,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>
+                    <TouchableOpacity onPress={sendNewMessage} style={styles.button}>
+                        <FontAwesome name="send" style={styles.icon} color={"#ffb200"} size={24}/>
+                    </TouchableOpacity>
+
+                </View>
             </View>
         </View >
     )
@@ -213,33 +218,33 @@ export default Messages
 
 const styles = StyleSheet.create({
     con: {
-        flex: 1,
-        height: "100%",
+        // flex: 1,
+        // height: "100%",
         // backgroundColor: "green"
     },
     messages: {
-        height: "93%",
+        height: "92%",
         // backgroundColor: "yellow",
         // position: "relative"
     },
     image: {
-        width: 60,
-        height: 60,
-        borderRadius: 60,
+        width: 50,
+        height: 50,
+        borderRadius: 50,
         margin: 10
     },
     sent_text: {
         fontSize: 20,
         // width: "70%",
         maxWidth: "70%",
+        // paddingVertical:0,
         padding: 15,
         borderRadius: 10,
-        borderWidth: 3,
-        borderColor: "white",
+        // borderWidth: 3,
+        // borderColor: "white",
         margin: 5,
         backgroundColor: "#fbb150",
-        color: "white"
-
+        color: "white",
     },
     recieved_text: {
         fontSize: 20,
@@ -247,8 +252,8 @@ const styles = StyleSheet.create({
         maxWidth: "70%",
         padding: 15,
         borderRadius: 10,
-        borderWidth: 3,
-        borderColor: "white",
+        // borderWidth: 3,
+        // borderColor: "white",
         margin: 5,
         backgroundColor: "#9b9090",
         color: "white"
@@ -264,12 +269,14 @@ const styles = StyleSheet.create({
         // lineHeight: 50
     },
     send: {
-        padding: 2,
+        // padding: 2,
         height: "7%",
-        backgroundColor: "#fbb150",
+        // backgroundColor: "#fbb150",
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent:"center",
+        // paddingBottom:20,
     },
     // message: {
     //     // width: "70%",
@@ -289,35 +296,37 @@ const styles = StyleSheet.create({
 
     },
     input: {
-        borderWidth: 3,
-        borderColor: "white",
+        borderWidth: 1,
+        borderColor: "#dadae8",
         borderRadius: 10,
-        width: "90%",
-        height: "80%",
-        fontSize: 20,
-        padding: 7,
-        backgroundColor: "white"
-    },
-    button: {
-        width: "7%",
-        height: "80%",
+        height: 50,
+        fontSize: 18,
         backgroundColor: "white",
-        borderRadius: 10,
-        // fontSize: "large",
-        textAlign: "center",
-        textAlignVertical: "center",
-        margin: 5,
-        justifyContent: "center",
-        alignItems: "center"
-        // padding: 10
+        elevation:2,
+        paddingStart:5
     },
-    // icon: {
-    //     height: 30,
-    //     width: 30,
-    //     // marginTop: 20
-    //     backgroundColor: "green",
-    //     fontSize: 30,
-    //     padding: 30
-    // }
+    // button: {
+    //     width: "10%",
+    //     // height: "80%",
+    //     // backgroundColor: "white",
+    //     borderRadius: 10,
+    //     // fontSize: "large",
+    //     // textAlign: "center",
+    //     // textAlignVertical: "center",
+    //     marginStart: 5,
+    //     justifyContent: "center",
+    //     alignItems: "center"
+    //     // padding: 10
+    // },
+    icon: {
+        // height: 30,
+        // width: 30,
+        // marginTop: 20
+        // backgroundColor: "green",
+        // fontSize: 30,
+        // padding: 30
+        // alignItems:"center",
+        // justifyContent:"center"
+    }
 
 })

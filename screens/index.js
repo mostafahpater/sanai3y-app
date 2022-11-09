@@ -122,14 +122,15 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   reciever_name: {
-    fontSize: 30,
+    fontSize: 20,
     // backgroundColor: "red",
     paddingHorizontal: 10,
-    marginHorizontal: 20
+    marginHorizontal: 20,
+    fontWeight:"500"
   },
   reciever_image: {
-    width: 60, 
-    height: 60, 
+    width: 40, 
+    height: 40, 
     borderRadius: 60,
   }
 });
