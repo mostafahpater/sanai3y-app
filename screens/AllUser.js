@@ -75,12 +75,14 @@ export default function AllSanai3y() {
           onPress={() => navigation.navigate("Sanai3yShow", {data:item})}
           >
           <View key={index} style={styles.card}>
-            <Image
+           <View style={{justifyContent:"center",}}>
+           <Image
               source={{
                 uri:`${pathUrl}${item.img?.slice(21)}`                 
               }}
               style={{ width: 70, height:70,resizeMode:"cover", borderRadius: 100}}
             />
+           </View>
 
             <View style={{ flexDirection: "column",marginLeft:30, alignItems: "flex-start" }}>
               <Text
