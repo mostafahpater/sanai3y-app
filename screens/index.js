@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import IntuoialScreen from './IntouialScrean';
 import {useSelector} from "react-redux";
 import { getImageUrl } from '../Config/imageUrl';
+import { getDataJops } from '../Redux/Slices/JobsReducer';
 
 export default function Index() {
 
@@ -47,7 +48,7 @@ export default function Index() {
       // 
     }
     )
-    
+    dispatch(getDataJops())
   }, [])
   // console.log(route)
 

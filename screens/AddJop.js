@@ -19,6 +19,8 @@ import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { pathUrl } from "../Config/env";
 import { useNavigation } from "@react-navigation/native";
+import { getDataJops } from "../Redux/Slices/JobsReducer";
+import { useDispatch } from "react-redux";
 // import { launchImageLibrary,  } from "react-native-image-picker";
 
 const AddJop = () => {
@@ -26,20 +28,25 @@ const AddJop = () => {
   const [image, setImage] = useState("");
   const [tok, setTok] = useState('')
   const navigation = useNavigation()
-  useEffect(()=>{
+  const dispatch = useDispatch()
+  useEffect(() => {
     AsyncStorage.getItem('token').then((res) => setTok(res))
-
-  },[])
-
+    
+    return () => {
+      console.log("dispathJop*********")
+      dispatch(getDataJops())
+    }
+  }, [])
+  
 
   const pickImage = async () => {
-  
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      selectionLimit:1
+      selectionLimit: 1
     });
 
     if (!result.cancelled) {
@@ -76,11 +83,11 @@ const AddJop = () => {
           titleJob: "",
           address: "",
           skills: "",
-          detailsAboutJob:"",
-          addresJob:"",
-          imageTest:""
+          detailsAboutJob: "",
+          addresJob: "",
+          imageTest: ""
         }}
-        validationSchema= {yup.object().shape({
+        validationSchema={yup.object().shape({
           titleJob: yup.string().required("هذا الحقل مطلوب").trim(),
           address: yup.string().required("هذا الحقل مطلوب").trim(),
           skills: yup.string().required("هذا الحقل مطلوب").trim(),
@@ -97,26 +104,27 @@ const AddJop = () => {
           formData.append("category", values.skills)
           formData.append("description", values.detailsAboutJob)
           formData.append("address", values.addresJob)
-          formData.append("jobImage",{
+          formData.append("jobImage", {
             name: image,
-            type:"image/*",
-            uri:image
+            type: "image/*",
+            uri: image
           })
+          
           const regUser = async () => {
             try {
-              const res = await axios.post(`${pathUrl}/jobs/postjob`,formData, 
-              {headers:
+              const res = await axios.post(`${pathUrl}/jobs/postjob`, formData,
                 {
-                  "authorization":tok,
-                  Accept: 'application/json',
-                  "Content-Type": "multipart/form-data",
+                  headers:
+                  {
+                    "authorization": tok,
+                    Accept: 'application/json',
+                    "Content-Type": "multipart/form-data",
+                  }
                 }
-              }
               )
 
 
               console.log('y')
-              console.log(res)
               if (res.status == 200) {
                 console.log(res.status);
                 // setRegErr(true);
@@ -126,12 +134,12 @@ const AddJop = () => {
             } catch (err) {
               // setRegErr(true);
               console.log(err)
-              
+
             }
           };
 
           regUser();
-          
+
         }}
       >
         {({
@@ -159,7 +167,7 @@ const AddJop = () => {
                   onChangeText={handleChange('titleJob')}
                   onBlur={handleBlur('titleJob')}
                 />
-                <Text style={[styles.errorTextStyle, {paddingVertical:5}]}>{touched.titleJob && errors.titleJob}</Text>
+                <Text style={[styles.errorTextStyle, { paddingVertical: 5 }]}>{touched.titleJob && errors.titleJob}</Text>
               </View>
             </View>
 
@@ -170,7 +178,7 @@ const AddJop = () => {
                   data={dataAddress}
                   defaultButtonText="أختر المركز"
                   buttonStyle={styles.selectInputStyle}
-                  buttonTextStyle={{textAlign:'justify', color:"#8b9cb5"}}
+                  buttonTextStyle={{ textAlign: 'justify', color: "#8b9cb5" }}
                   buttonTextAfterSelection={(selecteditem, index) => {
                     return selecteditem.value;
                   }}
@@ -182,9 +190,9 @@ const AddJop = () => {
                   }}
                   // onSelect={}
                   onSelect={(item) => (values.address = item.value)}
-                  // onBlur={handleBlur('address')}
+                // onBlur={handleBlur('address')}
                 />
-                <Text style={[styles.errorTextStyle, {paddingVertical:5}]}>{errors.address}</Text>
+                <Text style={[styles.errorTextStyle, { paddingVertical: 5 }]}>{errors.address}</Text>
               </View>
             </View>
 
@@ -194,7 +202,7 @@ const AddJop = () => {
                   data={dataSkills}
                   defaultButtonText="أختر الحرفة"
                   buttonStyle={styles.selectInputStyle}
-                  buttonTextStyle={{textAlign:'justify', color:"#8b9cb5"}}
+                  buttonTextStyle={{ textAlign: 'justify', color: "#8b9cb5" }}
                   buttonTextAfterSelection={(selecteditem, index) => {
                     return selecteditem.value;
                   }}
@@ -206,14 +214,14 @@ const AddJop = () => {
                   }}
                   // onSelect={}
                   onSelect={(item) => (values.skills = item.value)}
-                  // onBlur={handleBlur('address')}
+                // onBlur={handleBlur('address')}
                 />
-                <Text style={[styles.errorTextStyle, {paddingVertical:5}]}>{errors.skills}</Text>
+                <Text style={[styles.errorTextStyle, { paddingVertical: 5 }]}>{errors.skills}</Text>
               </View>
             </View>
 
             {/* Three */}
-            <View style={{flex:1, alignItems:'center'}}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
               <TextInput
                 multiline={true}
                 numberOfLines={2}
@@ -235,14 +243,14 @@ const AddJop = () => {
                   marginTop: 40,
                   borderWidth: 1,
                   borderColor: "#eee",
-                  
+
                 }}
               />
-               <Text style={[styles.errorTextStyle, {paddingTop:5}]}>{touched.detailsAboutJob && errors.detailsAboutJob}</Text>
+              <Text style={[styles.errorTextStyle, { paddingTop: 5 }]}>{touched.detailsAboutJob && errors.detailsAboutJob}</Text>
             </View>
 
             <View
-              style={[styles.SectionStyle, {  marginBottom: 20 }]}
+              style={[styles.SectionStyle, { marginBottom: 20 }]}
             >
               <View style={{ flex: 1, height: 80 }}>
                 <TextInput
@@ -258,7 +266,7 @@ const AddJop = () => {
                   onChangeText={handleChange('addresJob')}
                   onBlur={handleBlur('addresJob')}
                 />
-                <Text style={[styles.errorTextStyle,{paddingVertical:5}]}>{touched.addresJob && errors.addresJob}</Text>
+                <Text style={[styles.errorTextStyle, { paddingVertical: 5 }]}>{touched.addresJob && errors.addresJob}</Text>
               </View>
             </View>
 
@@ -271,7 +279,7 @@ const AddJop = () => {
                 borderBottomWidth: 1,
                 paddingBottom: 10,
                 borderBottomColor: "#EEE",
-                marginTop:10
+                marginTop: 10
               }}
             >
               <View
@@ -306,7 +314,7 @@ const AddJop = () => {
                         padding: 6,
                       }}
                       onPress={pickImage}
-                    
+
                     >
                       اضافة صورة
                     </Text>
@@ -325,7 +333,7 @@ const AddJop = () => {
                   <Image
                     source={{ uri: image }}
                     style={{ width: 170, height: 100 }}
-                    // value={values.image}
+                  // value={values.image}
                   />
                 )}
               </View>
@@ -360,7 +368,7 @@ const AddJop = () => {
                       fontSize: 15,
                       padding: 6,
                     }}
-                   
+
                   >
                     مشاركة المشكلة
                   </Text>
@@ -422,7 +430,7 @@ const styles = StyleSheet.create({
   inputStyle: {
     // flex: 1,
     height: 50,
-    alignItems:"center",
+    alignItems: "center",
     paddingLeft: 15,
     paddingRight: 15,
     paddingHorizontal: 100,
@@ -434,7 +442,7 @@ const styles = StyleSheet.create({
   },
   errorTextStyle: {
     color: "red",
-    paddingRight:5,
+    paddingRight: 5,
     fontSize: 12,
   },
   successTextStyle: {

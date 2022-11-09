@@ -10,39 +10,31 @@ import dateformat, { masks } from "dateformat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../components/Loder";
 import { Searchbar } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { getDataJops } from "../Redux/Slices/JobsReducer";
 export default function Home() {
   const navigation = useNavigation(); 
   const [flag,seTflag]=useState(false); // re render to component 
   const [ loader , setLoader] = useState(true)
-  const [allJob, setAllJob] = useState([]) // All Jops
+  // const [allJob, setAllJob] = useState([]) // All Jops
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [search, setSearch] = useState("");
+  const allJob = useSelector(state => state.JobsReducer.dataJobs)
+  const dispatch = useDispatch()
   useEffect(() => {
     seTflag(true);
-      axios.get(`${pathUrl}/jobs/all`).then((response) => {
-        const res = response.data.data.filter((item) => {
-          return item.status != "in progress"
-        })
-        setAllJob([...res])
-        setFilteredDataSource([...res])
-        // console.log(allJob)
-        if(response.status == 200){
-          setTimeout(() => {
-            setLoader(false)
-            
-          }, 1100);
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
-
     
+    console.log("first...")
+    console.log("first...*****")
+      // dispatch(getDataJops())
+
+    setFilteredDataSource(allJob)
     return () => {
       seTflag(false)
       setLoader(true)
     }
 
-  }, [])
+  }, [allJob])
   
   // console.log(val)
   const searchFilterFunction = (text) => {
@@ -66,10 +58,9 @@ export default function Home() {
   };
 
 
-  useEffect(() => { }, [allJob])
 
   function delet(id) {
-    setAllJob((prev) => prev.filter((item) => item._id != id));
+    setFilteredDataSource((prev) => prev.filter((item) => item._id != id));
   }
 
   // Start JSX
