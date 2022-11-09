@@ -36,8 +36,10 @@ function test() {
           ),
           headerTitle: "الصفحة الشخصية",
           headerTitleAlign: "center",
-          headerTitleStyle: {
-            fontSize: 25,
+          headerStyle: {
+            backgroundColor: "#fbb150",
+            elevation: 15,
+            shadowColor: "#000"
           },
           headerStyle: {
             backgroundColor: "#fbb150",

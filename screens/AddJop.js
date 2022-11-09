@@ -22,18 +22,24 @@ import { useNavigation } from "@react-navigation/native";
 import { getDataJops } from "../Redux/Slices/JobsReducer";
 import { useDispatch } from "react-redux";
 // import { launchImageLibrary,  } from "react-native-image-picker";
+import Loader from "../components/Loder";
 
 const AddJop = () => {
   let [regErr, setRegErr] = useState(false);
   const [image, setImage] = useState("");
   const [tok, setTok] = useState('')
+  const [ loader ,setLoader]= useState(true)
   const navigation = useNavigation()
   const dispatch = useDispatch()
   useEffect(() => {
     AsyncStorage.getItem('token').then((res) => setTok(res))
     
+    
+    setTimeout(() => {
+      setLoader(false)
+    }, 1100);
     return () => {
-      console.log("dispathJop*********")
+      // console.log("dispathJop*********")
       dispatch(getDataJops())
     }
   }, [])
@@ -78,7 +84,7 @@ const AddJop = () => {
   ];
   return (
     <>
-      <Formik
+      {!loader&&<Formik
         initialValues={{
           titleJob: "",
           address: "",
@@ -377,7 +383,9 @@ const AddJop = () => {
             </View>
           </ScrollView>
         )}
-      </Formik>
+      </Formik>}
+
+      {loader&&<Loader/>}
     </>
   );
 };

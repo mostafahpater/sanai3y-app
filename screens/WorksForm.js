@@ -23,10 +23,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoginScreen from "./Login";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { StackActions } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 export default function WorksForm() {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [token, setToken] = useState('')
+  const dispatch = useDispatch()
   const handleUpload = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -73,7 +75,7 @@ export default function WorksForm() {
         console.log(res);
         if (res.status == 200) {
           console.log("true");
-          StackActions.pop()
+          AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
           navigation.navigate('ShowWorks')
         } else {
           console.log("erorr");

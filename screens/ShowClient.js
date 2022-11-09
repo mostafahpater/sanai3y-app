@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { sendCurrentReciever } from '../Redux/Chat/ImageUrlSlicer';
 import { useDispatch } from 'react-redux';
 import { getImageUrl } from '../Config/imageUrl';
+import Loader from '../components/Loder';
 
 
 
@@ -42,7 +43,7 @@ export default function ShowClient(props) {
     const [conversations, setConversations] = useState([]);
     const [currentReciever, setCurrentReciever] = useState({});
     const [role , setRole]= useState('')
-
+    const [ loader , setLoader] = useState(true)
     // Getting the token of the current sender (current sanai3y)
     useEffect(() => {
         AsyncStorage.getItem('snai3yRole').then((i)=> setRole(i))
@@ -51,6 +52,9 @@ export default function ShowClient(props) {
             setToken(toke);
         }
         getToken();
+        // setTimeout(() => {
+        //     setLoader(false)
+        // }, 1000);
     }, [])
 
     // Fetching the data of the current sender (current sanai3y)
@@ -116,150 +120,152 @@ export default function ShowClient(props) {
             axios.get(`${pathUrl}/client/clients/${data.clientData?._id}`)
                 .then((res) => {
                     setJobs([...res.data.Data.jobs])
-                    console.log(jobs[10].image)
-
-
                     // Setting the current reciever data (current client)
                     // console.log(res.data.Data)
                     let newImage = getImageUrl(res.data.Data.img)
                     setCurrentReciever({ ...res.data.Data, img: newImage })
-
+                    if(res.status == 200){
+                        setLoader(false)
+                    }
                 }).catch((err) => console.log(err))
         }, 100);
 
     }, [])
 
     return (
+        <>
+            {!loader&&<ScrollView style={{ backgroundColor: "#fff" }}>
 
-        <ScrollView style={{ backgroundColor: "#fff" }}>
-
-            <View style={styles.parent}>
-                <View style={styles.image}>
-                    <View style={styles.imgProfile}>
-                        <View>
-                            <Image source={{ uri: `${pathUrl}${data.clientData?.img.slice(21)}` }}
-                                style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
-                            />
-                        </View>
-                        <View>
-                            <TouchableOpacity onPress={makeNewConversation}
-                                style={{
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    backgroundColor: "#eee",
-                                    padding: 5,
-                                    borderBottomStartRadius: 5,
-                                    borderBottomEndRadius: 5,
-                                }}
-                            >
-                                <Ionicons name="chatbox-ellipses" size={30} color="#fbb200" />
-                            </TouchableOpacity>
-                        </View>
-
-                    </View>
-
-                    <View style={styles.userName}>
-                        <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data.clientData?.firstName} ${data.clientData?.lastName}`}</Text>
-
-                    </View>
-
-                </View>
-
-                {/* Details user */}
-                <View style={styles.parentList}>
-                    {role == "client" &&<View style={styles.row}>
-                        <View style={styles.col}>
-                            <Text style={styles.textcol}>{data.clientData?.phoneNumber}</Text>
-                        </View>
-                        <View style={styles.col}>
-                            <Entypo name='phone' style={styles.iconCol} />
-                        </View>
-                    </View>}
-
-                    {/* address */}
-                    <View style={styles.row}>
-                        <View style={styles.col}>
-                            <Text style={styles.textcol}>{`العنوان : ${data.clientData?.address}`}</Text>
-                        </View>
-                        <View style={styles.col}>
-                            <Entypo name='location-pin' style={styles.iconCol} />
-                        </View>
-                    </View>
-                    <View style={styles.row}>
-                        <View style={styles.col}>
-                            <Text style={styles.textcol}>{`عدد المنشورات : ${jobs?.length}`}</Text>
-                        </View>
-                        <View style={styles.col}>
-                            <MaterialIcons name='post-add' style={styles.iconCol} />
-                        </View>
-                    </View>
-                </View>
-
-                {/* Talbat */}
-                <View style={{ alignItems: "center", marginTop: 20 }}>
-                    <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>المنشورات</Text>
-                </View>
-
-                {/* Card Style */}
-
-                {jobs.length > 0 && jobs.map((item, index) =>
-                    <View style={styles.card} key={index}>
-                        <View style={styles.cardBody}>
-                            {/* jop des */}
-                            <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
-                                <View>
-                                    <Text style={styles.text}>عنوان الوظيفة :{item.title}</Text>
-                                </View>
-                                <View>
-                                    <Text style={[styles.text, { marginTop: 10 }]}>الوصف : {item.description}</Text>
-                                </View>
+                <View style={styles.parent}>
+                    <View style={styles.image}>
+                        <View style={styles.imgProfile}>
+                            <View>
+                                <Image source={{ uri: `${pathUrl}${data.clientData?.img.slice(21)}` }}
+                                    style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
+                                />
                             </View>
-                            {/* img Jop */}
-                            <View style={{ width: "50%" }}>
-                                <Image
-                                    source={{ uri: `${pathUrl}${item.image?.slice(21)}` }}
-                                    style={{ height: 200, resizeMode: "contain" }} />
-                            </View>
-                        </View>
-                        {role != "client" && <View
-                            style={{
-                                flex:1,
-                                justifyContent:"flex-end",
-                                alignItems:"center",
-                                marginBottom:10
-                            }}
-                        >
-                            <TouchableOpacity
-                                style={{
-                                    width:"30%",
-                                    // justifyContent:"flex-end",
-                                    alignItems:"center"
-                                }}
-                            >
-                                <Text
+                            <View>
+                                <TouchableOpacity onPress={makeNewConversation}
                                     style={{
-                                        backgroundColor: "#ffb200",
-                                        paddingHorizontal: 10,
-                                        paddingVertical: 10,
-                                        borderRadius: 5,
-                                        // alignItems:"center",
-                                        justifyContent:"center"
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: "#eee",
+                                        padding: 5,
+                                        borderBottomStartRadius: 5,
+                                        borderBottomEndRadius: 5,
                                     }}
-                                    onPress={() =>
-                                        navigation.navigate("SendTalp", { one: item })
-                                    }
                                 >
-                                    تقديم طلب
-                                </Text>
-                            </TouchableOpacity>
+                                    <Ionicons name="chatbox-ellipses" size={30} color="#fbb200" />
+                                </TouchableOpacity>
+                            </View>
 
-                        </View>}
+                        </View>
+
+                        <View style={styles.userName}>
+                            <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data.clientData?.firstName} ${data.clientData?.lastName}`}</Text>
+
+                        </View>
+
                     </View>
-                )}
 
-                {jobs.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
-            </View>
-        </ScrollView>
+                    {/* Details user */}
+                    <View style={styles.parentList}>
+                        {role == "client" &&<View style={styles.row}>
+                            <View style={styles.col}>
+                                <Text style={styles.textcol}>{data.clientData?.phoneNumber}</Text>
+                            </View>
+                            <View style={styles.col}>
+                                <Entypo name='phone' style={styles.iconCol} />
+                            </View>
+                        </View>}
+
+                        {/* address */}
+                        <View style={styles.row}>
+                            <View style={styles.col}>
+                                <Text style={styles.textcol}>{`العنوان : ${data.clientData?.address}`}</Text>
+                            </View>
+                            <View style={styles.col}>
+                                <Entypo name='location-pin' style={styles.iconCol} />
+                            </View>
+                        </View>
+                        <View style={styles.row}>
+                            <View style={styles.col}>
+                                <Text style={styles.textcol}>{`عدد المنشورات : ${jobs?.length}`}</Text>
+                            </View>
+                            <View style={styles.col}>
+                                <MaterialIcons name='post-add' style={styles.iconCol} />
+                            </View>
+                        </View>
+                    </View>
+
+                    {/* Talbat */}
+                    <View style={{ alignItems: "center", marginTop: 20 }}>
+                        <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>المنشورات</Text>
+                    </View>
+
+                    {/* Card Style */}
+
+                    {jobs.length > 0 && jobs.map((item, index) =>
+                        <View style={styles.card} key={index}>
+                            <View style={styles.cardBody}>
+                                {/* jop des */}
+                                <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
+                                    <View>
+                                        <Text style={styles.text}>عنوان الوظيفة :{item.title}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={[styles.text, { marginTop: 10 }]}>الوصف : {item.description}</Text>
+                                    </View>
+                                </View>
+                                {/* img Jop */}
+                                <View style={{ width: "50%" }}>
+                                    <Image
+                                        source={{ uri: `${pathUrl}${item.image?.slice(21)}` }}
+                                        style={{ height: 200, resizeMode: "contain" }} />
+                                </View>
+                            </View>
+                            {role != "client" && <View
+                                style={{
+                                    flex:1,
+                                    justifyContent:"flex-end",
+                                    alignItems:"center",
+                                    marginBottom:10
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={{
+                                        width:"30%",
+                                        // justifyContent:"flex-end",
+                                        alignItems:"center"
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            backgroundColor: "#ffb200",
+                                            paddingHorizontal: 10,
+                                            paddingVertical: 10,
+                                            borderRadius: 5,
+                                            // alignItems:"center",
+                                            justifyContent:"center"
+                                        }}
+                                        onPress={() =>
+                                            navigation.navigate("SendTalp", { one: item })
+                                        }
+                                    >
+                                        تقديم طلب
+                                    </Text>
+                                </TouchableOpacity>
+
+                            </View>}
+                        </View>
+                    )}
+
+                    {jobs.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
+                </View>
+            </ScrollView>}
+            
+            {loader && <Loader/>}
+        </>
     )
 }
 

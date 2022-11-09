@@ -29,7 +29,7 @@ import { useDispatch } from "react-redux";
 export default function EditeJobsWithClient() {
   const { params } = useRoute();
   const id = get(params, "idJob");
-  console.log(id);
+  console.log("id",id);
 
   const [image, setImage] = useState(null);
   const dispatch = useDispatch()
@@ -43,13 +43,13 @@ export default function EditeJobsWithClient() {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
     }
   };
-  console.log(image);
+  // console.log(image);
   const worksSchema = yup.object().shape({
     title: yup.string().required("هذا الحقل مطلوب"),
     description: yup.string().required("هذا الحقل مطلوب"),
@@ -59,7 +59,7 @@ export default function EditeJobsWithClient() {
     AsyncStorage.getItem("token").then((res) => {
       axios
         .put(`${pathUrl}/jobs/update/${id}`, values, {
-          headers: { Authorization: res },
+          headers: { "Authorization": res },
         })
         .then((res) => {
           console.log(res);
@@ -102,7 +102,7 @@ export default function EditeJobsWithClient() {
                     style={styles.inputStyle}
                     onChangeText={handleChange("title")}
                     value={values.title}
-                    placeholder="ادخل عنوان العمل" //Text
+                    placeholder="ادخل عنوان المشكلة (ادخل وصف مختصر يعبر عن المشكلة)" //Text
                     placeholderTextColor="#8b9cb5"
                     autoCapitalize="none"
                     keyboardType="default"
@@ -116,8 +116,8 @@ export default function EditeJobsWithClient() {
                 )}
                 <View style={styles.SectionStyle}>
                   <TextInput
-                    style={[styles.inputStyle, styles.description]}
-                    placeholder="ادخل وصف العمل" //12345
+                    style={styles.textAreaStyle}
+                    placeholder="ادخل وصف المشكلة" //12345
                     placeholderTextColor="#8b9cb5"
                     keyboardType="default"
                     value={values.description}
@@ -125,6 +125,7 @@ export default function EditeJobsWithClient() {
                     onSubmitEditing={Keyboard.dismiss}
                     blurOnSubmit={false}
                     returnKeyType="next"
+                    multiline={true}
                     onBlur={() => setFieldTouched("description")}
                   />
                 </View>
@@ -167,7 +168,6 @@ const styles = StyleSheet.create({
   },
   SectionStyle: {
     flexDirection: "row",
-    // height: 40,
     marginTop: 20,
     marginLeft: 35,
     marginRight: 35,
@@ -187,52 +187,39 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     elevation: 5,
   },
-  description: {
-    height: 100,
-  },
   buttonTextStyle: {
     color: "white",
-
     fontSize: 18,
-  },
-  buttonPhoto: {
-    backgroundColor: "white",
-    borderWidth: 0,
-    height: 55,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignContent: "center",
-    borderRadius: 5,
-    padding: 5,
-
-    marginTop: 20,
-    marginBottom: 20,
-    elevation: 5,
   },
   inputStyle: {
     flex: 1,
     color: "#000",
     paddingLeft: 6,
     paddingRight: 15,
+    paddingVertical:10,
+    alignItems:"center",
+    justifyContent:"center",
     paddingTop: 5,
     borderWidth: 1,
     backgroundColor: "#fff",
     borderRadius: 5,
-    borderColor: "#8b9cb5",
+    borderColor: "#dadae8",
+    textAlign: "right",
+    elevation: 2,
+  },
+  textAreaStyle:{
+    flex: 1,
+    color: "#000",
+    padding:10,
+    borderWidth: 1,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    borderColor: "#dadae8",
     textAlign: "right",
     textAlignVertical: "top",
     elevation: 2,
+    height:100
   },
-  styleUser: {
-    fontSize: 22,
-
-    color: "#ffb200",
-
-    padding: 9,
-    paddingTop: 9,
-  },
-
   errorTextStyle: {
     color: "red",
     textAlign: "center",

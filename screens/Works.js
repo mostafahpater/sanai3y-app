@@ -15,12 +15,9 @@ export default function Works() {
     AsyncStorage.getItem('token').then((res) => setToken(res))
 
   },[])
-  useEffect(() => {
-    // console.log("object");x`
-   
+  useEffect(() => { 
     axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:token}}).then((res) => {
       // console.log(res.data);
-      console.log("true");
        setData(res.data.Data)
     }).catch((erorr) => {
       console.log("erorr");
@@ -37,7 +34,7 @@ export default function Works() {
     <View>
 
       <View style={styles.cont}>
-        <View>
+        <View style={{alignItems:"center",marginVertical:10}}>
           <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('AddWorks')}>
             <Text style={styles.buttonTextStyle}
             >اضافة عمل</Text>
@@ -45,7 +42,7 @@ export default function Works() {
 
         </View>
         {data.length > 0 && <FlatList
-         contentContainerStyle={{ paddingBottom: 120 }}
+         contentContainerStyle={{ paddingBottom: 200 }}
           data={data}
           // keyExtractor={({ item }) => item}
           renderItem={({ item }, index) => (
@@ -78,13 +75,9 @@ export default function Works() {
 }
 const styles = StyleSheet.create({
   cont: {
-
     color: "black",
-    // justifyContent: "center",
-    // alignItems: "center",
     flexDirection: "column",
-    // marginRight:15,
-    marginLeft: 20
+    marginLeft: 28,
   },
   card: {
     width: "90%",

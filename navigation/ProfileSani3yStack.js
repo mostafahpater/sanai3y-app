@@ -14,7 +14,6 @@ const ProfileSani3yStack = () => {
     function test() {
 
         AsyncStorage.clear();
-        // DevSettings.reload()  
         navigation.replace('login')
       }
   return (
@@ -25,6 +24,11 @@ const ProfileSani3yStack = () => {
             options={{
                 headerTitle:"الصفحة الشخصية",
                 headerTitleAlign:"center",
+                headerStyle: {
+                    backgroundColor: "#fbb150",
+                    elevation: 15,
+                    shadowColor: "#000"
+                  },
                 headerLeft: () => (
                     <TouchableOpacity>
                       <AntDesign name="login" style={{paddingRight:20, fontSize:20}} 

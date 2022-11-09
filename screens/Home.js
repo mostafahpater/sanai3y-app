@@ -24,9 +24,6 @@ export default function Home() {
   useEffect(() => {
     seTflag(true);
     
-    console.log("first...")
-    console.log("first...*****")
-      // dispatch(getDataJops())
 
     setFilteredDataSource(allJob)
     return () => {

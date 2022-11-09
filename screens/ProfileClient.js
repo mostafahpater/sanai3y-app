@@ -77,20 +77,15 @@ export default function ProfileClient() {
 
   // Dellet Job With Client
   function sendIdJob(id) {
-    AsyncStorage.getItem("token").then((res) => {
+    AsyncStorage.getItem("token").then((tok) => {
+      // console.log(tok)
 
-
-      axios
-        .put(
-          `${pathUrl}/jobs/delete/${id}`,
-          {},
-          { headers: { Authorization: res } }
-        )
-        .then((res) => {
+      axios.put(`${pathUrl}/jobs/delete/${id}`,{},
+          { headers: { "Authorization": tok } }
+        ).then((result0) => {
           // Logic  
-          if (res.status == 200) {
-            // var arr = getAllJobs.filter((item) => item._id != id);
-            // setGetAllJob([...arr]);
+          console.log(result0)
+          if (result0.status == 200) {
             AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
           }
 
@@ -123,7 +118,7 @@ export default function ProfileClient() {
             }
 
           })
-          console.log("first")
+          // console.log("first")
           if (res.status == 200) {
             toggleModal()
             AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))

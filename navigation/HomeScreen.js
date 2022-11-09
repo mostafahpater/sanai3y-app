@@ -16,14 +16,11 @@ import Sanai3yStack from "./Sanai3yStack";
 import ProfileSani3yStack from "./ProfileSani3yStack";
 import ProfileClientStack from "./ProfileClientStack";
 export default function MainTabs() {
-
   let [role, setRole] = useState('')
   const dispatch = useDispatch()
   AsyncStorage.getItem("snai3yRole").then(res => {
-    console.log(res);
     setRole(res)
   })
-  console.log("index");
   return (
 
     <Navigator>

@@ -13,17 +13,26 @@ const Sanai3yStack = () => {
         name="الصنايعية"
         component={AllUser}
         options={{
-          tabBarShowLabel:false,
-
+          headerTitle:"جميع الحرفيين",
+          headerTitleAlign:"center",
+          headerStyle:{
+            backgroundColor: "#fbb150",
+            elevation: 15,
+            shadowColor: "#000"
+          }
       
         }}
       />
         <Screen name='Sanai3yShow' component={ShowSanai3y}
        options={
          {
-           // headerShown:false
-           headerTitle: "صنايعى",
-          
+          headerTitle:"حرفي",
+          headerTitleAlign:"center",
+          headerStyle:{
+            backgroundColor: "#fbb150",
+            elevation: 15,
+            shadowColor: "#000"
+          }
          }
        }
        />
