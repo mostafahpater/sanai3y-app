@@ -32,14 +32,22 @@ export default function Works() {
    
   })})
 
-  }, [])
+  }, [token])
 
   // console.log(data);
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-
+    AsyncStorage.getItem('token').then((res) => 
+    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
+      // console.log(res.data);
+       setData(res.data.Data)
+    }).catch((erorr) => {
+      console.log("erorr");
+      console.log(erorr);
+   
+  })})
   }, []);
 
   return (

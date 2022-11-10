@@ -53,3 +53,20 @@ export const schemaUser = yup.object().shape({
     gender: yup.string().required("هذا الحقل مطلوب")
 
 })
+export const EditUSer = yup.object().shape({
+    firstName: yup.string().required("هذا الحقل مطلوب"),
+    
+    lastName: yup.string().required("هذا الحقل مطلوب"),
+    
+    email: yup.string().email("هذا البريد الألكتروني غير صحيح").required("هذا الحقل مطلوب"),
+    
+    
+    
+    
+    
+    phoneNumber:yup.string()
+    .matches(/^01[0125][0-9]{8}$/,"رقم الهاتف غير صحيح").required("هذا الحقل مطلوب"),
+
+    address: yup.string().required("هذا الحقل مطلوب"),
+
+})
