@@ -77,12 +77,12 @@ export default function AllSanai3y() {
               onPress={() => {navigation.navigate("Sanai3yShow", { data: item }); }}
             >
               <View key={index} style={styles.card}>
-                <View style={{ justifyContent: "center", marginStart:5 }}>
+                <View style={{ height: 150,justifyContent: "center", marginStart:5 }}>
                   <Image
                     source={{
                       uri: `${pathUrl}${item.img?.slice(21)}`
                     }}
-                    style={{ width: 120, height: "85%", resizeMode: "cover" ,borderRadius:10 }}
+                    style={{ width: 120, height: "90%", resizeMode: "stretch" ,borderRadius:10 }}
                   />
                 </View>
 
@@ -168,9 +168,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     elevation: 2,
     marginTop: 15,
-    marginBottom: 15,
+    // marginBottom: 15,
     paddingRight: 15,
-    padding: 5,
+    // padding: 5,
   },
   description: {
     margin: 5,
