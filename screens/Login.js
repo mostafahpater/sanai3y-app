@@ -25,7 +25,7 @@ import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Loader from '../components/Loder';
 import { useDispatch } from 'react-redux';
 // import Loader from './Components/Loader';
-
+import ToastManager, { Toast } from 'toastify-react-native'
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [loader, setLoader] = useState(true);
@@ -66,9 +66,9 @@ const LoginScreen = () => {
     // setLoading(true);
     const sendLogin = async () => {
       // console.log(values)
+      console.log(values)
       try {
         let res = await axios.post(`${pathUrl}/client/signin`, values)
-        // console.log(values)
         // console.log(res);
         if (res.data.message == "Valid password & logged in") {
           const stor = async () => {
@@ -80,20 +80,22 @@ const LoginScreen = () => {
           stor()
           // console.log(res)
           navigation.navigate('Home')
-          setLogErr(false)
+
         } else {
           setLogErr(true)
         }
 
       } catch (err) {
         console.log(err)
-        setLogErr(true)
+        showToasts()
       }
     }
 
     sendLogin()
   };
-
+  const showToasts = () => {
+    Toast.error("لبريد الالكتروني أو كلمة السر غير صحيحه")
+  }
 
   return (
     <>
@@ -106,6 +108,7 @@ const LoginScreen = () => {
           >
             {({ handleSubmit, handleChange, errors, touched, values, setFieldTouched }) => (
               <View style={styles.mainBody}>
+                <ToastManager/>
                 {/* <Loader loading={loading} /> */}
                 <ScrollView
                   keyboardShouldPersistTaps="handled"
@@ -128,11 +131,11 @@ const LoginScreen = () => {
                       />
 
                     </View>
-                    {logErr && <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "center", marginBottom: 10 }}>
+                    {/* {logErr && <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "center", marginBottom: 10 }}>
                       <View style={{ backgroundColor: "#dc2626", padding: 5, borderRadius: 5, width: "80%" }}>
                         <Text style={{ color: "#fff", fontSize: 18, textAlign: "center" }}>البريد الألكتروني أو كلمة السر غير صحيحه</Text>
                       </View>
-                    </View>}
+                    </View>} */}
                     <KeyboardAvoidingView enabled>
                       <Text style={{
                         color: "#000",

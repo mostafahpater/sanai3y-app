@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Image, Button, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image, Button, FlatList, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
@@ -12,6 +12,11 @@ import Loader from "../components/Loder";
 import { Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { getDataJops } from "../Redux/Slices/JobsReducer";
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 export default function Home() {
   const navigation = useNavigation();
   const [flag, seTflag] = useState(false); // re render to component 
@@ -23,10 +28,6 @@ export default function Home() {
   const dispatch = useDispatch()
   useEffect(() => {
     seTflag(true);
-
-    setTimeout(() => {
-      setLoader(false)
-    }, 1100);
 
     setFilteredDataSource(allJob)
     return () => {
@@ -62,11 +63,17 @@ export default function Home() {
   function delet(id) {
     setFilteredDataSource((prev) => prev.filter((item) => item._id != id));
   }
+  const [refreshing, setRefreshing] = React.useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    dispatch(getDataJops())
+  }, []);
   // Start JSX
   return (
     <>
-      {!loader && <View style={styles.container}>
+      { <View style={styles.container}>
         {/* Start Search */}
 
         <Searchbar
@@ -86,6 +93,12 @@ export default function Home() {
           <FlatList
             data={filteredDataSource}
             keyExtractor={(item, index) => index}
+            refreshControl={
+              <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+            }
             renderItem={({ item }) => (
               <View style={[styles.box, styles.shadowProp]}>
                 <TouchableOpacity
@@ -232,7 +245,6 @@ export default function Home() {
         {/* End Box Posts */}
         {allJob.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
       </View>}
-      {loader && <Loader />}
     </>
   );
 }

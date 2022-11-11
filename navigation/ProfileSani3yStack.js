@@ -7,6 +7,7 @@ import Works from '../screens/Works'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
+import EditProfileSani3y from '../screens/EditProfileSani3y'
 
 const ProfileSani3yStack = () => {
     const { Navigator , Screen} = createStackNavigator()
@@ -58,6 +59,19 @@ const ProfileSani3yStack = () => {
             options={{
                 headerShown:true,
                 headerTitle:"اضافة عمل جديد",
+                headerStyle: {
+                    backgroundColor: "#fbb150",
+                    elevation: 15,
+                    shadowColor: "#000"
+                  },
+            }}
+        />
+        <Screen 
+            name='EditDataSani3y'
+            component={EditProfileSani3y}
+            options={{
+                headerShown:true,
+                headerTitle:"تعديل البيانات",
                 headerStyle: {
                     backgroundColor: "#fbb150",
                     elevation: 15,

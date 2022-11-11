@@ -24,6 +24,8 @@ import LoginScreen from "./Login";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { StackActions } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
+import ToastManager, { Toast } from 'toastify-react-native'
+
 export default function WorksForm() {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
@@ -70,144 +72,151 @@ export default function WorksForm() {
           Accept: 'application/json',
           "Content-Type": "multipart/form-data",
         }
-      })
-      .then((res) => {
+      }).then((res) => {
         console.log(res);
         if (res.status == 200) {
           console.log("true");
-          AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
-          navigation.navigate('ShowWorks')
+          showToasts()
+          setTimeout(() => {
+            navigation.navigate('ShowWorks')
+            AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
+            
+          }, 3000);
         } else {
           console.log("erorr");
           console.log("Please check your email id or password");
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.log("erorr");
         console.log(err);
       });
       
   };
-
+  const showToasts = () => {
+    Toast.success('تم الأضافة بنجاح')
+  }
   return (
-    <Formik
-      initialValues={
-        {
-          title: "",
-          description: "",
-          workImage: ""
+    <>
+    <ToastManager/>
+      <Formik
+        initialValues={
+          {
+            title: "",
+            description: "",
+            workImage: ""
+          }
         }
-      }
-      validationSchema={worksSchema}
-      onSubmit={onSubmit}
-    >
-      {({
-        handleSubmit,
-        handleChange,
-        errors,
-        touched,
-        values,
-        setFieldTouched,
-      }) => (
-        <View style={styles.mainBody}>
-          {/* <Loader loading={loading} /> */}
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{
-              flex: 1,
-              justifyContent: "center",
-              alignContent: "center",
-            }}
-          >
-            <View>
-              <KeyboardAvoidingView enabled>
-                <Text
-                  style={{
-                    color: "#000",
-                    fontSize: 25,
-                    fontWeight: "700",
-                    textAlign: "center",
-                  }}
-                >
-                  اضافة عمل جديد
-                </Text>
-                <View style={styles.SectionStyle}>
-                  <TextInput
-                    style={styles.inputStyle}
-                    onChangeText={handleChange("title")}
-                    value={values.title}
-                    placeholder="ادخل عنوان العمل" //Text
-                    placeholderTextColor="#8b9cb5"
-                    autoCapitalize="none"
-                    keyboardType="default"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    onBlur={() => setFieldTouched("title")}
-                  />
-                </View>
-                {touched.title && errors.title && (
-                  <Text style={styles.errorTextStyle}>{errors.title}</Text>
-                )}
-                <View style={styles.SectionStyle}>
-                  <TextInput
-                    style={[styles.inputStyle, styles.description]}
-                    placeholder="ادخل وصف العمل" //12345
-                    placeholderTextColor="#8b9cb5"
-                    keyboardType="default"
-                multiline={true}
-                    value={values.description}
-                    onChangeText={handleChange("description")}
-                    onSubmitEditing={Keyboard.dismiss}
-                    blurOnSubmit={false}
-                    returnKeyType="next"
-                    onBlur={() => setFieldTouched("description")}
-                  />
-                </View>
-                {touched.description && errors.description && (
-                  <Text style={styles.errorTextStyle}>
-                    {errors.description}
-                  </Text>
-                )}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                  }}
-                >
-                  <TouchableOpacity
-                    style={styles.buttonPhoto}
-                    activeOpacity={0.5}
-                    onPress={handleUpload}
+        validationSchema={worksSchema}
+        onSubmit={onSubmit}
+      >
+        {({
+          handleSubmit,
+          handleChange,
+          errors,
+          touched,
+          values,
+          setFieldTouched,
+        }) => (
+          <View style={styles.mainBody}>
+            {/* <Loader loading={loading} /> */}
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{
+                flex: 1,
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+            >
+              <View>
+                <KeyboardAvoidingView enabled>
+                  <Text
+                    style={{
+                      color: "#000",
+                      fontSize: 25,
+                      fontWeight: "700",
+                      textAlign: "center",
+                    }}
                   >
-                    <Text style={[styles.buttonTextStyle, { color: "black" }]}>
-                      اضف صورة
-                    </Text>
-                    <Icon name="upload" style={styles.styleUser} />
-                  </TouchableOpacity>
-                  {image && (
-                    <Image
-                      source={{ uri: image }}
-                      style={{ height: 200, width: 200, margin: 10 }}
+                    اضافة عمل جديد
+                  </Text>
+                  <View style={styles.SectionStyle}>
+                    <TextInput
+                      style={styles.inputStyle}
+                      onChangeText={handleChange("title")}
+                      value={values.title}
+                      placeholder="ادخل عنوان العمل" //Text
+                      placeholderTextColor="#8b9cb5"
+                      autoCapitalize="none"
+                      keyboardType="default"
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                      onBlur={() => setFieldTouched("title")}
                     />
+                  </View>
+                  {touched.title && errors.title && (
+                    <Text style={styles.errorTextStyle}>{errors.title}</Text>
                   )}
-                </View>
-                {touched.jobImage && errors.jobImage && (
-                  <Text style={styles.errorTextStyle}>{errors.jobImage}</Text>
-                )}
-                <TouchableOpacity
-                  style={styles.buttonStyle}
-                  activeOpacity={0.5}
-                  onPress={handleSubmit}
+                  <View style={styles.SectionStyle}>
+                    <TextInput
+                      style={[styles.inputStyle, styles.description]}
+                      placeholder="ادخل وصف العمل" //12345
+                      placeholderTextColor="#8b9cb5"
+                      keyboardType="default"
+                  multiline={true}
+                      value={values.description}
+                      onChangeText={handleChange("description")}
+                      onSubmitEditing={Keyboard.dismiss}
+                      blurOnSubmit={false}
+                      returnKeyType="next"
+                      onBlur={() => setFieldTouched("description")}
+                    />
+                  </View>
+                  {touched.description && errors.description && (
+                    <Text style={styles.errorTextStyle}>
+                      {errors.description}
+                    </Text>
+                  )}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={styles.buttonPhoto}
+                      activeOpacity={0.5}
+                      onPress={handleUpload}
+                    >
+                      <Text style={[styles.buttonTextStyle, { color: "black" }]}>
+                        اضف صورة
+                      </Text>
+                      <Icon name="upload" style={styles.styleUser} />
+                    </TouchableOpacity>
+                    {image && (
+                      <Image
+                        source={{ uri: image }}
+                        style={{ height: 200, width: 200, margin: 10 }}
+                      />
+                    )}
+                  </View>
+                  {touched.jobImage && errors.jobImage && (
+                    <Text style={styles.errorTextStyle}>{errors.jobImage}</Text>
+                  )}
+                  <TouchableOpacity
+                    style={styles.buttonStyle}
+                    activeOpacity={0.5}
+                    onPress={handleSubmit}
 
-                >
-                  <Text style={styles.buttonTextStyle} >اضافة</Text>
-                </TouchableOpacity>
-              </KeyboardAvoidingView>
-            </View>
-          </ScrollView>
-        </View>
-      )}
-    </Formik>
+                  >
+                    <Text style={styles.buttonTextStyle} >اضافة</Text>
+                  </TouchableOpacity>
+                </KeyboardAvoidingView>
+              </View>
+            </ScrollView>
+          </View>
+        )}
+      </Formik>
+    </>
   );
 }
 

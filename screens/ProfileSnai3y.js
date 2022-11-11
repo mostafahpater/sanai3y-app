@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Button, Platform } from 'react-native'
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Button, Platform, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
 import Modal from "react-native-modal";
@@ -12,8 +12,13 @@ import NotFind from '../components/NotFind';
 import { result } from 'lodash';
 import { getDataSnai3y } from '../Redux/Slices/Snai3yReducer';
 import Loader from '../components/Loder';
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 export default function ProfileSnai3y() {
-  const [ loader , setLoader ] = useState(true)
+  const [ loader , setLoader ] = useState(false)
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation()
@@ -59,7 +64,7 @@ export default function ProfileSnai3y() {
           setTimeout(() => {
             setLoader(false)
             
-          }, 1100);
+          }, 100);
         }
       })
     })
@@ -100,9 +105,23 @@ export default function ProfileSnai3y() {
       
     })
   }
+  // Refresh
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
+  }, []);
   return (
     <>
-      {!loader &&<ScrollView style={{ backgroundColor: "#fff" }}>
+      {!loader &&<ScrollView style={{ backgroundColor: "#fff" }}
+        refreshControl={
+          <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+        }
+      >
 
         <View style={styles.parent}>
           <View style={styles.image}>
@@ -203,6 +222,17 @@ export default function ProfileSnai3y() {
 
           {/* Details user */}
           <View style={styles.parentList}>
+            <View style={styles.row}>
+              <TouchableOpacity onPress={()=> navigation.navigate("EditDataSani3y")}
+              style={{
+                backgroundColor:"#eee", padding:5,flexDirection:"row-reverse",borderRadius:5,
+                alignItems:"baseline",
+                paddingHorizontal:10
+                }}>
+                <AntDesign name="setting" size={20} style={[styles.iconCol,{marginStart:5}]}/>
+                <Text style={{fontSize:22}}>تعديل البيانات</Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.textcol}>{datas.phoneNumber}</Text>

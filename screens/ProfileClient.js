@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
@@ -18,6 +19,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { getDataClient } from '../Redux/Slices/ClientReducer';
 import Loader from "../components/Loder";
+import NotFind from "../components/NotFind";
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 export default function ProfileClient() {
   const [loader, setLoader] = useState(true)
   // Start Modal
@@ -73,7 +80,7 @@ export default function ProfileClient() {
     return () => {
       setLoader(true)
     }
-  }, [])
+  }, [refreshing])
 
   // Dellet Job With Client
   function sendIdJob(id) {
@@ -137,10 +144,25 @@ export default function ProfileClient() {
     })
 
   }
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+  }, []);
   return (
     <>
-      {!loader && <ScrollView style={{ backgroundColor: "#fff" }}>
+      {!loader && <ScrollView style={{ backgroundColor: "#fff" }}
+        refreshControl={
+          <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+        }
+      >
+      
+      
         <View style={styles.parent}>
           <View style={styles.image}>
             <View style={styles.imgProfile}>
@@ -274,6 +296,19 @@ export default function ProfileClient() {
 
           {/* Details user */}
           <View style={styles.parentList}>
+            {/* Settings */}
+          <View style={styles.row}>
+              <TouchableOpacity onPress={()=> navigate.navigate("editDataClient")}
+              style={{
+                backgroundColor:"#eee", padding:5,flexDirection:"row-reverse",borderRadius:5,
+                alignItems:"baseline",
+                paddingHorizontal:10
+                }}>
+                <AntDesign name="setting" size={20} style={[styles.iconCol,{marginStart:5}]}/>
+                <Text style={{fontSize:22}}>تعديل البيانات</Text>
+              </TouchableOpacity>
+            </View>
+            {/* Mobile */}
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.textcol}>{data.phoneNumber}</Text>
@@ -320,7 +355,7 @@ export default function ProfileClient() {
           </View>
 
           {/* Card Style And Get All Jobs  */}
-          {getAllJobs.map((item, index) => (
+          {getAllJobs.length > 0 && getAllJobs.map((item, index) => (
             <View style={styles.card} key={index}>
               <View style={styles.cardHeader}>
                 <View style={{ width: "10%" }}>
@@ -379,6 +414,8 @@ export default function ProfileClient() {
 
             </View>
           ))}
+
+          {getAllJobs.length == 0 && <NotFind data={"لايوجد منشورات"}/>}
         </View>
       </ScrollView>}
 
