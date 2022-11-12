@@ -17,20 +17,21 @@ export default function Works() {
   const [token, setToken] = useState('')
   // console.log(data);
   // console.log(token);
-  useEffect(()=>{
+  useEffect(() => {
 
 
-  },[])
-  useEffect(() => { 
-    AsyncStorage.getItem('token').then((res) => 
-    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
-      // console.log(res.data);
-       setData(res.data.Data)
-    }).catch((erorr) => {
-      console.log("erorr");
-      console.log(erorr);
-   
-  })})
+  }, [])
+  useEffect(() => {
+    AsyncStorage.getItem('token').then((res) => {
+      axios.get(`${pathUrl}/sanai3y/workstores`, { headers: { authorization: res } }).then((res) => {
+        // console.log(res.data);
+        setData(res.data.Data)
+      }).catch((erorr) => {
+        console.log("erorr");
+        console.log(erorr);
+
+      })
+    })
 
   }, [token])
 
@@ -39,15 +40,16 @@ export default function Works() {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    AsyncStorage.getItem('token').then((res) => 
-    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
-      // console.log(res.data);
-       setData(res.data.Data)
-    }).catch((erorr) => {
-      console.log("erorr");
-      console.log(erorr);
-   
-  })})
+    AsyncStorage.getItem('token').then((res) => {
+      axios.get(`${pathUrl}/sanai3y/workstores`, { headers: { authorization: res } }).then((res) => {
+        // console.log(res.data);
+        setData(res.data.Data)
+      }).catch((erorr) => {
+        console.log("erorr");
+        console.log(erorr);
+
+      })
+    })
   }, []);
 
   return (
@@ -55,7 +57,7 @@ export default function Works() {
     <View>
 
       <View style={styles.cont}>
-        <View style={{alignItems:"center",marginVertical:10}}>
+        <View style={{ alignItems: "center", marginVertical: 10 }}>
           <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('AddWorks')}>
             <Text style={styles.buttonTextStyle}
             >اضافة عمل</Text>
@@ -63,13 +65,13 @@ export default function Works() {
 
         </View>
         {data.length > 0 && <FlatList
-         contentContainerStyle={{ paddingBottom: 200 }}
-         refreshControl={
-           <RefreshControl
-             refreshing={refreshing}
-             onRefresh={onRefresh}
-           />
-         }
+          contentContainerStyle={{ paddingBottom: 200 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
           data={data}
           // keyExtractor={({ item }) => item}
           renderItem={({ item }, index) => (
@@ -80,7 +82,7 @@ export default function Works() {
                 source={{
                   uri: `${pathUrl}${item.img?.slice(21)}`,
                 }}
-                style={{ height: 200,borderRadius:6 }}
+                style={{ height: 200, borderRadius: 6 }}
               />
 
               <Text style={styles.job}>{item.title}</Text>
@@ -92,8 +94,17 @@ export default function Works() {
 
           )}
         />}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+        >
 
-        {data.length == 0 &&<NotFind data={"لايوجد منشورات"}/>}
+          {data.length == 0 && <NotFind data={"لايوجد منشورات"} />}
+        </ScrollView>
 
 
       </View>
@@ -111,16 +122,16 @@ const styles = StyleSheet.create({
   card: {
     width: "90%",
     backgroundColor: "#fff",
-    borderColor:"#99999982",
-    borderWidth:1,
+    borderColor: "#99999982",
+    borderWidth: 1,
     borderRadius: 10,
-    marginHorizontal:5,
-    justifyContent:"center",
+    marginHorizontal: 5,
+    justifyContent: "center",
     flexDirection: "column",
     elevation: 6,
     marginTop: 15,
     marginBottom: 15,
-    
+
   },
   description: {
     padding: 15,
@@ -133,11 +144,11 @@ const styles = StyleSheet.create({
     padding: 10,
     // borderBottomWidth:1,
     // borderColor:"#99999982",
-    elevation:5,
-  //  flex:2,
+    elevation: 5,
+    //  flex:2,
     fontSize: 18,
-    color:"#000",
-    fontWeight:"bold",
+    color: "#000",
+    fontWeight: "bold",
     fontWeight: "700",
     backgroundColor: "#FFC133",
     // borderBottomColor:"#ffb200",
@@ -178,6 +189,6 @@ const styles = StyleSheet.create({
     color: "white",
     paddingVertical: 10,
     fontSize: 16,
-    fontWeight:"bold",
+    fontWeight: "bold",
   },
 });
