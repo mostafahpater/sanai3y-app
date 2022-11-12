@@ -21,6 +21,7 @@ import { getDataClient } from '../Redux/Slices/ClientReducer';
 import Loader from "../components/Loder";
 import NotFind from "../components/NotFind";
 import { TextInput } from 'react-native-paper';
+import { Formik } from "formik";
 import * as yup from 'yup'
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -89,19 +90,20 @@ export default function ProfileClient() {
 
   // Dellet Job With Client
   function sendIdJob(id) {
+    console.log(id)
     AsyncStorage.getItem("token").then((tok) => {
       // console.log(tok)
 
-      axios.put(`${pathUrl}/jobs/delete/${id}`,{},
-          { headers: { "Authorization": tok } }
-        ).then((result0) => {
-          // Logic  
-          console.log(result0)
-          if (result0.status == 200) {
-            AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
-          }
+      axios.delete(`${pathUrl}/jobs/delete/${id}`,
+        { headers: { "authorization": tok } }
+      ).then((result0) => {
+        // Logic  
+        console.log(result0)
+        if (result0.status == 200) {
+          AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+        }
 
-        })
+      })
         .catch((err) => {
           console.log(err);
         });
@@ -161,13 +163,13 @@ export default function ProfileClient() {
       {!loader && <ScrollView style={{ backgroundColor: "#fff" }}
         refreshControl={
           <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
         }
       >
-      
-      
+
+
         <View style={styles.parent}>
           <View style={styles.image}>
             <View style={styles.imgProfile}>
@@ -302,7 +304,7 @@ export default function ProfileClient() {
           {/* Details user */}
           <View style={styles.parentList}>
             {/* Settings */}
-          <View style={styles.row}>
+            <View style={styles.row}>
               {/* Change Detalis */}
               <View style={styles.col}>
                 <TouchableOpacity onPress={() => navigation.navigate("EditDataSani3y")}
@@ -346,15 +348,15 @@ export default function ProfileClient() {
                             confirmPassword: ""
                           }}
                           validationSchema={yup.object().shape({
-                            currentPassword : yup.string().required("هذا الحقل مطلوب"),
-                            password : yup.string().required("هذا الحقل مطلوب"),
-                            confirmPassword: yup.string().oneOf([yup.ref('password'),null],"كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
+                            currentPassword: yup.string().required("هذا الحقل مطلوب"),
+                            password: yup.string().required("هذا الحقل مطلوب"),
+                            confirmPassword: yup.string().oneOf([yup.ref('password'), null], "كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
                           })}
-                          onSubmit={(value)=>{
+                          onSubmit={(value) => {
                             console.log(value)
                           }}
                         >
-                          {({ handleSubmit, handleBlur, handleChange, values ,touched ,errors }) =>
+                          {({ handleSubmit, handleBlur, handleChange, values, touched, errors }) =>
                             <View style={{ marginTop: 20, flexDirection: "column", alignItems: "center", justifyContent: "center", width: 300 }}>
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
@@ -375,7 +377,7 @@ export default function ProfileClient() {
                                     color: "black"
                                   }}
                                 />
-                                <Text style={{color:"red" , marginTop:5}}>{touched.currentPassword && errors.currentPassword}</Text>
+                                <Text style={{ color: "red", marginTop: 5 }}>{touched.currentPassword && errors.currentPassword}</Text>
                               </View>
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
@@ -390,7 +392,7 @@ export default function ProfileClient() {
 
                                   }}
                                 />
-                                <Text style={{color:"red" , marginTop:5}}>{touched.password && errors.password}</Text>
+                                <Text style={{ color: "red", marginTop: 5 }}>{touched.password && errors.password}</Text>
                               </View>
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
@@ -405,10 +407,10 @@ export default function ProfileClient() {
 
                                   }}
                                 />
-                                <Text style={{color:"red" ,marginTop:5}}>{touched.confirmPassword && errors.confirmPassword}</Text>
+                                <Text style={{ color: "red", marginTop: 5 }}>{touched.confirmPassword && errors.confirmPassword}</Text>
                               </View>
                               <TouchableOpacity style={[styles.button, { marginVertical: 20 }]}
-                              onPress={handleSubmit}
+                                onPress={handleSubmit}
                               >
                                 <Text style={styles.buttonText}>تغيير</Text>
                               </TouchableOpacity>
@@ -494,7 +496,7 @@ export default function ProfileClient() {
 
               <View style={styles.cardBody}>
                 {/* jop des */}
-                <View style={{ flex: 1, alignItems: "flex-start", padding: 10 }}>
+                <View style={{ flex: 1, alignItems: "flex-start", padding: 10 ,width:"50%" }}>
 
                   <View style={{ borderLeftWidth: 1, borderLeftColor: '#ffb200' }}>
                     <Text style={[styles.text, { fontSize: 14 }]}>{item.title}</Text>
@@ -512,17 +514,28 @@ export default function ProfileClient() {
 
 
                 </View>
+                <View style={{width:"50%"}}>
+                    <Image style={{width:"100%",height:100}} source={{uri: `${pathUrl}${item.image.slice(21)}`}}/>
+                </View>
               </View>
 
               <View style={styles.parentButton}>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={[styles.button,
+                {
+                  backgroundColor: item.status == "in progress" ? "#555" : "#fbb200"
+                }
+                ]}
+
+                >
                   <Text
                     style={styles.buttonText}
                     onPress={() =>
                       navigate.navigate("talpatSending", {
-                        proposal: item.proposals,
+                        proposal: item,
+                        status:item.status
                       })
                     }
+                    disabled={item.status == "in progress"}
                   >
                     الطلبات المقدمة
                   </Text>
@@ -532,7 +545,7 @@ export default function ProfileClient() {
             </View>
           ))}
 
-          {getAllJobs.length == 0 && <NotFind data={"لايوجد منشورات"}/>}
+          {getAllJobs.length == 0 && <NotFind data={"لايوجد منشورات"} />}
         </View>
       </ScrollView>}
 
@@ -609,12 +622,12 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     width: "100%",
-    backgroundColor: "#eee",
+    backgroundColor: "#fff",
     borderRadius: 5,
     paddingVertical: 10,
     flexDirection: "row",
     justifyContent: "space-between",
-    borderBottomColor: "gray",
+    borderBottomColor: "#555",
     borderBottomWidth: 1,
     elevation: 1
   },
@@ -667,6 +680,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: "#000",
+    color: "#fff",
   },
 });

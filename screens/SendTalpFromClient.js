@@ -17,43 +17,56 @@ import { AntDesign } from "@expo/vector-icons";
 import { pathUrl } from "../Config/env";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import ToastManager, { Toast } from 'toastify-react-native'
 export default function SendTalpFromClient() {
   const { params } = useRoute();
   const detailJob = get(params, "one");
 
 
-  const [proposal , setProposal] = useState("")
-  const [role , setRole]= useState('')
-  const [token , setToken]= useState('')
- const navigate = useNavigation()
+  const [proposal, setProposal] = useState("")
+  const [role, setRole] = useState('')
+  const [token, setToken] = useState('')
+  const navigate = useNavigation()
 
- useEffect(()=>{
-  AsyncStorage.getItem('snai3yRole').then((i)=> setRole(i))
-  AsyncStorage.getItem('token').then((i)=> setToken(i))
- },[])
+  useEffect(() => {
+    AsyncStorage.getItem('snai3yRole').then((i) => setRole(i))
+    AsyncStorage.getItem('token').then((i) => setToken(i))
+  }, [])
 
 
-  let headers={
+  let headers = {
     'Authorization': token
   }
 
-  function sendProposal (id){
-    let body ={
+  const showToastsError = () => {
+    Toast.error('عليك الانتهاء من الوظيفة التي قدمت عليها اولا')
+  }
+  const showToasts = () => {
+    Toast.success('تم التقديم بنجاح')
+  }
+  function sendProposal(id) {
+    let body = {
       sanai3yProposal: proposal
     }
     // console.log(body)
-    axios.put(`${pathUrl}/jobs/addproposal/${id}`,body,{headers:headers})
-    .then(res=>{
-     
-      if(res.status == 200){
-        navigate.navigate('HomePost')
-        console.log('Done Proposal')
-      }
+    AsyncStorage.getItem("token").then((token)=>{
+
+      axios.put(`${pathUrl}/jobs/addproposal/${id}`, body, { headers: { "Authorization": token } })
+        .then(res => {
+  
+          if (res.status == 200) {
+            showToasts()
+            setTimeout(() => {
+              navigate.navigate("HomePost")
+            }, 3000);
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
     })
 
 
-  
+
   }
 
 
@@ -62,6 +75,7 @@ export default function SendTalpFromClient() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
+        <ToastManager />
         {/* Start Box Posts */}
         <View style={[styles.box, styles.shadowProp]}>
           <View
@@ -77,7 +91,7 @@ export default function SendTalpFromClient() {
                 uri: `${pathUrl}${detailJob.clientData?.img.slice(21)}`,
               }}
             />
-            <View style={{ marginLeft: 10 , justifyContent:"center"}}>
+            <View style={{ marginLeft: 10, justifyContent: "center" }}>
               <Text
                 style={{
                   marginRight: 10,
@@ -100,14 +114,14 @@ export default function SendTalpFromClient() {
             style={styles.tinyLogotest}
             source={{
               // uri: 'http://192.168.1.6'+detailJob?.image?.split('http://localhost')[1],
-              uri:`${pathUrl}${detailJob?.image.slice(21)}`
+              uri: `${pathUrl}${detailJob?.image.slice(21)}`
             }}
           />
 
           <Text
             style={{ paddingVertical: 10, paddingHorizontal: 10, fontSize: 12 }}
           >
-               {detailJob?.title}   
+            {detailJob?.title}
           </Text>
 
           {/* <Text>{JSON.stringify( detailJob.image)}</Text> */}
@@ -119,7 +133,7 @@ export default function SendTalpFromClient() {
               borderBottomColor: "#eee",
             }}
           >
-        {detailJob?.description}
+            {detailJob?.description}
           </Text>
 
           <View
@@ -131,12 +145,12 @@ export default function SendTalpFromClient() {
           ></View>
         </View>
         {/* End Box Posts */}
-        {role != "client" &&<View style={{ alignItems: "center" }}>
+        {role != "client" && <View style={{ alignItems: "center" }}>
           <TextInput
             multiline={true}
             numberOfLines={2}
             placeholder={"ازاي تقدر تحل المشكلة"}
-            onChangeText={newtext =>setProposal(newtext) }
+            onChangeText={newtext => setProposal(newtext)}
             style={{
               padding: 10,
               height: 100,
@@ -152,7 +166,7 @@ export default function SendTalpFromClient() {
           />
         </View>}
 
-        {role != "client" &&<View style={{ alignItems: "center" }}>
+        {role != "client" && <View style={{ alignItems: "center" }}>
           <TouchableOpacity
             style={{
               width: "50%",
@@ -173,7 +187,7 @@ export default function SendTalpFromClient() {
                 padding: 6,
                 borderRadius: 10,
               }}
-              
+
             >
               ارسال الطلب
             </Text>

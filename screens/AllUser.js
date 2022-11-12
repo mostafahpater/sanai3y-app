@@ -71,6 +71,8 @@ export default function AllSanai3y() {
         <FlatList
           data={filteredDataSource}
           contentContainerStyle={{ paddingBottom: 60 }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           renderItem={({ item }, index) => (
             <TouchableOpacity
               activeOpacity={0.5}

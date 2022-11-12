@@ -15,6 +15,7 @@ import Loader from '../components/Loder';
 import { Formik } from 'formik';
 import { TextInput } from 'react-native-paper';
 import * as yup from 'yup'
+import ToastManager, { Toast } from 'toastify-react-native';
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -66,6 +67,7 @@ export default function ProfileSnai3y() {
       axios.get(`${pathUrl}/sanai3y/jobs`, { headers: { "Authorization": res } }).then((result) => {
         // console.log("ggg")
         if (result.status == 200) {
+          console.log("jobs",result.data.Data)
           setSnai3yJobs(result.data.Data)
           setTimeout(() => {
             setLoader(false)
@@ -75,7 +77,6 @@ export default function ProfileSnai3y() {
       })
     })
     AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
-
     return () => {
       setLoader(true)
     }
@@ -117,9 +118,55 @@ export default function ProfileSnai3y() {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
     AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
+    AsyncStorage.getItem('token').then((res) => {
+
+      axios.get(`${pathUrl}/sanai3y/jobs`, { headers: { "Authorization": res } }).then((result) => {
+        // console.log("ggg")
+        if (result.status == 200) {
+          // console.log("jobs",result.data.Data)
+          setSnai3yJobs(result.data.Data)
+          setTimeout(() => {
+            setLoader(false)
+
+          }, 100);
+        }
+      })
+    })
   }, []);
+
+const tostComplite=()=>{
+  Toast.success("تهانينا تم الانتهاء من الوظيفة يمكنك الان التقديم علي وظيفة أخري")
+}
+const tostErr= () =>{
+  Toast.error("حدث خطأ برجاء المحاولة مرة أخري")
+}  // complet Job
+  function completeJob(){
+    AsyncStorage.getItem("token").then((token)=>{
+      axios.put(`${pathUrl}/sanai3y/jobcompelete`,{},{headers:{"authorization": token}})
+      .then((res)=>{
+        console.log(token)
+        if (res.status == 200){
+          tostComplite()
+          console.log("succes")
+          // AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
+        }
+      }).catch((err)=>{
+        tostErr()
+        console.log(err)
+      })  
+
+    })
+  }
+
+  function checkOut() {
+
+   navigation.navigate("paypal")
+  }
+
+
   return (
     <>
+      <ToastManager position="bottom" positionValue={500} style={{width:320,paddingTop:20,height:100}}/>
       {!loader && <ScrollView style={{ backgroundColor: "#fff" }}
         refreshControl={
           <RefreshControl
@@ -128,7 +175,6 @@ export default function ProfileSnai3y() {
           />
         }
       >
-
         <View style={styles.parent}>
           <View style={styles.image}>
             <View style={styles.imgProfile}>
@@ -272,15 +318,15 @@ export default function ProfileSnai3y() {
                             confirmPassword: ""
                           }}
                           validationSchema={yup.object().shape({
-                            currentPassword : yup.string().required("هذا الحقل مطلوب"),
-                            password : yup.string().required("هذا الحقل مطلوب"),
-                            confirmPassword: yup.string().oneOf([yup.ref('password'),null],"كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
+                            currentPassword: yup.string().required("هذا الحقل مطلوب"),
+                            password: yup.string().required("هذا الحقل مطلوب"),
+                            confirmPassword: yup.string().oneOf([yup.ref('password'), null], "كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
                           })}
-                          onSubmit={(value)=>{
+                          onSubmit={(value) => {
                             console.log(value)
                           }}
                         >
-                          {({ handleSubmit, handleBlur, handleChange, values ,touched ,errors }) =>
+                          {({ handleSubmit, handleBlur, handleChange, values, touched, errors }) =>
                             <View style={{ marginTop: 20, flexDirection: "column", alignItems: "center", justifyContent: "center", width: 300 }}>
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
@@ -301,7 +347,7 @@ export default function ProfileSnai3y() {
                                     color: "black"
                                   }}
                                 />
-                                <Text style={{color:"red" , marginTop:5}}>{touched.currentPassword && errors.currentPassword}</Text>
+                                <Text style={{ color: "red", marginTop: 5 }}>{touched.currentPassword && errors.currentPassword}</Text>
                               </View>
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
@@ -316,7 +362,7 @@ export default function ProfileSnai3y() {
 
                                   }}
                                 />
-                                <Text style={{color:"red" , marginTop:5}}>{touched.password && errors.password}</Text>
+                                <Text style={{ color: "red", marginTop: 5 }}>{touched.password && errors.password}</Text>
                               </View>
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
@@ -331,10 +377,10 @@ export default function ProfileSnai3y() {
 
                                   }}
                                 />
-                                <Text style={{color:"red" ,marginTop:5}}>{touched.confirmPassword && errors.confirmPassword}</Text>
+                                <Text style={{ color: "red", marginTop: 5 }}>{touched.confirmPassword && errors.confirmPassword}</Text>
                               </View>
                               <TouchableOpacity style={[styles.button, { marginVertical: 20 }]}
-                              onPress={handleSubmit}
+                                onPress={handleSubmit}
                               >
                                 <Text style={styles.buttonText}>تغيير</Text>
                               </TouchableOpacity>
@@ -351,6 +397,23 @@ export default function ProfileSnai3y() {
               </View>
               {/* End Change Password */}
             </View>
+
+
+            {/* paypal  */}
+            <View style={styles.row}>
+              <TouchableOpacity onPress={()=> checkOut()}
+              style={{
+                backgroundColor:"#eee", padding:5,flexDirection:"row-reverse",borderRadius:5,
+                alignItems:"baseline",
+                paddingHorizontal:10
+                }}>
+                <Entypo name="paypal" size={20} style={[styles.iconCol,{marginStart:5}]}/>
+                <Text style={{fontSize:22}}>الدفع</Text>
+              </TouchableOpacity>
+            </View>
+
+
+
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.textcol}>{datas.phoneNumber}</Text>
@@ -400,13 +463,14 @@ export default function ProfileSnai3y() {
           </View>
 
           {/* Card Style */}
-          {snai3yJobs.map((item) =>
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              {snai3yJobs.length > 0 && <View style={styles.card}>
+          {snai3yJobs.map((item,index) =>
+            <View style={{ flex: 1, justifyContent: "center" }} key={index}>
+              {snai3yJobs.length > 0 && 
+              <View style={styles.card}>
                 <View style={styles.cardHeader}>
                   <View style={{ width: "100%" }}>
                     <View style={styles.userDetails}>
-                      <Image source={{ uri: item.cliclientData?.img }}
+                      <Image source={{ uri: `${pathUrl}${item.clientData?.img.slice(21)}` }}
                         style={[styles.imageCard, { resizeMode: "contain" }]}
                       />
                       <View>
@@ -432,7 +496,7 @@ export default function ProfileSnai3y() {
                   </View>
                   {/* img Jop */}
                   <View style={{ width: "50%" }}>
-                    <Image source={{ uri: `${pathUrl}${item.image}.slice(21)` }}
+                    <Image source={{ uri: `${pathUrl}${item.image.slice(21)}` }}
                       style={{ height: 200, resizeMode: "contain" }} />
                   </View>
                 </View>
@@ -440,9 +504,9 @@ export default function ProfileSnai3y() {
                   <View style={styles.headerTalp}>
                     <Text style={styles.textHeaderTalp}>طلبك المقدم</Text>
                   </View>
-                  {item.proposals.map((p) =>
+                  {item.proposals.map((p, index) =>
 
-                    <View>
+                    <View key={index}>
                       <Text style={styles.textTalp}>
                         {p?.sanai3yProposal}
                       </Text>
@@ -450,8 +514,17 @@ export default function ProfileSnai3y() {
                   )}
                 </View>
 
+                <View 
+                style={{justifyContent:"center",flex:1,alignItems:"flex-end"}}>
+                  <TouchableOpacity onPress={completeJob} disabled={item.status == "compelete"}
+                  style={[styles.button , 
+                  {marginEnd:10,marginBottom:20,marginTop:10,
+                    backgroundColor: item.status == "compelete"? "#555":"#fbb200"
+                  }]}>
+                    <Text style={styles.buttonText}>تم الانتهاء</Text>
+                  </TouchableOpacity>
+                </View>
               </View>}
-
             </View>
           )}
           {snai3yJobs.length == 0 && <NotFind data={"لاتوجد طلبات مؤكدة"} />}
@@ -535,7 +608,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center",
+    // alignItems: "center",
     width: "90%",
     backgroundColor: "#eee",
     marginTop: 20,

@@ -18,20 +18,21 @@ export default function Works() {
   const [token, setToken] = useState('')
   // console.log(data);
   // console.log(token);
-  useEffect(()=>{
+  useEffect(() => {
 
 
-  },[])
-  useEffect(() => { 
-    AsyncStorage.getItem('token').then((res) => 
-    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
-      // console.log(res.data);
-       setData(res.data.Data)
-    }).catch((erorr) => {
-      console.log("erorr");
-      console.log(erorr);
-   
-  })})
+  }, [])
+  useEffect(() => {
+    AsyncStorage.getItem('token').then((res) => {
+      axios.get(`${pathUrl}/sanai3y/workstores`, { headers: { authorization: res } }).then((res) => {
+        // console.log(res.data);
+        setData(res.data.Data)
+      }).catch((erorr) => {
+        console.log("erorr");
+        console.log(erorr);
+
+      })
+    })
 
   }, [token])
 
@@ -40,15 +41,16 @@ export default function Works() {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    AsyncStorage.getItem('token').then((res) => 
-    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
-      // console.log(res.data);
-       setData(res.data.Data)
-    }).catch((erorr) => {
-      console.log("erorr");
-      console.log(erorr);
-   
-  })})
+    AsyncStorage.getItem('token').then((res) => {
+      axios.get(`${pathUrl}/sanai3y/workstores`, { headers: { authorization: res } }).then((res) => {
+        // console.log(res.data);
+        setData(res.data.Data)
+      }).catch((erorr) => {
+        console.log("erorr");
+        console.log(erorr);
+
+      })
+    })
   }, []);
 const deleted =async (id) => {
   AsyncStorage.getItem('token').then((res) => {
@@ -105,8 +107,17 @@ const deleted =async (id) => {
 
           )}
         />}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+        >
 
-        {data.length == 0 &&<NotFind data={"لايوجد منشورات"}/>}
+          {data.length == 0 && <NotFind data={"لايوجد منشورات"} />}
+        </ScrollView>
 
 
       </View>
@@ -134,7 +145,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginTop: 15,
     marginBottom: 15,
-    
+
   },
   description: {
     margin: 20,
@@ -214,6 +225,6 @@ const styles = StyleSheet.create({
     width:70,
     marginLeft:15,
     fontSize: 16,
-    fontWeight:"bold",
+    fontWeight: "bold",
   },
 });
