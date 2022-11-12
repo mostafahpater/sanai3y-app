@@ -91,6 +91,8 @@ export default function Home() {
 
         {allJob.length > 0 && (
           <FlatList
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             data={filteredDataSource}
             keyExtractor={(item, index) => index}
             refreshControl={
