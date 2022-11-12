@@ -24,20 +24,19 @@ const EditProfileClient = () => {
   const showToasts = () => {
     Toast.success('تم التعديل بنجاح')
   }
+  const showToastsError = () => {
+    Toast.error('من فضلك ادخل بريد الكتروني او رقم هاتف أخر')
+  }
   // showToasts()
   let dataClient = useSelector(state => state.ClientReducer.clintdata)
   const navigation = useNavigation()
   return (
     <>
       <ScrollView
-        keyboardShouldPersistTaps="handled"
+        // keyboardShouldPersistTaps="handled"
         style={{ backgroundColor: "#fff" }}
         contentContainerStyle={{
-          justifyContent: 'center',
-          // flex: 1,
-          alignItems: "center",
-          marginTop: 150,
-
+          marginVertical: 150,
         }}
       >
 
@@ -53,7 +52,7 @@ const EditProfileClient = () => {
           onSubmit={(value) => {
             let data = {
               firstName: value.firstName,
-              lastName : value.lastName,
+              lastName: value.lastName,
               email: value.email,
               phoneNumber: value.phoneNumber,
               address: value.address,
@@ -66,10 +65,15 @@ const EditProfileClient = () => {
                   if (res.status == 200) {
                     showToasts()
                     setTimeout(() => {
-                      
+
                       navigation.navigate("profileClient")
                     }, 3000);
                   }
+                  else{
+                    showToastsError()
+                  }
+                }).catch(()=>{
+                  showToastsError()
                 })
 
             })
@@ -79,31 +83,29 @@ const EditProfileClient = () => {
             <KeyboardAvoidingView enabled
               style={{ alignItems: "center" }}
             >
-                  <ToastManager />
+              
+              <ToastManager  style={{width:320,paddingTop:20,height:80}}/>
               <View style={styles.SectionStyle}>
-                <View style={{ flex: 1, height: 50 }}>
-                    <TextInput
-                      style={[styles.inputStyle, { paddingHorizontal: 20, marginEnd: 5 }]}
-                      underlineColorAndroid="#f000"
-                      placeholder="اسمك الاول"
-                      placeholderTextColor="#8b9cb5"
-                      autoCapitalize="sentences"
-                      returnKeyType="next"
-                      blurOnSubmit={false}
-                      value={values.firstName}
-                      onChangeText={handleChange('firstName')}
-                      onBlur={handleBlur('firstName')}
+                <View style={{ flex: 1, height: 80 }}>
+                  <Text style={{ marginStart: 5, marginBottom: 5, fontSize: 18 }}>أسمك الأول</Text>
+                  <TextInput
+                    style={[styles.inputStyle, { paddingHorizontal: 20, marginEnd: 5 }]}
+                    underlineColorAndroid="#f000"
+                    autoCapitalize="sentences"
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                    value={values.firstName}
+                    onChangeText={handleChange('firstName')}
+                    onBlur={handleBlur('firstName')}
 
-                    />
-                    <Text style={{ fontSize: 12, color: "red", textAlign: "center" }}>{touched.firstName && errors.firstName}</Text>
+                  />
+                  <Text style={{ fontSize: 12, color: "red", textAlign: "center" }}>{touched.firstName && errors.firstName}</Text>
                 </View>
 
-                <View style={{ flex: 1, height: 50 }}>
-
+                <View style={{ flex: 1, height: 80 }}>
+                  <Text style={{ marginStart: 10, marginBottom: 5, fontSize: 18 }}>أسمك الأخير</Text>
                   <TextInput
                     style={[styles.inputStyle, { marginStart: 5, flexDirection: "column", height: 40 }]}
-                    placeholder="اسمك الأخير"
-                    placeholderTextColor="#8b9cb5"
                     autoCapitalize="sentences"
                     returnKeyType="next"
                     blurOnSubmit={false}
@@ -114,14 +116,12 @@ const EditProfileClient = () => {
                   <Text style={styles.errorTextStyle}>{touched.lastName && errors.lastName}</Text>
                 </View>
               </View>
-              <View style={[styles.SectionStyle, { marginTop: 15 }]}>
-                <View style={{ flex: 1, height: 50 }}>
-
+              <View style={[styles.SectionStyle]}>
+                <View style={{ flex: 1, height: 80 }}>
+                  <Text style={{ marginStart: 5, marginBottom: 5, fontSize: 18 }}>البريد الالكتروني</Text>
                   <TextInput
                     style={styles.inputStyle}
                     underlineColorAndroid="#f000"
-                    placeholder="البريد الألكتروني"
-                    placeholderTextColor="#8b9cb5"
                     keyboardType="email-address"
                     returnKeyType="next"
                     blurOnSubmit={false}
@@ -133,12 +133,11 @@ const EditProfileClient = () => {
                 </View>
               </View>
               <View style={[styles.SectionStyle, { marginTop: 15 }]}>
-                <View style={{ flex: 1, height: 50 }}>
+                <View style={{ flex: 1, height: 80 }}>
+                  <Text style={{ marginStart: 5, marginBottom: 5, fontSize: 18 }}>البريد الالكتروني</Text>
                   <TextInput
                     style={[styles.inputStyle]}
                     underlineColorAndroid="#f000"
-                    placeholder="رقم الهاتف"
-                    placeholderTextColor="#8b9cb5"
                     // autoCapitalize="sentences"
                     returnKeyType="next"
                     // blurOnSubmit={false}
@@ -150,24 +149,19 @@ const EditProfileClient = () => {
                   <Text style={styles.errorTextStyle}>{touched.phoneNumber && errors.phoneNumber}</Text>
                 </View>
               </View>
-             
+
 
               {/* Input Age */}
 
 
-              <View style={[
-                {
-                  flex: 1, marginTop: 20, alignItems: "center", height: 40, flexDirection: "row", justifyContent: "space-between",
-                  marginLeft: 35,
-                  marginRight: 35,
-                }]}>
+              <View style={styles.SectionStyle}>
 
-              
 
                 <View style={{ width: "50%" }}>
+                <Text style={{fontSize:18 ,  marginStart: 5, marginBottom: 5, }}>أختر المركز</Text>
 
                   <SelectDropdown data={data}
-                    defaultButtonText="أختر المركز"
+                    defaultButtonText={dataClient.address}
                     buttonStyle={styles.selectStyle}
                     buttonTextAfterSelection={(selecteditem, index) => {
                       return selecteditem.value
@@ -210,6 +204,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     marginLeft: 35,
     marginRight: 35,
+    marginBottom: 30
   },
   buttonStyle: {
     backgroundColor: '#ffb200',

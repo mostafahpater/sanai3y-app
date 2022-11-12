@@ -12,25 +12,31 @@ import NotFind from '../components/NotFind';
 import { result } from 'lodash';
 import { getDataSnai3y } from '../Redux/Slices/Snai3yReducer';
 import Loader from '../components/Loder';
-
+import { Formik } from 'formik';
+import { TextInput } from 'react-native-paper';
+import * as yup from 'yup'
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
 export default function ProfileSnai3y() {
-  const [ loader , setLoader ] = useState(false)
+  const [loader, setLoader] = useState(false)
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisiblePass, setModalVisiblePass] = useState(false);
   const navigation = useNavigation()
   const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+    setModalVisible(!isModalVisible)
+  };
+  const toggleModalPass = () => {
+    setModalVisiblePass(!isModalVisiblePass)
   };
   // End Modal
 
   // Start Image in Modal
   const [image, setImage] = useState("");
   const [photo, setPhoto] = useState({});
- 
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,44 +62,44 @@ export default function ProfileSnai3y() {
     // setDatas(data)
     setPhoto(datas.img)
     AsyncStorage.getItem('token').then((res) => {
-      
+
       axios.get(`${pathUrl}/sanai3y/jobs`, { headers: { "Authorization": res } }).then((result) => {
         // console.log("ggg")
-        if(result.status == 200){
+        if (result.status == 200) {
           setSnai3yJobs(result.data.Data)
           setTimeout(() => {
             setLoader(false)
-            
+
           }, 100);
         }
       })
     })
     AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
 
-    return () =>{
+    return () => {
       setLoader(true)
     }
   }, [])
   function sendImg() {
     AsyncStorage.getItem('token').then((token) => {
       console.log("first")
-      const send =  async ()=> {
+      const send = async () => {
         try {
           const formdata = new FormData()
           formdata.append("sanai3yImage", {
             name: image,
             type: "image/*",
-            uri:image
+            uri: image
           })
           console.log(image)
-          const res = await axios.post(`${pathUrl}/sanai3y/addimage`,formdata, { 
-            headers: { 
+          const res = await axios.post(`${pathUrl}/sanai3y/addimage`, formdata, {
+            headers: {
               "Authorization": token,
-              Accept:'application/json',
-              "Content-Type":"multipart/form-data",
-            } 
+              Accept: 'application/json',
+              "Content-Type": "multipart/form-data",
+            }
           })
-          if ( res.status == 200){
+          if (res.status == 200) {
             toggleModal()
             AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
           }
@@ -102,7 +108,7 @@ export default function ProfileSnai3y() {
         }
       }
       send()
-      
+
     })
   }
   // Refresh
@@ -114,12 +120,12 @@ export default function ProfileSnai3y() {
   }, []);
   return (
     <>
-      {!loader &&<ScrollView style={{ backgroundColor: "#fff" }}
+      {!loader && <ScrollView style={{ backgroundColor: "#fff" }}
         refreshControl={
           <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
         }
       >
 
@@ -133,7 +139,7 @@ export default function ProfileSnai3y() {
               </View>
               {/* Start Modal */}
               <View>
-                <TouchableOpacity title="Show modal" onPress={toggleModal} >
+                <TouchableOpacity onPress={toggleModal} >
                   <View style={{
                     justifyContent: "center", alignItems: "center", backgroundColor: "#eee",
                     padding: 5, borderBottomStartRadius: 5, borderBottomEndRadius: 5
@@ -223,15 +229,127 @@ export default function ProfileSnai3y() {
           {/* Details user */}
           <View style={styles.parentList}>
             <View style={styles.row}>
-              <TouchableOpacity onPress={()=> navigation.navigate("EditDataSani3y")}
-              style={{
-                backgroundColor:"#eee", padding:5,flexDirection:"row-reverse",borderRadius:5,
-                alignItems:"baseline",
-                paddingHorizontal:10
-                }}>
-                <AntDesign name="setting" size={20} style={[styles.iconCol,{marginStart:5}]}/>
-                <Text style={{fontSize:22}}>تعديل البيانات</Text>
-              </TouchableOpacity>
+              {/* Change Detalis */}
+              <View style={styles.col}>
+                <TouchableOpacity onPress={() => navigation.navigate("EditDataSani3y")}
+                  style={{
+                    backgroundColor: "#eee", padding: 5, flexDirection: "row-reverse", borderRadius: 5,
+                    alignItems: "baseline",
+                    paddingHorizontal: 10
+                  }}>
+                  <AntDesign name="setting" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
+                  <Text style={{ fontSize: 22 }}>تعديل البيانات</Text>
+                </TouchableOpacity>
+              </View>
+              {/* Change Password */}
+              <View style={styles.col}>
+                <TouchableOpacity onPress={toggleModalPass}
+                  style={{
+                    backgroundColor: "#eee", padding: 5, flexDirection: "row-reverse", borderRadius: 5,
+                    alignItems: "baseline",
+                    paddingHorizontal: 10,
+                    marginEnd: 5
+                  }}>
+                  <AntDesign name="setting" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
+                  <Text style={{ fontSize: 22 }}>تغيير كلمة السر</Text>
+                </TouchableOpacity>
+
+                <Modal isVisible={isModalVisiblePass}>
+                  <TouchableOpacity onPress={toggleModalPass} style={{ padding: 5, justifyContent: "center", alignItems: "flex-start" }}>
+                    <AntDesign name='closecircleo' style={{ backgroundColor: "#fff", borderRadius: 50, fontSize: 24 }} />
+                  </TouchableOpacity>
+                  <View style={{ backgroundColor: "#eee", borderRadius: 5 }}>
+                    <View style={{ alignItems: "center", flexDirection: "column" }}>
+                      <View
+                        style={{
+                          alignItems: "center",
+                        }}
+                      >
+                        <Formik
+                          initialValues={{
+                            currentPassword: "",
+                            password: "",
+                            confirmPassword: ""
+                          }}
+                          validationSchema={yup.object().shape({
+                            currentPassword : yup.string().required("هذا الحقل مطلوب"),
+                            password : yup.string().required("هذا الحقل مطلوب"),
+                            confirmPassword: yup.string().oneOf([yup.ref('password'),null],"كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
+                          })}
+                          onSubmit={(value)=>{
+                            console.log(value)
+                          }}
+                        >
+                          {({ handleSubmit, handleBlur, handleChange, values ,touched ,errors }) =>
+                            <View style={{ marginTop: 20, flexDirection: "column", alignItems: "center", justifyContent: "center", width: 300 }}>
+                              <View style={{ width: "80%", marginBottom: 5 }}>
+
+                                <TextInput
+                                  value={values.currentPassword}
+                                  onChangeText={handleChange("currentPassword")}
+                                  onBlur={handleBlur("currentPassword")}
+
+                                  placeholder="كلمة السر الحاليه"
+                                  placeholderTextColor="#8b9cb5"
+                                  underlineColorAndroid="#000"
+                                  keyboardType='text'
+                                  secureTextEntry={true}
+                                  blurOnSubmit={false}
+                                  style={{
+                                    backgroundColor: "#eee",
+                                    borderRadius: 5,
+                                    color: "black"
+                                  }}
+                                />
+                                <Text style={{color:"red" , marginTop:5}}>{touched.currentPassword && errors.currentPassword}</Text>
+                              </View>
+                              <View style={{ width: "80%", marginBottom: 5 }}>
+
+                                <TextInput
+                                  value={values.password}
+                                  onChangeText={handleChange("password")}
+                                  onBlur={handleBlur("password")}
+                                  placeholder="كلمة السر الجديدة"
+                                  placeholderTextColor="#8b9cb5"
+                                  style={{
+                                    backgroundColor: "#eee",
+
+                                  }}
+                                />
+                                <Text style={{color:"red" , marginTop:5}}>{touched.password && errors.password}</Text>
+                              </View>
+                              <View style={{ width: "80%", marginBottom: 5 }}>
+
+                                <TextInput
+                                  value={values.confirmPassword}
+                                  onChangeText={handleChange("confirmPassword")}
+                                  onBlur={handleBlur("confirmPassword")}
+                                  placeholder="أعد كتابة كلمة السر"
+                                  placeholderTextColor="#8b9cb5"
+                                  style={{
+                                    backgroundColor: "#eee",
+
+                                  }}
+                                />
+                                <Text style={{color:"red" ,marginTop:5}}>{touched.confirmPassword && errors.confirmPassword}</Text>
+                              </View>
+                              <TouchableOpacity style={[styles.button, { marginVertical: 20 }]}
+                              onPress={handleSubmit}
+                              >
+                                <Text style={styles.buttonText}>تغيير</Text>
+                              </TouchableOpacity>
+                            </View>
+                          }
+                        </Formik>
+                      </View>
+                    </View>
+
+
+
+                  </View>
+                </Modal>
+              </View>
+              {/* End Change Password */}
             </View>
             <View style={styles.row}>
               <View style={styles.col}>
@@ -243,10 +361,10 @@ export default function ProfileSnai3y() {
             </View>
 
             <View style={styles.row}>
-              <View style={styles.col}>
+              <View style={[styles.col, { width: "80%" }]}>
                 <Text style={styles.textcol}>{datas.email}</Text>
               </View>
-              <View style={styles.col}>
+              <View style={[styles.col, { width: "20%" }]}>
                 <Entypo name='email' style={styles.iconCol} />
               </View>
             </View>
@@ -339,10 +457,10 @@ export default function ProfileSnai3y() {
           {snai3yJobs.length == 0 && <NotFind data={"لاتوجد طلبات مؤكدة"} />}
 
         </View>
-      </ScrollView>}
-      
+      </ScrollView >}
 
-      {loader &&<Loader/>}
+
+      {loader && <Loader />}
     </>
 
   )
