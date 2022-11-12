@@ -112,6 +112,14 @@ export default function ProfileSnai3y() {
     wait(2000).then(() => setRefreshing(false));
     AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
   }, []);
+
+
+  function checkOut() {
+
+   navigation.navigate("paypal")
+  }
+
+
   return (
     <>
       {!loader &&<ScrollView style={{ backgroundColor: "#fff" }}
@@ -233,6 +241,23 @@ export default function ProfileSnai3y() {
                 <Text style={{fontSize:22}}>تعديل البيانات</Text>
               </TouchableOpacity>
             </View>
+
+
+            {/* paypal  */}
+            <View style={styles.row}>
+              <TouchableOpacity onPress={()=> checkOut()}
+              style={{
+                backgroundColor:"#eee", padding:5,flexDirection:"row-reverse",borderRadius:5,
+                alignItems:"baseline",
+                paddingHorizontal:10
+                }}>
+                <Entypo name="paypal" size={20} style={[styles.iconCol,{marginStart:5}]}/>
+                <Text style={{fontSize:22}}>الدفع</Text>
+              </TouchableOpacity>
+            </View>
+
+
+
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.textcol}>{datas.phoneNumber}</Text>
