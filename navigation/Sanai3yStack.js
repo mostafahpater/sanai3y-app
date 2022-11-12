@@ -13,6 +13,7 @@ const Sanai3yStack = () => {
         name="الصنايعية"
         component={AllUser}
         options={{
+          headerLeft:false,
           headerTitle:"جميع الحرفيين",
           headerTitleAlign:"center",
           headerStyle:{
