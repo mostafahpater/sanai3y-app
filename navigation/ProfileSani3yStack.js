@@ -46,6 +46,7 @@ const ProfileSani3yStack = () => {
             options={{
                 headerShown:true,
                 headerTitle:"معرض الاعمال",
+                headerLeft: ()=> null,
                 headerStyle: {
                     backgroundColor: "#fbb150",
                     elevation: 15,
@@ -58,6 +59,7 @@ const ProfileSani3yStack = () => {
             component={WorksForm}
             options={{
                 headerShown:true,
+                headerLeft: ()=> null,
                 headerTitle:"اضافة عمل جديد",
                 headerStyle: {
                     backgroundColor: "#fbb150",
