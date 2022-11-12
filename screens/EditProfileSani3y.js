@@ -24,6 +24,9 @@ const EditProfileSani3y= () => {
   const showToasts = () => {
     Toast.success('تم التعديل بنجاح')
   }
+  const showToastsError = () => {
+    Toast.error('من فضلك ادخل بريد الكتروني او رقم هاتف أخر')
+  }
   // showToasts()
   const dataSani3y = useSelector(state => state.Snai3yReducer.dataSani3y)
   const navigation = useNavigation()
@@ -63,131 +66,126 @@ const EditProfileSani3y= () => {
                       navigation.navigate("ProfileSnai3y")
                     }, 3000);
                   }
+                  else{
+                    showToastsError()
+                  }
+                }).catch((err)=>{
+
+                    showToastsError()
+                  
                 })
 
             })
           }}
         >
-          {({ handleSubmit, handleBlur, handleChange, touched, errors, values }) => (
-            <KeyboardAvoidingView enabled
-              style={{ alignItems: "center" }}
-            >
-                  <ToastManager />
-              <View style={styles.SectionStyle}>
-                <View style={{ flex: 1, height: 50 }}>
-                    <TextInput
-                      style={[styles.inputStyle, { paddingHorizontal: 20, marginEnd: 5 }]}
-                      underlineColorAndroid="#f000"
-                      placeholder="اسمك الاول"
-                      placeholderTextColor="#8b9cb5"
-                      autoCapitalize="sentences"
-                      returnKeyType="next"
-                      blurOnSubmit={false}
-                      value={values.firstName}
-                      onChangeText={handleChange('firstName')}
-                      onBlur={handleBlur('firstName')}
+          {({ handleSubmit, handleBlur, handleChange, touched, errors, values ,isValid }) => (
+             <KeyboardAvoidingView enabled
+             style={{ alignItems: "center" }}
+           >
+             <ToastManager  style={{width:320,paddingTop:20,height:80}}/>
+             <View style={styles.SectionStyle}>
+               <View style={{ flex: 1, height: 80 }}>
+                 <Text style={{ marginStart: 5, marginBottom: 5, fontSize: 18 }}>أسمك الأول</Text>
+                 <TextInput
+                   style={[styles.inputStyle, { paddingHorizontal: 20, marginEnd: 5 }]}
+                   underlineColorAndroid="#f000"
+                   autoCapitalize="sentences"
+                   returnKeyType="next"
+                   blurOnSubmit={false}
+                   value={values.firstName}
+                   onChangeText={handleChange('firstName')}
+                   onBlur={handleBlur('firstName')}
 
-                    />
-                    <Text style={{ fontSize: 12, color: "red", textAlign: "center" }}>{touched.firstName && errors.firstName}</Text>
-                </View>
+                 />
+                 <Text style={{ fontSize: 12, color: "red", textAlign: "center" }}>{touched.firstName && errors.firstName}</Text>
+               </View>
 
-                <View style={{ flex: 1, height: 50 }}>
-
-                  <TextInput
-                    style={[styles.inputStyle, { marginStart: 5, flexDirection: "column", height: 40 }]}
-                    placeholder="اسمك الأخير"
-                    placeholderTextColor="#8b9cb5"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    value={values.lastName}
-                    onChangeText={handleChange('lastName')}
-                    onBlur={handleBlur('lastName')}
-                  />
-                  <Text style={styles.errorTextStyle}>{touched.lastName && errors.lastName}</Text>
-                </View>
-              </View>
-              <View style={[styles.SectionStyle, { marginTop: 15 }]}>
-                <View style={{ flex: 1, height: 50 }}>
-
-                  <TextInput
-                    style={styles.inputStyle}
-                    underlineColorAndroid="#f000"
-                    placeholder="البريد الألكتروني"
-                    placeholderTextColor="#8b9cb5"
-                    keyboardType="email-address"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    value={values.email}
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
-                  />
-                  <Text style={styles.errorTextStyle}>{touched.email && errors.email}</Text>
-                </View>
-              </View>
-              <View style={[styles.SectionStyle, { marginTop: 15 }]}>
-                <View style={{ flex: 1, height: 50 }}>
-                  <TextInput
-                    style={[styles.inputStyle]}
-                    underlineColorAndroid="#f000"
-                    placeholder="رقم الهاتف"
-                    placeholderTextColor="#8b9cb5"
-                    // autoCapitalize="sentences"
-                    returnKeyType="next"
-                    // blurOnSubmit={false}
-                    keyboardType="numeric"
-                    value={values.phoneNumber}
-                    onChangeText={handleChange('phoneNumber')}
-                    onBlur={handleBlur('phoneNumber')}
-                  />
-                  <Text style={styles.errorTextStyle}>{touched.phoneNumber && errors.phoneNumber}</Text>
-                </View>
-              </View>
-
-             
-
-          
-
-              {/* Input Age */}
+               <View style={{ flex: 1, height: 80 }}>
+                 <Text style={{ marginStart: 10, marginBottom: 5, fontSize: 18 }}>أسمك الأخير</Text>
+                 <TextInput
+                   style={[styles.inputStyle, { marginStart: 5, flexDirection: "column", height: 40 }]}
+                   autoCapitalize="sentences"
+                   returnKeyType="next"
+                   blurOnSubmit={false}
+                   value={values.lastName}
+                   onChangeText={handleChange('lastName')}
+                   onBlur={handleBlur('lastName')}
+                 />
+                 <Text style={styles.errorTextStyle}>{touched.lastName && errors.lastName}</Text>
+               </View>
+             </View>
+             <View style={[styles.SectionStyle]}>
+               <View style={{ flex: 1, height: 80 }}>
+                 <Text style={{ marginStart: 5, marginBottom: 5, fontSize: 18 }}>البريد الالكتروني</Text>
+                 <TextInput
+                   style={styles.inputStyle}
+                   underlineColorAndroid="#f000"
+                   keyboardType="email-address"
+                   returnKeyType="next"
+                   blurOnSubmit={false}
+                   value={values.email}
+                   onChangeText={handleChange('email')}
+                   onBlur={handleBlur('email')}
+                 />
+                 <Text style={styles.errorTextStyle}>{touched.email && errors.email}</Text>
+               </View>
+             </View>
+             <View style={[styles.SectionStyle, { marginTop: 15 }]}>
+               <View style={{ flex: 1, height: 80 }}>
+                 <Text style={{ marginStart: 5, marginBottom: 5, fontSize: 18 }}>البريد الالكتروني</Text>
+                 <TextInput
+                   style={[styles.inputStyle]}
+                   underlineColorAndroid="#f000"
+                   // autoCapitalize="sentences"
+                   returnKeyType="next"
+                   // blurOnSubmit={false}
+                   keyboardType="numeric"
+                   value={values.phoneNumber}
+                   onChangeText={handleChange('phoneNumber')}
+                   onBlur={handleBlur('phoneNumber')}
+                 />
+                 <Text style={styles.errorTextStyle}>{touched.phoneNumber && errors.phoneNumber}</Text>
+               </View>
+             </View>
 
 
-              <View style={[
-                {
-                  flex: 1, marginTop: 20, alignItems: "center", height: 40, flexDirection: "row", justifyContent: "space-between",
-                  marginLeft: 35,
-                  marginRight: 35,
-                }]}>
+             {/* Input Age */}
 
-                <View style={{ width: "50%" }}>
 
-                  <SelectDropdown data={data}
-                    defaultButtonText="أختر المركز"
-                    buttonStyle={styles.selectStyle}
-                    buttonTextAfterSelection={(selecteditem, index) => {
-                      return selecteditem.value
-                    }}
-                    rowTextForSelection={(item) => {
-                      return item.value
-                    }}
-                    // onSelect={}
-                    onSelect={(item) => values.address = item.value}
-                  // onBlur={handleBlur('address')}
-                  />
-                  <Text style={styles.errorTextStyle}>{touched.address && errors.address}</Text>
-                </View>
-              </View>
+             <View style={styles.SectionStyle}>
+
+
+               <View style={{ width: "50%" }}>
+               <Text style={{fontSize:18 ,  marginStart: 5, marginBottom: 5, }}>أختر المركز</Text>
+
+                 <SelectDropdown data={data}
+                   defaultButtonText={dataSani3y.address}
+                   buttonStyle={styles.selectStyle}
+                   buttonTextAfterSelection={(selecteditem, index) => {
+                     return selecteditem.value
+                   }}
+                   rowTextForSelection={(item) => {
+                     return item.value
+                   }}
+                   // onSelect={}
+                   onSelect={(item) => values.address = item.value}
+                 // onBlur={handleBlur('address')}
+                 />
+                 <Text style={styles.errorTextStyle}>{touched.address && errors.address}</Text>
+               </View>
+             </View>
 
 
 
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                activeOpacity={0.5}
-                onPress={handleSubmit}
-              // disabled={!isValid}
-              >
-                <Text style={styles.buttonTextStyle}>تعديل</Text>
-              </TouchableOpacity>
-            </KeyboardAvoidingView>
+             <TouchableOpacity
+               style={styles.buttonStyle}
+               activeOpacity={0.5}
+               onPress={handleSubmit}
+                disabled={!isValid}
+             >
+               <Text style={styles.buttonTextStyle}>تعديل</Text>
+             </TouchableOpacity>
+           </KeyboardAvoidingView>
           )}
         </Formik>
       </ScrollView>
@@ -204,6 +202,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     marginLeft: 35,
     marginRight: 35,
+    marginBottom: 30
   },
   buttonStyle: {
     backgroundColor: '#ffb200',

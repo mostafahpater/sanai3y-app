@@ -20,7 +20,8 @@ import { useNavigation } from "@react-navigation/native";
 import { getDataClient } from '../Redux/Slices/ClientReducer';
 import Loader from "../components/Loder";
 import NotFind from "../components/NotFind";
-
+import { TextInput } from 'react-native-paper';
+import * as yup from 'yup'
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -29,10 +30,14 @@ export default function ProfileClient() {
   const [loader, setLoader] = useState(true)
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisiblePass, setModalVisiblePass] = useState(false);
   const navigate = useNavigation();
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+  const toggleModalPass = () => {
+    setModalVisiblePass(!isModalVisiblePass)
   };
   // End Modal
 
@@ -298,15 +303,127 @@ export default function ProfileClient() {
           <View style={styles.parentList}>
             {/* Settings */}
           <View style={styles.row}>
-              <TouchableOpacity onPress={()=> navigate.navigate("editDataClient")}
-              style={{
-                backgroundColor:"#eee", padding:5,flexDirection:"row-reverse",borderRadius:5,
-                alignItems:"baseline",
-                paddingHorizontal:10
-                }}>
-                <AntDesign name="setting" size={20} style={[styles.iconCol,{marginStart:5}]}/>
-                <Text style={{fontSize:22}}>تعديل البيانات</Text>
-              </TouchableOpacity>
+              {/* Change Detalis */}
+              <View style={styles.col}>
+                <TouchableOpacity onPress={() => navigation.navigate("EditDataSani3y")}
+                  style={{
+                    backgroundColor: "#eee", padding: 5, flexDirection: "row-reverse", borderRadius: 5,
+                    alignItems: "baseline",
+                    paddingHorizontal: 10
+                  }}>
+                  <AntDesign name="setting" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
+                  <Text style={{ fontSize: 22 }}>تعديل البيانات</Text>
+                </TouchableOpacity>
+              </View>
+              {/* Change Password */}
+              <View style={styles.col}>
+                <TouchableOpacity onPress={toggleModalPass}
+                  style={{
+                    backgroundColor: "#eee", padding: 5, flexDirection: "row-reverse", borderRadius: 5,
+                    alignItems: "baseline",
+                    paddingHorizontal: 10,
+                    marginEnd: 5
+                  }}>
+                  <AntDesign name="setting" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
+                  <Text style={{ fontSize: 22 }}>تغيير كلمة السر</Text>
+                </TouchableOpacity>
+
+                <Modal isVisible={isModalVisiblePass}>
+                  <TouchableOpacity onPress={toggleModalPass} style={{ padding: 5, justifyContent: "center", alignItems: "flex-start" }}>
+                    <AntDesign name='closecircleo' style={{ backgroundColor: "#fff", borderRadius: 50, fontSize: 24 }} />
+                  </TouchableOpacity>
+                  <View style={{ backgroundColor: "#eee", borderRadius: 5 }}>
+                    <View style={{ alignItems: "center", flexDirection: "column" }}>
+                      <View
+                        style={{
+                          alignItems: "center",
+                        }}
+                      >
+                        <Formik
+                          initialValues={{
+                            currentPassword: "",
+                            password: "",
+                            confirmPassword: ""
+                          }}
+                          validationSchema={yup.object().shape({
+                            currentPassword : yup.string().required("هذا الحقل مطلوب"),
+                            password : yup.string().required("هذا الحقل مطلوب"),
+                            confirmPassword: yup.string().oneOf([yup.ref('password'),null],"كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
+                          })}
+                          onSubmit={(value)=>{
+                            console.log(value)
+                          }}
+                        >
+                          {({ handleSubmit, handleBlur, handleChange, values ,touched ,errors }) =>
+                            <View style={{ marginTop: 20, flexDirection: "column", alignItems: "center", justifyContent: "center", width: 300 }}>
+                              <View style={{ width: "80%", marginBottom: 5 }}>
+
+                                <TextInput
+                                  value={values.currentPassword}
+                                  onChangeText={handleChange("currentPassword")}
+                                  onBlur={handleBlur("currentPassword")}
+
+                                  placeholder="كلمة السر الحاليه"
+                                  placeholderTextColor="#8b9cb5"
+                                  underlineColorAndroid="#000"
+                                  keyboardType='text'
+                                  secureTextEntry={true}
+                                  blurOnSubmit={false}
+                                  style={{
+                                    backgroundColor: "#eee",
+                                    borderRadius: 5,
+                                    color: "black"
+                                  }}
+                                />
+                                <Text style={{color:"red" , marginTop:5}}>{touched.currentPassword && errors.currentPassword}</Text>
+                              </View>
+                              <View style={{ width: "80%", marginBottom: 5 }}>
+
+                                <TextInput
+                                  value={values.password}
+                                  onChangeText={handleChange("password")}
+                                  onBlur={handleBlur("password")}
+                                  placeholder="كلمة السر الجديدة"
+                                  placeholderTextColor="#8b9cb5"
+                                  style={{
+                                    backgroundColor: "#eee",
+
+                                  }}
+                                />
+                                <Text style={{color:"red" , marginTop:5}}>{touched.password && errors.password}</Text>
+                              </View>
+                              <View style={{ width: "80%", marginBottom: 5 }}>
+
+                                <TextInput
+                                  value={values.confirmPassword}
+                                  onChangeText={handleChange("confirmPassword")}
+                                  onBlur={handleBlur("confirmPassword")}
+                                  placeholder="أعد كتابة كلمة السر"
+                                  placeholderTextColor="#8b9cb5"
+                                  style={{
+                                    backgroundColor: "#eee",
+
+                                  }}
+                                />
+                                <Text style={{color:"red" ,marginTop:5}}>{touched.confirmPassword && errors.confirmPassword}</Text>
+                              </View>
+                              <TouchableOpacity style={[styles.button, { marginVertical: 20 }]}
+                              onPress={handleSubmit}
+                              >
+                                <Text style={styles.buttonText}>تغيير</Text>
+                              </TouchableOpacity>
+                            </View>
+                          }
+                        </Formik>
+                      </View>
+                    </View>
+
+
+
+                  </View>
+                </Modal>
+              </View>
+              {/* End Change Password */}
             </View>
             {/* Mobile */}
             <View style={styles.row}>

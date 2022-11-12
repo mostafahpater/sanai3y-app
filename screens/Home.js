@@ -41,8 +41,8 @@ export default function Home() {
   const searchFilterFunction = (text) => {
     if (text) {
       const newData = allJob.filter(function (item) {
-        const itemfirstName = item.firstName?.toUpperCase()
-        const itemlastName = item.lastName?.toUpperCase()
+        const itemfirstName =item.clientData?.firstName.toUpperCase()
+        const itemlastName = item.clientData?.lastName.toUpperCase()
         const itemTitle = item.title?.toUpperCase()
         const itemDscription = item.description?.toUpperCase()
         const itemCity = item.city?.toUpperCase()
