@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import IntuoialScreen from './IntouialScrean';
 import {useSelector} from "react-redux";
 import { getImageUrl } from '../Config/imageUrl';
+import { getDataJops } from '../Redux/Slices/JobsReducer';
 
 export default function Index() {
 
@@ -47,7 +48,7 @@ export default function Index() {
       // 
     }
     )
-    
+    dispatch(getDataJops())
   }, [])
   // console.log(route)
 
@@ -121,14 +122,15 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   reciever_name: {
-    fontSize: 30,
+    fontSize: 20,
     // backgroundColor: "red",
     paddingHorizontal: 10,
-    marginHorizontal: 20
+    marginHorizontal: 20,
+    fontWeight:"500"
   },
   reciever_image: {
-    width: 60, 
-    height: 60, 
+    width: 40, 
+    height: 40, 
     borderRadius: 60,
   }
 });

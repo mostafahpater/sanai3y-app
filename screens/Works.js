@@ -1,10 +1,16 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import { pathUrl } from '../Config/env';
 import axios from "axios";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import NotFind from "../components/NotFind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
+
 export default function Works() {
   const navigation = useNavigation();
   const [data, setData] = useState([])
@@ -12,32 +18,44 @@ export default function Works() {
   // console.log(data);
   // console.log(token);
   useEffect(()=>{
-    AsyncStorage.getItem('token').then((res) => setToken(res))
+
 
   },[])
-  useEffect(() => {
-    // console.log("object");x`
-   
-    axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:token}}).then((res) => {
+  useEffect(() => { 
+    AsyncStorage.getItem('token').then((res) => 
+    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
       // console.log(res.data);
-      console.log("true");
        setData(res.data.Data)
     }).catch((erorr) => {
       console.log("erorr");
       console.log(erorr);
    
-  }, 100);
+  })})
+
   }, [token])
 
   // console.log(data);
-
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    AsyncStorage.getItem('token').then((res) => 
+    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
+      // console.log(res.data);
+       setData(res.data.Data)
+    }).catch((erorr) => {
+      console.log("erorr");
+      console.log(erorr);
+   
+  })})
+  }, []);
 
   return (
 
     <View>
 
       <View style={styles.cont}>
-        <View>
+        <View style={{alignItems:"center",marginVertical:10}}>
           <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('AddWorks')}>
             <Text style={styles.buttonTextStyle}
             >اضافة عمل</Text>
@@ -45,7 +63,13 @@ export default function Works() {
 
         </View>
         {data.length > 0 && <FlatList
-         contentContainerStyle={{ paddingBottom: 120 }}
+         contentContainerStyle={{ paddingBottom: 200 }}
+         refreshControl={
+           <RefreshControl
+             refreshing={refreshing}
+             onRefresh={onRefresh}
+           />
+         }
           data={data}
           // keyExtractor={({ item }) => item}
           renderItem={({ item }, index) => (
@@ -69,7 +93,8 @@ export default function Works() {
           )}
         />}
 
-        {data.length == 0 &&<NotFind data={"لا توجد اعمال"}/>}
+        {data.length == 0 &&<NotFind data={"لايوجد منشورات"}/>}
+
 
       </View>
     </View>
@@ -78,13 +103,10 @@ export default function Works() {
 }
 const styles = StyleSheet.create({
   cont: {
-
+    // flex:1,
     color: "black",
-    // justifyContent: "center",
-    // alignItems: "center",
     flexDirection: "column",
-    // marginRight:15,
-    marginLeft: 20
+    marginLeft: 28,
   },
   card: {
     width: "90%",

@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, TextInput, Image, Button, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image, Button, FlatList, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation,useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import axios from 'axios';
 import { pathUrl } from '../Config/env'
@@ -10,41 +10,33 @@ import dateformat, { masks } from "dateformat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../components/Loder";
 import { Searchbar } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { getDataJops } from "../Redux/Slices/JobsReducer";
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 export default function Home() {
-  const navigation = useNavigation(); 
-  const [flag,seTflag]=useState(false); // re render to component 
-  const [ loader , setLoader] = useState(true)
-  const [allJob, setAllJob] = useState([]) // All Jops
+  const navigation = useNavigation();
+  const [flag, seTflag] = useState(false); // re render to component 
+  const [loader, setLoader] = useState(true)
+  // const [allJob, setAllJob] = useState([]) // All Jops
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [search, setSearch] = useState("");
-  console.log(allJob);
+  const allJob = useSelector(state => state.JobsReducer.dataJobs)
+  const dispatch = useDispatch()
   useEffect(() => {
     seTflag(true);
-      axios.get(`${pathUrl}/jobs/all`).then((response) => {
-        const res = response.data.data.filter((item) => {
-          return item.status != "in progress"
-        })
-        setAllJob([...res])
-        setFilteredDataSource([...res])
-        // console.log(allJob)
-        if(response.status == 200){
-          setTimeout(() => {
-            setLoader(false)
-            
-          }, 1100);
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
 
-    
+    setFilteredDataSource(allJob)
     return () => {
       seTflag(false)
       setLoader(true)
     }
 
-  }, [])
-  
+  }, [allJob])
+
   // console.log(val)
   const searchFilterFunction = (text) => {
     if (text) {
@@ -56,7 +48,7 @@ export default function Home() {
         const itemCity = item.city?.toUpperCase()
         const itemCatogry = item.category?.toUpperCase()
         const textData = text.toUpperCase();
-        return itemfirstName?.indexOf(textData) >=0 || itemlastName?.indexOf(textData) >=0 || itemTitle?.indexOf(textData) >=0 ||itemDscription?.indexOf(textData) >=0 ||itemCity?.indexOf(textData) >=0 ||itemCatogry?.indexOf(textData) >=0
+        return itemfirstName?.indexOf(textData) >= 0 || itemlastName?.indexOf(textData) >= 0 || itemTitle?.indexOf(textData) >= 0 || itemDscription?.indexOf(textData) >= 0 || itemCity?.indexOf(textData) >= 0 || itemCatogry?.indexOf(textData) >= 0
       });
       setFilteredDataSource(newData);
       setSearch(text);
@@ -67,180 +59,193 @@ export default function Home() {
   };
 
 
-  useEffect(() => { }, [allJob])
 
   function delet(id) {
-    setAllJob((prev) => prev.filter((item) => item._id != id));
+    setFilteredDataSource((prev) => prev.filter((item) => item._id != id));
   }
+  const [refreshing, setRefreshing] = React.useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    dispatch(getDataJops())
+  }, []);
   // Start JSX
   return (
-    <View style={styles.container}>
-      {/* Start Search */}
+    <>
+      { <View style={styles.container}>
+        {/* Start Search */}
 
-      <Searchbar
-        onChangeText={(text) => searchFilterFunction(text)}
-        style={styles.search}
-        value={search}
-        iconColor="#ffb200"
-        keyboardType="default"
-        placeholderTextColor="#8b9cb5"
-        placeholder="بحث"
+        <Searchbar
+          onChangeText={(text) => searchFilterFunction(text)}
+          style={styles.search}
+          value={search}
+          iconColor="#ffb200"
+          keyboardType="default"
+          placeholderTextColor="#8b9cb5"
+          placeholder="بحث"
         />
-      
+
 
         {/* Start Box Posts */}
 
-      {allJob.length > 0 && (
-        <FlatList
-        data={filteredDataSource}
-          keyExtractor={(item, index) => index}
-          renderItem={({ item }) => (
-            <View style={[styles.box, styles.shadowProp]}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("ClientShow", { data: item })
-                }
-                style={{width:"50%"}}
-              >
-                <View
-                  style={{ flexDirection: "row", justifyContent: "flex-start" }}
+        {allJob.length > 0 && (
+          <FlatList
+            data={filteredDataSource}
+            keyExtractor={(item, index) => index}
+            refreshControl={
+              <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+            }
+            renderItem={({ item }) => (
+              <View style={[styles.box, styles.shadowProp]}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("ClientShow", { data: item })
+                  }
+                  style={{ width: "50%" }}
                 >
-                  <Image
-                    style={styles.tinyLogo}
-                    source={{
-                      uri: `${pathUrl}${item.clientData?.img.slice(21)}`,
-                    }}
-                  />
-                  <View style={{ marginLeft: 10 }}>
-                    <Text
-                      style={{
-                        marginRight: 10,
-                        paddingRight: 10,
-                        borderRightWidth: 1,
-                        borderRightColor: "#ffb200",
-                        fontWeight: "bold",
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "flex-start" }}
+                  >
+                    <Image
+                      style={styles.tinyLogo}
+                      source={{
+                        uri: `${pathUrl}${item.clientData?.img.slice(21)}`,
                       }}
-                    >
-                      {item.clientData?.firstName +
-                        " " +
-                        item.clientData?.lastName}
-                    </Text>
+                    />
+                    <View style={{ marginLeft: 10 }}>
+                      <Text
+                        style={{
+                          marginRight: 10,
+                          paddingRight: 10,
+                          borderRightWidth: 1,
+                          borderRightColor: "#ffb200",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {item.clientData?.firstName +
+                          " " +
+                          item.clientData?.lastName}
+                      </Text>
 
-                    <Text
-                      style={{ fontSize: 10, textAlign: "left", color: "#777" }}
-                    >
-                      {dateformat(item?.hiredDate, " h:MM  TT")}
-                    </Text>
+                      <Text
+                        style={{ fontSize: 10, textAlign: "left", color: "#777" }}
+                      >
+                        {dateformat(item?.hiredDate, " h:MM  TT")}
+                      </Text>
 
-                    {/* <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
+                      {/* <Text style={{ paddingRight: 10, color: "#999", fontSize: 10 }}>
                     {item.city}
                   </Text> */}
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-              
-              <AntDesign
-               name="closecircle"
-                style={styles.test} 
-                onPress={() => delet(item._id)}
-                  
+                </TouchableOpacity>
+
+                <AntDesign
+                  name="closecircle"
+                  style={styles.test}
+                  onPress={() => delet(item._id)}
+
                 />
 
-              <Text
-                style={{
-                  paddingTop: 5,
-                  paddingHorizontal: 10,
-                  fontSize: 12,
-                  color: "#444",
-                }}
-              >
-                {item.title}
-              </Text>
-
-              <Text
-                style={{
-                  paddingRight: 10,
-                  paddingBottom: 10,
-                  borderBottomWidth: 1,
-                  marginBottom: 10,
-                  borderBottomColor: "#EEE",
-                }}
-              >
-                {item.description}
-              </Text>
-
-              <Text
-                style={{
-                  paddingRight: 10,
-                  paddingBottom: 5,
-                  color: "#111",
-                  fontSize: 12,
-                }}
-              >
-                <Text style={{ fontWeight: "bold" }}> العنوان : </Text>
-                {item.city}
-              </Text>
-
-              <Text
-                style={{
-                  paddingRight: 15,
-                  paddingBottom: 10,
-                  color: "#111",
-                  fontSize: 12,
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#EEE",
-                  marginBottom: 10,
-                }}
-              >
-                <Text style={{ fontWeight: "bold" }}>
-                  عدد الطلبات المقدمة :{" "}
-                </Text>
-
-                <Text style={{}}>{item?.proposals.length}</Text>
-              </Text>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "flex-end",
-                }}
-              >
                 <Text
                   style={{
-                    backgroundColor: "#EEE",
-                    width: 80,
-                    textAlign: "center",
-                    borderRadius: 10,
+                    paddingTop: 5,
+                    paddingHorizontal: 10,
+                    fontSize: 12,
+                    color: "#444",
+                  }}
+                >
+                  {item.title}
+                </Text>
+
+                <Text
+                  style={{
+                    paddingRight: 10,
+                    paddingBottom: 10,
+                    borderBottomWidth: 1,
+                    marginBottom: 10,
+                    borderBottomColor: "#EEE",
+                  }}
+                >
+                  {item.description}
+                </Text>
+
+                <Text
+                  style={{
+                    paddingRight: 10,
+                    paddingBottom: 5,
+                    color: "#111",
                     fontSize: 12,
                   }}
                 >
-                  {item.category}
+                  <Text style={{ fontWeight: "bold" }}> العنوان : </Text>
+                  {item.city}
                 </Text>
-                <TouchableOpacity>
+
+                <Text
+                  style={{
+                    paddingRight: 15,
+                    paddingBottom: 10,
+                    color: "#111",
+                    fontSize: 12,
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#EEE",
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text style={{ fontWeight: "bold" }}>
+                    عدد الطلبات المقدمة :{" "}
+                  </Text>
+
+                  <Text style={{}}>{item?.proposals.length}</Text>
+                </Text>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end",
+                  }}
+                >
                   <Text
                     style={{
-                      backgroundColor: "#ffb200",
-                      paddingHorizontal: 10,
-                      paddingVertical: 5,
-                      borderRadius: 5,
+                      backgroundColor: "#EEE",
+                      width: 80,
+                      textAlign: "center",
+                      borderRadius: 10,
+                      fontSize: 12,
                     }}
-                    onPress={() =>
-                      navigation.navigate("SendTalp", { one: item })
-                    }
                   >
-                    التفاصيل
+                    {item.category}
                   </Text>
-                </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Text
+                      style={{
+                        backgroundColor: "#ffb200",
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        borderRadius: 5,
+                      }}
+                      onPress={() =>
+                        navigation.navigate("SendTalp", { one: item })
+                      }
+                    >
+                      التفاصيل
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          )}
-        />
-      )}
-      {/* End Box Posts */}
-      {allJob.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
-    </View>
+            )}
+          />
+        )}
+        {/* End Box Posts */}
+        {allJob.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
+      </View>}
+    </>
   );
 }
 
@@ -253,8 +258,8 @@ const styles = StyleSheet.create({
   },
   search: {
     // flex: 1,
-    color: "#000",  
-    marginVertical: 10,  
+    color: "#000",
+    marginVertical: 10,
     // padding:10,
     borderWidth: 1,
     borderRadius: 5,
@@ -262,7 +267,7 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
     borderColor: "#ffb200",
     elevation: 2,
-    
+
   },
   box: {
 

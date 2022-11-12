@@ -44,9 +44,9 @@ console.log(currentReciever)
 
     return (
         <>
-            <TouchableOpacity style={styles.conv} onPress={()=> {props.navigation.navigate("messages", {conversation, currentSender, currentReciever}); dispatch(sendCurrentReciever(currentReciever))}}>
-                <Image source={{uri: currentReciever?.img}} style={styles.image} />
-                <Text style={styles.recieverName}> {`${currentReciever?.firstName} ${currentReciever?.lastName} `}</Text>
+            <TouchableOpacity style={styles.conv}  onPress={()=> {props.navigation.navigate("messages", {conversation, currentSender, currentReciever}); dispatch(sendCurrentReciever(currentReciever))}}>
+                    <Image source={{uri: currentReciever?.img}} style={styles.image} />
+                    <Text style={styles.recieverName}> {`${currentReciever?.firstName} ${currentReciever?.lastName} `}</Text>
             </TouchableOpacity>
         </>
     )
@@ -57,12 +57,16 @@ export default Conversations
 const styles = StyleSheet.create({
     conv: {
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor:"#eee",
+        marginBottom:10,
+        borderRadius:5,
+        padding:5
     },
     image: {
-        width: 60,
-        height: 60,
-        borderRadius: 60,
+        width: 50,
+        height: 50,
+        borderRadius: 50,
         margin: 10
 
     },

@@ -10,6 +10,10 @@ import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import { get } from 'lodash';
 import NotFind from '../components/NotFind';
+import Loader from "../components/Loder";
+
+
+
 export default function ShowSanai3y() {
   // Start Modal
   const [isModalVisible, setModalVisible] = useState(false);
@@ -22,99 +26,112 @@ export default function ShowSanai3y() {
   // Start Image in Modal
   const { params } = useRoute()
   const data = get(params, "data")
+  const [ loader , setLoader]= useState(true)
   // End Image in Modal 
 //   console.log(data);
 // console.log("ahmed");
   const [workstore, setWorkstore] = useState([])
-//   console.log(workstore.length);
   useEffect(() => {
-    // console.log("useeff");
       axios.get(`${pathUrl}/sanai3y/sanai3ies/${data?._id}`)
         .then((res) => {
-            // console.log(data._id);
             setWorkstore(res.data.Data.workStore)
-            // console.log(res.data)
-            // console.log(res.data.Data.workStore);
+            if(res.status == 200){
+              setTimeout(() => {
+                setLoader(false)
+              }, 1100);
+            }
         }).catch((err) => console.log(err))
   
-// console.log("object");
   }, [data])
 
   return (
 
-    <ScrollView style={{ backgroundColor: "#fff" }}>
 
-      <View style={styles.parent}>
-        <View style={styles.image}>
-          <View style={styles.imgProfile}>
-            <View>
-              <Image source={{ uri: `${pathUrl}${data?.img.slice(21)}` }}
-                style={{ width: 200, height: 200, borderRadius: 5, resizeMode: "cover" }}
-              />
-            </View>
+    <>
+      {!loader &&<ScrollView style={{ backgroundColor: "#fff" }}>
 
-
-          </View>
-
-          <View style={styles.userName}>
-            <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data?.firstName} ${data?.lastName}`}</Text>
-
-          </View>
-        </View>
-
-        {/* Details user */}
-        <View style={styles.parentList}>
-          <View style={styles.row}>
-            <View style={styles.col}>
-              <Text style={styles.textcol}>{data?.skills}</Text>
-            </View>
-            <View style={styles.col}>
-              <Entypo name='tools' style={styles.iconCol} />
-            </View>
-          </View>
-
-          {/* address */}
-          <View style={styles.row}>
-            <View style={styles.col}>
-              <Text style={styles.textcol}>{`العنوان : ${data?.address}`}</Text>
-            </View>
-            <View style={styles.col}>
-              <Entypo name='location-pin' style={[styles.iconCol]} />
-            </View>
-          </View>
-        </View>
-
-        {/* Talbat */}
-        <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>معرض الاعمال</Text>
-        </View>
-
-        {/* Card Style */}
-
-        {workstore.length > 0 && workstore.map((item,index) =>
-          <View style={styles.card} key={index} >
-            <View style={styles.cardBody} >
-              {/* jop des */}
-              <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
-                <View>
-                  <Text style={styles.text}>عنوان الوظيفة: {item.title}</Text>
-                </View>
-                <View>
-                  <Text style={[styles.text, { marginTop: 10 }]}>الوصف : {item.description}</Text>
-                </View>
+        <View style={styles.parent}>
+          <View style={styles.image}>
+            <View style={styles.imgProfile}>
+              <View>
+                <Image source={{ uri: `${pathUrl}${data?.img.slice(21)}` }}
+                  style={{ width: 200, height: 200, borderRadius: 5, resizeMode: "cover" }}
+                />
               </View>
-              {/* img Jop */}
-              <View style={{ width: "50%" }}>
-                <Image source={{ uri: `${pathUrl}${item.img?.slice(21)}` }}
-                  style={{ height: 200, resizeMode: "contain" }} />
+
+
+            </View>
+
+            <View style={styles.userName}>
+              <Text style={{ textAlign: "center", fontSize: 25 }}>{`${data?.firstName} ${data?.lastName}`}</Text>
+
+            </View>
+          </View>
+
+          {/* Details user */}
+          <View style={styles.parentList}>
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <Text style={styles.textcol}>{data?.skills}</Text>
+              </View>
+              <View style={styles.col}>
+                <Entypo name='tools' style={styles.iconCol} />
+              </View>
+            </View>
+
+            {/* address */}
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <Text style={styles.textcol}>{`العنوان : ${data?.address}`}</Text>
+              </View>
+              <View style={styles.col}>
+                <Entypo name='location-pin' style={[styles.iconCol]} />
+              </View>
+            </View>
+            {/* numoer of the jops  */}
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <Text style={styles.textcol}>{`عدد الوظائف : ${data?.jobs.length == 0?"لا يوجد":data?.jobs.length}`}</Text>
+              </View>
+              <View style={styles.col}>
+                <Entypo name={data?.jobs.length == 0?'emoji-sad':"emoji-happy"} style={[styles.iconCol]} />
               </View>
             </View>
           </View>
-        )}
 
-        {workstore == 0 && <NotFind data={"لاتوجد منشورات "} />}
-      </View>
-    </ScrollView>
+          {/* Talbat */}
+          <View style={{ alignItems: "center", marginTop: 20 }}>
+            <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>معرض الاعمال</Text>
+          </View>
+
+          {/* Card Style */}
+
+          {workstore.length > 0 && workstore.map((item,index) =>
+            <View style={styles.card} key={index} >
+              <View style={styles.cardBody} >
+                {/* jop des */}
+                <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
+                  <View>
+                    <Text style={styles.text}>عنوان الوظيفة: {item.title}</Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.text, { marginTop: 10 }]}>الوصف : {item.description}</Text>
+                  </View>
+                </View>
+                {/* img Jop */}
+                <View style={{ width: "50%" }}>
+                  <Image source={{ uri: `${pathUrl}${item.img?.slice(21)}` }}
+                    style={{ height: 200, resizeMode: "contain" }} />
+                </View>
+              </View>
+            </View>
+          )}
+
+          {workstore == 0 && <NotFind data={"لاتوجد منشورات "} />}
+        </View>
+      </ScrollView>}
+      {loader &&<Loader/>}
+    </>
   )
 }
 
