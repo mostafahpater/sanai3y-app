@@ -243,7 +243,17 @@ export default function Home() {
           />
         )}
         {/* End Box Posts */}
-        {allJob.length == 0 && <NotFind data={"لاتوجد منشورات الان"} />}
+        {allJob.length == 0 && <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+        >
+
+          <NotFind data={"لاتوجد منشورات الان"} />
+        </ScrollView>}
       </View>}
     </>
   );
