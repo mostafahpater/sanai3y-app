@@ -110,6 +110,8 @@ export default function SendTalpFromClient() {
                {detailJob?.title}   
           </Text>
 
+          {/* <Text>{JSON.stringify( detailJob.image)}</Text> */}
+
           <Text
             style={{
               padding: 10,

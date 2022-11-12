@@ -432,7 +432,7 @@ export default function ProfileSnai3y() {
                   </View>
                   {/* img Jop */}
                   <View style={{ width: "50%" }}>
-                    <Image source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" }}
+                    <Image source={{ uri: `${pathUrl}${item.image}.slice(21)` }}
                       style={{ height: 200, resizeMode: "contain" }} />
                   </View>
                 </View>
