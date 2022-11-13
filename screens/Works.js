@@ -28,8 +28,8 @@ export default function Works() {
         // console.log(res.data);
         setData(res.data.Data)
       }).catch((erorr) => {
-        console.log("erorr");
-        console.log(erorr);
+        // console.log("erorr");
+        // console.log(erorr);
 
       })
     })
@@ -56,8 +56,14 @@ const deleted =async (id) => {
   AsyncStorage.getItem('token').then((res) => {
   let filterData=  data.filter((item)=>item._id!==id)
   setData([...filterData])
-  axios.delete(`${pathUrl}/sanai3y/deletestore/${id}`,{headers:{authorization:res}}).then((res)=>{
+   axios.delete(`${pathUrl}/sanai3y/deletestore/${id}`,{headers:{authorization:res}})
+  .then((res)=>{
     console.log(res);
+  })
+  .catch((err) => {
+
+    console.log(err)
+
   })
   })
 }
@@ -68,9 +74,9 @@ const deleted =async (id) => {
       <View style={styles.cont}>
         <View style={{alignItems:"center",paddingVertical:10,backgroundColor:'#fff'}}>
           <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('AddWorks')}>
-            <Icon name="plus" style={{color:'#fff'}} size={16} />
             <Text style={styles.buttonTextStyle}
-            >اضافة عمل</Text>
+            >اضافة عمل للمعرض </Text>
+            <Icon name="plus" style={{color:'#fff', paddingRight:5, paddingLeft:5}} size={16}  />
           </TouchableOpacity>
 
         </View>
@@ -83,10 +89,10 @@ const deleted =async (id) => {
            />
          }
           data={data}
-          // keyExtractor={({ item }) => item}
-          renderItem={({ item }, index) => (
+          keyExtractor={({ item, index }) => index}
+          renderItem={({ item }) => (
 
-            <View key={index} style={styles.card}>
+            <View  style={styles.card}>
 
               <Image
                 source={{
@@ -99,7 +105,7 @@ const deleted =async (id) => {
               <Text style={styles.description}>{item.description} </Text>
               <TouchableOpacity style={styles.buttonDelete}
                activeOpacity={0.5}
-               onPress={()=>deleted(item._id)}
+               onPress={()=>deleted(item?._id)}
               >
                 <Text style={styles.buttonDeleteStyle}> حذف</Text>
               </TouchableOpacity>
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
   cont: {
     // flex:1,
     color: "black",
-    backgroundColor:'#F7F7F7',
+    backgroundColor:'#FFF',
     flexDirection: "column",
   },
   card: {
@@ -184,7 +190,7 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems: "center",
     borderRadius: 5,
-    width: 100,
+    // width: 120,
     // marginLeft: 35,
     // marginRight: 35,
     marginTop: 10,
@@ -213,6 +219,7 @@ const styles = StyleSheet.create({
   },
   buttonTextStyle: {
     color: "white",
+    // width:150,
     paddingVertical: 10,
     marginLeft:7,
     fontSize: 16,

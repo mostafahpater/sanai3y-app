@@ -46,8 +46,8 @@ const ProfileSani3yStack = () => {
         component={Works}
         options={{
           headerShown: true,
+          headerTitleAlign:'center',
           headerTitle: "معرض الاعمال",
-          headerLeft: ()=> null,
           headerStyle: {
             backgroundColor: "#fbb150",
             elevation: 15,
@@ -61,7 +61,7 @@ const ProfileSani3yStack = () => {
         options={{
           headerShown: true,
           headerTitle: "اضافة عمل جديد",
-          headerLeft: ()=> null,
+          headerTitleAlign:'center',
           headerStyle: {
             backgroundColor: "#fbb150",
             elevation: 15,
@@ -83,7 +83,7 @@ const ProfileSani3yStack = () => {
         }}
       />
       <Screen
-        name="paypal"
+        name="Paypal"
         component={Paypal}
         options={{
           headerShown: false,

@@ -25,6 +25,7 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { StackActions } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import ToastManager, { Toast } from 'toastify-react-native'
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function WorksForm() {
   const navigation = useNavigation();
@@ -45,7 +46,7 @@ export default function WorksForm() {
     }
   };
 
-  console.log(image);
+  // console.log(image);
   const worksSchema = yup.object().shape({
     title: yup.string().required("هذا الحقل مطلوب"),
     description: yup.string().required("هذا الحقل مطلوب"),
@@ -73,9 +74,9 @@ export default function WorksForm() {
           "Content-Type": "multipart/form-data",
         }
       }).then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.status == 200) {
-          console.log("true");
+          // console.log("true");
           showToasts()
           setTimeout(() => {
             navigation.navigate('ShowWorks')
@@ -83,12 +84,12 @@ export default function WorksForm() {
             
           }, 3000);
         } else {
-          console.log("erorr");
-          console.log("Please check your email id or password");
+          // console.log("erorr");
+          // console.log("Please check your email id or password");
         }
       }).catch((err) => {
-        console.log("erorr");
-        console.log(err);
+        // console.log("erorr");
+        // console.log(err);
       });
       
   };
@@ -187,10 +188,10 @@ export default function WorksForm() {
                       activeOpacity={0.5}
                       onPress={handleUpload}
                     >
-                      <Text style={[styles.buttonTextStyle, { color: "black" }]}>
-                        اضف صورة
+                      <Text style={[styles.buttonTextStyle, { color: "black", paddingHorizontal:10 }]}>
+                      <MaterialIcons name="add-photo-alternate" style={styles.styleUser} /> 
+                     <Text> اضف صورة</Text>   
                       </Text>
-                      <Icon name="upload" style={styles.styleUser} />
                     </TouchableOpacity>
                     {image && (
                       <Image
@@ -208,7 +209,10 @@ export default function WorksForm() {
                     onPress={handleSubmit}
 
                   >
-                    <Text style={styles.buttonTextStyle} >اضافة</Text>
+                    <Text style={styles.buttonTextStyle} >
+                      <MaterialIcons name="post-add" style={{color:'#fff', fontSize:20}}></MaterialIcons>
+                     <Text> اضافة العمل</Text> 
+                      </Text>
                   </TouchableOpacity>
                 </KeyboardAvoidingView>
               </View>
@@ -254,7 +258,6 @@ const styles = StyleSheet.create({
   },
   buttonTextStyle: {
     color: "white",
-    paddingVertical: 10,
     fontSize: 19,
   },
   buttonPhoto: {
@@ -285,14 +288,15 @@ const styles = StyleSheet.create({
     textAlign: "right",
     textAlignVertical: "top",
     elevation: 2,
+    height:40
   },
   styleUser: {
     fontSize: 22,
 
     color: "#ffb200",
 
-    padding: 9,
-    paddingTop: 9,
+    // padding: 9,
+    // paddingTop: 15,
   },
 
   errorTextStyle: {

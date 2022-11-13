@@ -39,7 +39,7 @@ export default class Paypal extends Component {
 
             }],
             "redirect_urls": {
-                "return_url": "https://www.sandbox.paypal.com/checkoutnow?sessionID=uid_f7130461ec_mtc6nta6ndi&buttonSessionID=uid_1a27f9388e_mtc6nti6mjk&stickinessID=uid_d4c4ff1255_mti6mjg6mdu&inlinexo=false&smokeHash=&token=63F3771594008344H&fundingSource=paypal&buyerCountry=US&locale.x=en_US&commit=true&clientID=AZ51PWvV2V_ij5HDO2ivSJYUHukBhsoQwm6NulX6ZjIzMiLkdosGhpxefln8kfwraTqWXt9WjBkKFK4t&env=sandbox&sdkMeta=eyJ1cmwiOiJodHRwczovL3d3dy5wYXlwYWwuY29tL3Nkay9qcz9jbGllbnQtaWQ9QVo1MVBXdlYyVl9pajVIRE8yaXZTSllVSHVrQmhzb1F3bTZOdWxYNlpqSXpNaUxrZG9zR2hweGVmbG44a2Z3cmFUcVdYdDlXakJrS0ZLNHQiLCJhdHRycyI6eyJkYXRhLXNkay1pbnRlZ3JhdGlvbi1zb3VyY2UiOiJyZWFjdC1wYXlwYWwtanMiLCJkYXRhLXVpZCI6InVpZF96aGp6cnBkdGF1Z2FsdHhyZG5kZnVnd2VvY3F1eHIifX0&xcomponent=1&version=5.0.343",
+                "return_url": 'https://example.com',
                 "cancel_url": "https://example.com"
             }
         }
@@ -49,7 +49,7 @@ export default class Paypal extends Component {
                 method:'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': `Bearer A21AAK5qxI5pUj-kAgQUtZXuqr0g2wMycwcJMjnjent2bJnjiswRQyrByyGiXRG1ZheNgcOHMRIoJzEq4KLWZw94S0Vo7uVRA` // Your authorization value
+                    'Authorization': `Bearer A21AAJN9hG1p1jTFw6K-aUxjv0tPq1Bq8_WtUrRu7JD-cO2IYPgCjMH6i3vE2hJm30S50C9j80o9HO_bk_ZOwNRyV5T4m1E8A` // Your authorization value
 
                 },
                 body:  'grant_type=client_credentials'

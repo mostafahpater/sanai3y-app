@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Button, Platform, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
+import { AntDesign, Entypo, FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from '@react-navigation/native';
@@ -166,7 +166,7 @@ const tostErr= () =>{
 
   function checkOut() {
 
-   navigation.navigate("paypal")
+   navigation.navigate("Paypal")
   }
 
 
@@ -185,7 +185,7 @@ const tostErr= () =>{
           <View style={styles.image}>
             <View style={styles.imgProfile}>
               <View>
-                <Image source={{ uri: datas.img }}
+                <Image source={{ uri: datas?.img }}
                   style={{ width: 200, height: 200, borderTopLeftRadius: 5, borderTopRightRadius: 5, resizeMode: "cover" }}
                 />
               </View>
@@ -290,7 +290,7 @@ const tostErr= () =>{
                     paddingHorizontal: 10
                   }}>
                   <AntDesign name="setting" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
-                  <Text style={{ fontSize: 22 }}>تعديل البيانات</Text>
+                  <Text style={{ fontSize: 18, color:'#666' }}>تعديل البيانات</Text>
                 </TouchableOpacity>
               </View>
               {/* Change Password */}
@@ -303,7 +303,7 @@ const tostErr= () =>{
                     marginEnd: 5
                   }}>
                   <AntDesign name="setting" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
-                  <Text style={{ fontSize: 22 }}>تغيير كلمة السر</Text>
+                  <Text style={{ fontSize: 18, color:'#666'  }}>تغيير كلمة السر</Text>
                 </TouchableOpacity>
 
                 <Modal isVisible={isModalVisiblePass}>
@@ -433,7 +433,7 @@ const tostErr= () =>{
                 paddingHorizontal:10
                 }}>
                 <Entypo name="paypal" size={20} style={[styles.iconCol,{marginStart:5}]}/>
-                <Text style={{fontSize:22}}>الدفع</Text>
+                <Text style={{fontSize:18, color:'#666' }}>الدفع</Text>
               </TouchableOpacity>
             </View>
 
@@ -459,7 +459,7 @@ const tostErr= () =>{
 
             <View style={styles.row}>
               <View style={styles.col}>
-                <Text style={styles.textcol}>العمر :  {datas.age}</Text>
+                <Text style={styles.textcol}>العمر :  ({datas.age})</Text>
               </View>
               <View style={styles.col}>
                 <Entypo name='pencil' style={styles.iconCol} />
@@ -477,7 +477,7 @@ const tostErr= () =>{
             {/* Jop Count */}
             <View style={styles.row}>
               <View style={[styles.col,{width:"80%"}]}>
-                <Text style={styles.textcol}>{`عدد الوظائف المتاحة :  ${datas.jobcount}`}</Text>
+                <Text style={styles.textcol}>{`عدد الوظائف المتاحة :  (${datas?.jobcount})`}</Text>
               </View>
               <View style={[styles.col,{width:"20%"}]}>
                 <Entypo name='tools' style={styles.iconCol} />
@@ -486,14 +486,17 @@ const tostErr= () =>{
 
             <View style={styles.row}>
               <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ShowWorks')}>
-                <Text style={styles.buttonText}>معرض الأعمال</Text>
+                <Text style={styles.buttonText}>
+                  <FontAwesome name="window-restore" style={{fontSize:20}}></FontAwesome>   
+            <Text style={{paddingLeft:20}}> معرض الأعمال</Text>      
+                  </Text>
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Talbat */}
           <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Text style={{ fontSize: 25, borderBottomColor: "#eee", borderBottomWidth: 2 }}>الطلبات المؤكدة</Text>
+            <Text style={{ fontSize: 22, borderBottomColor: "#eee", borderBottomWidth: 2 }}>الطلبات المؤكدة</Text>
           </View>
 
           {/* Card Style */}
@@ -504,14 +507,14 @@ const tostErr= () =>{
                 <View style={styles.cardHeader}>
                   <View style={{ width: "100%" }}>
                     <View style={styles.userDetails}>
-                      <Image source={{ uri: `${pathUrl}${item.clientData?.img.slice(21)}` }}
+                      <Image source={{ uri: `${pathUrl}${item?.clientData?.img?.slice(21)}` }}
                         style={[styles.imageCard, { resizeMode: "contain" }]}
                       />
                       <View>
                         <Text style={[styles.text, { borderEndWidth: 10, borderStyle: "solid", borderEndColor: "red" }]}>
                           {`${item.clientData?.firstName} ${item.clientData?.lastName}`}
                         </Text>
-                        <Text style={[styles.text, { fontSize: 12 }]}>
+                        <Text style={[styles.text, { fontSize: 12, color:'#555' }]}>
                           {item.clientData?.address}
                         </Text>
                       </View>
@@ -520,23 +523,32 @@ const tostErr= () =>{
                 </View>
                 <View style={styles.cardBody}>
                   {/* jop des */}
-                  <View style={{ width: "50%", alignItems: "flex-start", padding: 10 }}>
+                  <View style={{  alignItems: "flex-start", padding: 10, backgroundColor:'#FFF' }}>
                     <View>
-                      <Text style={styles.text}>{item?.title}</Text>
+                      <Text style={[styles.text, {fontSize:15,fontWeight:'bold'}]}>
+                        وصف سريع  : 
+                       <Text style={{fontWeight:'normal'}}> {item?.title}</Text> 
+                      </Text>
                     </View>
                     <View>
-                      <Text style={[styles.text, { marginTop: 10 }]}>{item?.description}</Text>
+                      <Text style={[styles.text, { marginTop: 5, fontSize:14,fontWeight:'bold', borderBottomWidth:1, paddingBottom:10, borderBottomColor:'#EEE' }]}>
+                        التفاصيل :
+                        <Text style={{fontWeight:'normal'}}> {item?.description}</Text>
+                        </Text>
                     </View>
                   </View>
                   {/* img Jop */}
-                  <View style={{ width: "50%" }}>
-                    <Image source={{ uri: `${pathUrl}${item.image.slice(21)}` }}
+                  <View style={{ backgroundColor:'#FFF', paddingBottom:10,paddingTop:10 }}>
+                    <Image source={{ uri: `${pathUrl}${item?.image?.slice(21)}` }}
                       style={{ height: 200, resizeMode: "contain" }} />
                   </View>
                 </View>
                 <View style={styles.cardTalp}>
                   <View style={styles.headerTalp}>
-                    <Text style={styles.textHeaderTalp}>طلبك المقدم</Text>
+                    <Text style={styles.textHeaderTalp}>
+                      <AntDesign name='message1' ></AntDesign>
+                     <Text style={{marginRight:5}}> طلبك المقدم </Text> 
+                      </Text>
                   </View>
                   {item.proposals.map((p, index) =>
 
@@ -555,7 +567,10 @@ const tostErr= () =>{
                   {marginEnd:10,marginBottom:20,marginTop:10,
                     backgroundColor: item.status == "compelete"? "#555":"#fbb200"
                   }]}>
-                    <Text style={styles.buttonText}>تم الانتهاء</Text>
+                    <Text style={[styles.buttonText, {fontSize:18}]}>
+                <Text>تم الانتهاء </Text> 
+                <AntDesign name='lock' style={{fontSize:18}}></AntDesign>
+                       </Text>
                   </TouchableOpacity>
                 </View>
               </View>}
@@ -613,11 +628,11 @@ const styles = StyleSheet.create({
   col: {
     width: "50%",
     borderBottomWidth: 1,
-    borderBottomColor: "gray",
+    borderBottomColor: "#EEE",
     paddingBottom: 10,
   },
   textcol: {
-    fontSize: 20,
+    fontSize: 15,
     textAlign: "left"
   },
   iconCol: {
@@ -651,12 +666,12 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   cardHeader: {
-    backgroundColor: "#eee", //test
+    backgroundColor: "#FFF", //test
     borderRadius: 5,
     flex: 1,
     flexDirection: "row",
     padding: 8,
-    borderBottomColor: "gray",
+    borderBottomColor: "#999",
     borderBottomWidth: 2,
   },
   userDetails: {
@@ -671,7 +686,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    marginStart: 5
+    marginStart: 5,
   },
   iconCard: {
     width: "50%",
@@ -686,10 +701,10 @@ const styles = StyleSheet.create({
     alignItems: "baseline"
   },
   cardBody: {
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     flex: 1,
-    flexDirection: "row",
-    marginTop: 10,
+    // flexDirection: "row",
+    marginTop: 5,
     marginBottom: 20
   },
   cardTalp: {
@@ -697,21 +712,23 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   headerTalp: {
-    borderBottomColor: "gray",
-    borderBottomWidth: 2,
+    borderBottomColor: "#FFF",
+    borderBottomWidth: 1,
     paddingBottom: 5,
     justifyContent: "center",
     alignItems: "center"
   },
   textHeaderTalp: {
     backgroundColor: "#fff",
-    fontSize: 25,
+    fontSize: 20,
     textAlign: "center",
     paddingVertical: 5,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    borderRadius:10,
+    color:'#666'
   },
   textTalp: {
-    fontSize: 17,
+    fontSize: 15,
     padding: 10
   }
 
