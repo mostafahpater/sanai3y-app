@@ -16,8 +16,7 @@ export default class Paypal extends Component {
     }
 
     componentDidMount() {
-        // let currency = '100 USD'
-        // currency.replace(" USD", "")
+
 
         const dataDetail = {
             "intent": "sale",
@@ -40,7 +39,7 @@ export default class Paypal extends Component {
 
             }],
             "redirect_urls": {
-                "return_url": "https://example.com",
+                "return_url": "https://www.sandbox.paypal.com/checkoutnow?sessionID=uid_f7130461ec_mtc6nta6ndi&buttonSessionID=uid_1a27f9388e_mtc6nti6mjk&stickinessID=uid_d4c4ff1255_mti6mjg6mdu&inlinexo=false&smokeHash=&token=63F3771594008344H&fundingSource=paypal&buyerCountry=US&locale.x=en_US&commit=true&clientID=AZ51PWvV2V_ij5HDO2ivSJYUHukBhsoQwm6NulX6ZjIzMiLkdosGhpxefln8kfwraTqWXt9WjBkKFK4t&env=sandbox&sdkMeta=eyJ1cmwiOiJodHRwczovL3d3dy5wYXlwYWwuY29tL3Nkay9qcz9jbGllbnQtaWQ9QVo1MVBXdlYyVl9pajVIRE8yaXZTSllVSHVrQmhzb1F3bTZOdWxYNlpqSXpNaUxrZG9zR2hweGVmbG44a2Z3cmFUcVdYdDlXakJrS0ZLNHQiLCJhdHRycyI6eyJkYXRhLXNkay1pbnRlZ3JhdGlvbi1zb3VyY2UiOiJyZWFjdC1wYXlwYWwtanMiLCJkYXRhLXVpZCI6InVpZF96aGp6cnBkdGF1Z2FsdHhyZG5kZnVnd2VvY3F1eHIifX0&xcomponent=1&version=5.0.343",
                 "cancel_url": "https://example.com"
             }
         }
@@ -114,7 +113,7 @@ export default class Paypal extends Component {
             })
                 .then(res => res.json())
                 .then(response => {
-
+                    console.log(response)
                     if(response.name === 'INVALID_RESOURCE_ID') {
                         alert('paymanet fild')
                         this.setState({
