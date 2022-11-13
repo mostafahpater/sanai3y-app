@@ -19,7 +19,7 @@ export const JobsReducer = createSlice({
 export const getDataJops =()=> async (dispatch) =>{
         const res = await axios.get(`${pathUrl}/jobs/all`);
         const result = res.data.data.filter((item) => {
-            return item.status != "in progress"
+            return item.status != "in progress" && item.status != "compelete"
         })
         dispatch(setData(result));
 

@@ -5,7 +5,8 @@ import axios from "axios";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import NotFind from "../components/NotFind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import Icon from "react-native-vector-icons/FontAwesome";
+import { set } from "lodash";
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -17,20 +18,21 @@ export default function Works() {
   const [token, setToken] = useState('')
   // console.log(data);
   // console.log(token);
-  useEffect(()=>{
+  useEffect(() => {
 
 
-  },[])
-  useEffect(() => { 
-    AsyncStorage.getItem('token').then((res) => 
-    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
-      // console.log(res.data);
-       setData(res.data.Data)
-    }).catch((erorr) => {
-      console.log("erorr");
-      console.log(erorr);
-   
-  })})
+  }, [])
+  useEffect(() => {
+    AsyncStorage.getItem('token').then((res) => {
+      axios.get(`${pathUrl}/sanai3y/workstores`, { headers: { authorization: res } }).then((res) => {
+        // console.log(res.data);
+        setData(res.data.Data)
+      }).catch((erorr) => {
+        console.log("erorr");
+        console.log(erorr);
+
+      })
+    })
 
   }, [token])
 
@@ -39,31 +41,41 @@ export default function Works() {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
-    AsyncStorage.getItem('token').then((res) => 
-    {axios.get(`${pathUrl}/sanai3y/workstores`,{headers:{authorization:res}}).then((res) => {
-      // console.log(res.data);
-       setData(res.data.Data)
-    }).catch((erorr) => {
-      console.log("erorr");
-      console.log(erorr);
-   
-  })})
-  }, []);
+    AsyncStorage.getItem('token').then((res) => {
+      axios.get(`${pathUrl}/sanai3y/workstores`, { headers: { authorization: res } }).then((res) => {
+        // console.log(res.data);
+        setData(res.data.Data)
+      }).catch((erorr) => {
+        console.log("erorr");
+        console.log(erorr);
 
+      })
+    })
+  }, []);
+const deleted =async (id) => {
+  AsyncStorage.getItem('token').then((res) => {
+  let filterData=  data.filter((item)=>item._id!==id)
+  setData([...filterData])
+  axios.delete(`${pathUrl}/sanai3y/deletestore/${id}`,{headers:{authorization:res}}).then((res)=>{
+    console.log(res);
+  })
+  })
+}
   return (
 
     <View>
 
       <View style={styles.cont}>
-        <View style={{alignItems:"center",marginVertical:10}}>
+        <View style={{alignItems:"center",paddingVertical:10,backgroundColor:'#fff'}}>
           <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('AddWorks')}>
+            <Icon name="plus" style={{color:'#fff'}} size={16} />
             <Text style={styles.buttonTextStyle}
             >اضافة عمل</Text>
           </TouchableOpacity>
 
         </View>
         {data.length > 0 && <FlatList
-         contentContainerStyle={{ paddingBottom: 200 }}
+         contentContainerStyle={{ paddingBottom: 200,marginLeft:20 }}
          refreshControl={
            <RefreshControl
              refreshing={refreshing}
@@ -80,20 +92,32 @@ export default function Works() {
                 source={{
                   uri: `${pathUrl}${item.img?.slice(21)}`,
                 }}
-                style={{ height: 200,borderRadius:6 }}
+                style={{ height: 200, borderTopRightRadius: 10, borderTopLeftRadius: 10}}
               />
-
               <Text style={styles.job}>{item.title}</Text>
+
               <Text style={styles.description}>{item.description} </Text>
-              {/* <TouchableOpacity style={styles.buttonDelete}>
-                <Text style={styles.buttonTextStyle}> حذف</Text>
-              </TouchableOpacity> */}
+              <TouchableOpacity style={styles.buttonDelete}
+               activeOpacity={0.5}
+               onPress={()=>deleted(item._id)}
+              >
+                <Text style={styles.buttonDeleteStyle}> حذف</Text>
+              </TouchableOpacity>
             </View>
 
           )}
         />}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+        >
 
-        {data.length == 0 &&<NotFind data={"لايوجد منشورات"}/>}
+          {data.length == 0 && <NotFind data={"لايوجد منشورات"} />}
+        </ScrollView>
 
 
       </View>
@@ -105,41 +129,46 @@ const styles = StyleSheet.create({
   cont: {
     // flex:1,
     color: "black",
+    backgroundColor:'#F7F7F7',
     flexDirection: "column",
-    marginLeft: 28,
   },
   card: {
     width: "90%",
     backgroundColor: "#fff",
-    borderColor:"#99999982",
-    borderWidth:1,
+    
+    // margin:'auto',
     borderRadius: 10,
     marginHorizontal:5,
     justifyContent:"center",
+    justifyContent:"center",
     flexDirection: "column",
-    elevation: 6,
+    elevation: 3,
     marginTop: 15,
     marginBottom: 15,
-    
+
   },
   description: {
-    padding: 15,
+    margin: 20,
     fontSize: 16,
-    color: "#000",
+    color: "#222222",
     // backgroundColor:"#D4D4D4"
 
   },
   job: {
-    padding: 10,
+    borderBottomWidth:1,
+    marginLeft: 15,
+    marginRight: 15,
+    paddingTop:15,
+    paddingBottom:15,
     // borderBottomWidth:1,
-    // borderColor:"#99999982",
-    elevation:5,
+    borderColor:"#99999982",
+    // elevation:5,
   //  flex:2,
-    fontSize: 18,
+    fontSize: 20,
     color:"#000",
-    fontWeight:"bold",
+    // fontWeight:"bold",
     fontWeight: "700",
-    backgroundColor: "#FFC133",
+    // backgroundColor: "#FFC133",
     // borderBottomColor:"#ffb200",
     // borderBottomWidth:1,
     // width:,
@@ -148,36 +177,54 @@ const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: "#ffb200",
     // borderWidth: 0,
+    paddingHorizontal:7,
     color: "#FFFFFF",
     // borderColor: '#000',
     height: 40,
+    flexDirection:'row',
     alignItems: "center",
     borderRadius: 5,
     width: 100,
-    marginLeft: 35,
-    marginRight: 35,
+    // marginLeft: 35,
+    // marginRight: 35,
     marginTop: 10,
     marginBottom: 10,
     elevation: 5,
   },
   buttonDelete: {
-    backgroundColor: "red",
+    backgroundColor: "#fff",
     // borderWidth: 0,
     color: "#FFFFFF",
     // borderColor: '#000',
-    alignItems: "center",
+    // alignItems: "center",
     borderRadius: 5,
-    width: 100,
-    marginLeft: 35,
-    marginRight: 35,
+    width: 70,
+    marginLeft: 15,
+    textAlign:"center",
+    paddingVertical:4,
+    borderRadius:7,
+    borderColor:"#dc3545",
+    borderWidth:1,
+    marginBottom:10,
+    // marginRight: 35,
     marginTop: 15,
-    marginBottom: 10,
+    marginBottom: 20,
     elevation: 5,
   },
   buttonTextStyle: {
     color: "white",
     paddingVertical: 10,
+    marginLeft:7,
     fontSize: 16,
     fontWeight:"bold",
+  },
+  buttonDeleteStyle: {
+    color: "#dc3545",
+    
+ 
+    width:70,
+    marginLeft:15,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
