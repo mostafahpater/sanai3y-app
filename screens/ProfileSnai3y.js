@@ -58,7 +58,7 @@ export default function ProfileSnai3y() {
   const [snai3yJobs, setSnai3yJobs] = useState([])
   const dispatch = useDispatch()
   const datas = useSelector(state => state.Snai3yReducer.dataSani3y)
-  // console.log(datas);
+  console.log(datas);
   useEffect(() => {
     // setDatas(data)
     setPhoto(datas.img)
@@ -67,7 +67,7 @@ export default function ProfileSnai3y() {
       axios.get(`${pathUrl}/sanai3y/jobs`, { headers: { "Authorization": res } }).then((result) => {
         // console.log("ggg")
         if (result.status == 200) {
-          console.log("jobs",result.data.Data)
+          // console.log("jobs",result.data.Data)
           setSnai3yJobs(result.data.Data)
           setTimeout(() => {
             setLoader(false)
@@ -134,8 +134,14 @@ export default function ProfileSnai3y() {
     })
   }, []);
 
+// Tost Change Pass
+const tostChangePass=()=>{
+  Toast.success("تم تغيير كلمة السر بنجاح")
+}
+const [errPass , setErrPass]=useState(false)
+// Tost complet Job
 const tostComplite=()=>{
-  Toast.success("تهانينا تم الانتهاء من الوظيفة يمكنك الان التقديم علي وظيفة أخري")
+  Toast.success("تهانينا تم الانتهاء من الوظيفة")
 }
 const tostErr= () =>{
   Toast.error("حدث خطأ برجاء المحاولة مرة أخري")
@@ -144,10 +150,10 @@ const tostErr= () =>{
     AsyncStorage.getItem("token").then((token)=>{
       axios.put(`${pathUrl}/sanai3y/jobcompelete`,{},{headers:{"authorization": token}})
       .then((res)=>{
-        console.log(token)
+        // console.log(token)
         if (res.status == 200){
           tostComplite()
-          console.log("succes")
+          // console.log("succes")
           // AsyncStorage.getItem('id').then(result => dispatch(getDataSnai3y(result)))
         }
       }).catch((err)=>{
@@ -166,7 +172,7 @@ const tostErr= () =>{
 
   return (
     <>
-      <ToastManager position="bottom" positionValue={500} style={{width:320,paddingTop:20,height:100}}/>
+      <ToastManager position="bottom" positionValue={500}/>
       {!loader && <ScrollView style={{ backgroundColor: "#fff" }}
         refreshControl={
           <RefreshControl
@@ -314,20 +320,38 @@ const tostErr= () =>{
                         <Formik
                           initialValues={{
                             currentPassword: "",
-                            password: "",
+                            newPassword: "",
                             confirmPassword: ""
                           }}
                           validationSchema={yup.object().shape({
                             currentPassword: yup.string().required("هذا الحقل مطلوب"),
-                            password: yup.string().required("هذا الحقل مطلوب"),
-                            confirmPassword: yup.string().oneOf([yup.ref('password'), null], "كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
+                            newPassword: yup.string().required("هذا الحقل مطلوب").matches(/^(?=.*[0-9])(?=.*[a-z]).{8,32}$/,"يجب ان تحتوي كلمة المرور عل حرف صغير وحرف كبير وان لاتقل عن 8 أحرف"),
+                            confirmPassword: yup.string().oneOf([yup.ref('newPassword'), null], "كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
                           })}
                           onSubmit={(value) => {
-                            console.log(value)
+                            let data= {
+                              currentPassword: value.currentPassword,
+                              newPassword: value.newPassword
+                            }
+                            AsyncStorage.getItem("token").then((token)=>{
+                              axios.put(`${pathUrl}/sanai3y/changepassword`,data,{headers:{"authorization":token}})
+                              .then((res)=>{
+                                if(res.status == 200){
+                                  tostChangePass()
+                                  setErrPass(false)
+                                  toggleModalPass()
+                                }
+                              }).catch(err=>{
+                                setErrPass(true)
+                                console.log(err)
+                              })
+                            })
+                            // console.log(value)
                           }}
                         >
                           {({ handleSubmit, handleBlur, handleChange, values, touched, errors }) =>
                             <View style={{ marginTop: 20, flexDirection: "column", alignItems: "center", justifyContent: "center", width: 300 }}>
+                              {errPass&&<Text style={{color:"red"}}>برجاء التأكد من كلمة السر الحالية</Text>}
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
                                 <TextInput
@@ -352,17 +376,18 @@ const tostErr= () =>{
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
                                 <TextInput
-                                  value={values.password}
-                                  onChangeText={handleChange("password")}
-                                  onBlur={handleBlur("password")}
+                                  value={values.newPassword}
+                                  onChangeText={handleChange("newPassword")}
+                                  onBlur={handleBlur("newPassword")}
                                   placeholder="كلمة السر الجديدة"
+                                  secureTextEntry={true}
                                   placeholderTextColor="#8b9cb5"
                                   style={{
                                     backgroundColor: "#eee",
 
                                   }}
                                 />
-                                <Text style={{ color: "red", marginTop: 5 }}>{touched.password && errors.password}</Text>
+                                <Text style={{ color: "red", marginTop: 5 }}>{touched.newPassword && errors.newPassword}</Text>
                               </View>
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
@@ -371,10 +396,10 @@ const tostErr= () =>{
                                   onChangeText={handleChange("confirmPassword")}
                                   onBlur={handleBlur("confirmPassword")}
                                   placeholder="أعد كتابة كلمة السر"
+                                  secureTextEntry={true}
                                   placeholderTextColor="#8b9cb5"
                                   style={{
-                                    backgroundColor: "#eee",
-
+                                    backgroundColor: "#eee"
                                   }}
                                 />
                                 <Text style={{ color: "red", marginTop: 5 }}>{touched.confirmPassword && errors.confirmPassword}</Text>
@@ -440,12 +465,21 @@ const tostErr= () =>{
                 <Entypo name='pencil' style={styles.iconCol} />
               </View>
             </View>
-
+              {/* Skills */}
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.textcol}>{datas.skills}</Text>
               </View>
               <View style={styles.col}>
+                <Entypo name='tools' style={styles.iconCol} />
+              </View>
+            </View>
+            {/* Jop Count */}
+            <View style={styles.row}>
+              <View style={[styles.col,{width:"80%"}]}>
+                <Text style={styles.textcol}>{`عدد الوظائف المتاحة :  ${datas.jobcount}`}</Text>
+              </View>
+              <View style={[styles.col,{width:"20%"}]}>
                 <Entypo name='tools' style={styles.iconCol} />
               </View>
             </View>

@@ -18,6 +18,10 @@ import { pathUrl } from "../Config/env";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ToastManager, { Toast } from 'toastify-react-native'
+import { useSelector } from "react-redux";
+import { getDataSnai3y } from '../Redux/Slices/Snai3yReducer';
+
+
 export default function SendTalpFromClient() {
   const { params } = useRoute();
   const detailJob = get(params, "one");
@@ -34,15 +38,13 @@ export default function SendTalpFromClient() {
   }, [])
 
 
-  let headers = {
-    'Authorization': token
-  }
 
-  const showToastsError = () => {
-    Toast.error('عليك الانتهاء من الوظيفة التي قدمت عليها اولا')
-  }
+  const dataSani3y = useSelector(state => state.Snai3yReducer.dataSani3y)
   const showToasts = () => {
     Toast.success('تم التقديم بنجاح')
+  }
+  const showToastsErr = () => {
+    Toast.error('برجاء الاشتراك اولا')
   }
   function sendProposal(id) {
     let body = {
@@ -50,19 +52,25 @@ export default function SendTalpFromClient() {
     }
     // console.log(body)
     AsyncStorage.getItem("token").then((token)=>{
+      if(dataSani3y.jobcount <= 0){
+        showToastsErr()
+      }
+      else{
 
-      axios.put(`${pathUrl}/jobs/addproposal/${id}`, body, { headers: { "Authorization": token } })
-        .then(res => {
-  
-          if (res.status == 200) {
-            showToasts()
-            setTimeout(() => {
-              navigate.navigate("HomePost")
-            }, 3000);
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
+        axios.put(`${pathUrl}/jobs/addproposal/${id}`, body, { headers: { "Authorization": token } })
+          .then(res => {
+    
+            if (res.status == 200) {
+                showToasts()
+                setTimeout(() => {
+                  navigate.navigate("HomePost")
+                }, 3000);
+              
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+      }
     })
 
 

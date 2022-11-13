@@ -23,6 +23,7 @@ import NotFind from "../components/NotFind";
 import { TextInput } from 'react-native-paper';
 import { Formik } from "formik";
 import * as yup from 'yup'
+import ToastManager, { Toast } from "toastify-react-native";
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -122,7 +123,6 @@ export default function ProfileClient() {
     AsyncStorage.getItem("token").then((tok) => {
 
       const sendImg = async () => {
-
         try {
           let res = await axios.post(`${pathUrl}/client/addimage`, formdata, {
             headers: {
@@ -130,7 +130,6 @@ export default function ProfileClient() {
               Accept: 'application/json',
               "Content-Type": "multipart/form-data",
             }
-
           })
           // console.log("first")
           if (res.status == 200) {
@@ -140,14 +139,8 @@ export default function ProfileClient() {
         } catch (error) {
           console.log(error)
         }
-
-
       }
-
       sendImg()
-
-
-
     })
 
   }
@@ -158,8 +151,14 @@ export default function ProfileClient() {
     wait(2000).then(() => setRefreshing(false));
     AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
   }, []);
+
+  const succesChangePass = ()=>{
+    Toast.success("تم تغيير الباسورد بنجاح")
+  }
+  const [errPass , setErrPass]= useState(false)
   return (
     <>
+      <ToastManager position="bottom" positionValue={500}/>
       {!loader && <ScrollView style={{ backgroundColor: "#fff" }}
         refreshControl={
           <RefreshControl
@@ -344,20 +343,37 @@ export default function ProfileClient() {
                         <Formik
                           initialValues={{
                             currentPassword: "",
-                            password: "",
+                            newPassword: "",
                             confirmPassword: ""
                           }}
                           validationSchema={yup.object().shape({
                             currentPassword: yup.string().required("هذا الحقل مطلوب"),
-                            password: yup.string().required("هذا الحقل مطلوب"),
-                            confirmPassword: yup.string().oneOf([yup.ref('password'), null], "كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
+                            newPassword: yup.string().required("هذا الحقل مطلوب").matches(/^(?=.*[0-9])(?=.*[a-z]).{8,32}$/,"يجب ان تحتوي كلمة المرور عل حرف صغير وحرف كبير وان لاتقل عن 8 أحرف"),
+                            confirmPassword: yup.string().oneOf([yup.ref('newPassword'), null], "كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
                           })}
                           onSubmit={(value) => {
+                            let data={
+                              currentPassword: value.currentPassword,
+                              newPassword: value.newPassword
+                            }
+                            AsyncStorage.getItem("token").then((token)=>{
+                              axios.put(`${pathUrl}/client/changepassword`,data,{headers:{"authorization":token}})
+                              .then(res =>{
+                                if(res.status == 200){
+                                  toggleModalPass()
+                                  succesChangePass()
+                                  setErrPass(false)
+                                }
+                              }).catch(()=>{
+                                setErrPass(true)
+                              })
+                            })
                             console.log(value)
                           }}
                         >
                           {({ handleSubmit, handleBlur, handleChange, values, touched, errors }) =>
                             <View style={{ marginTop: 20, flexDirection: "column", alignItems: "center", justifyContent: "center", width: 300 }}>
+                              {errPass&&<Text style={{color:"red"}}>برجاء التاكد من كلمة السر الحالية</Text>}
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
                                 <TextInput
@@ -382,17 +398,18 @@ export default function ProfileClient() {
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
                                 <TextInput
-                                  value={values.password}
-                                  onChangeText={handleChange("password")}
-                                  onBlur={handleBlur("password")}
+                                  value={values.newPassword}
+                                  onChangeText={handleChange("newPassword")}
+                                  onBlur={handleBlur("newPassword")}
                                   placeholder="كلمة السر الجديدة"
+                                  secureTextEntry={true}
                                   placeholderTextColor="#8b9cb5"
                                   style={{
                                     backgroundColor: "#eee",
 
                                   }}
                                 />
-                                <Text style={{ color: "red", marginTop: 5 }}>{touched.password && errors.password}</Text>
+                                <Text style={{ color: "red", marginTop: 5 }}>{touched.newPassword && errors.newPassword}</Text>
                               </View>
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
@@ -401,6 +418,7 @@ export default function ProfileClient() {
                                   onChangeText={handleChange("confirmPassword")}
                                   onBlur={handleBlur("confirmPassword")}
                                   placeholder="أعد كتابة كلمة السر"
+                                  secureTextEntry={true}
                                   placeholderTextColor="#8b9cb5"
                                   style={{
                                     backgroundColor: "#eee",
