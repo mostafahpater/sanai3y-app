@@ -61,6 +61,7 @@ export default function TalpatSendingWithSanai3y() {
               }}
             >
               <Text
+              onPress={()=> navigation.navigate("sani3yShow",{data:item.sanai3yId}) }
                 style={{
                   borderRightWidth: 1,
                   borderColor: "#ffb200",

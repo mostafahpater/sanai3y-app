@@ -8,6 +8,7 @@ import { DevSettings, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import EditProfileClient from "../screens/EditProfileClient";
+import ShowSanai3y from "../screens/ShowSanai3y";
 
 const ProfileClientStack = () => {
   const { Navigator, Screen } = createStackNavigator();
@@ -86,6 +87,22 @@ function test() {
         component={EditProfileClient}
         options={{
           headerTitle:'تعديل البيانات',
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontSize: 25,
+          },
+          headerStyle: {
+            backgroundColor: "#fbb150",
+            elevation: 15,
+            shadowColor: "#000",
+          },
+        }}
+      />
+      <Screen
+        name="sani3yShow"
+        component={ShowSanai3y}
+        options={{
+          headerTitle:'حرفي',
           headerTitleAlign: "center",
           headerTitleStyle: {
             fontSize: 25,

@@ -19,22 +19,18 @@ export default function Works() {
   // console.log(data);
   // console.log(token);
   useEffect(() => {
-
-
-  }, [])
-  useEffect(() => {
     AsyncStorage.getItem('token').then((res) => {
       axios.get(`${pathUrl}/sanai3y/workstores`, { headers: { authorization: res } }).then((res) => {
         // console.log(res.data);
         setData(res.data.Data)
       }).catch((erorr) => {
         // console.log("erorr");
-        // console.log(erorr);
+        console.log(erorr);
 
       })
-    })
+    }).catch((err)=> console.log(err))
 
-  }, [token])
+  }, [])
 
   // console.log(data);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -50,27 +46,23 @@ export default function Works() {
         console.log(erorr);
 
       })
-    })
+    }).catch((err)=> console.log(err))
   }, []);
-const deleted =async (id) => {
+const deleted = (id) => {
   AsyncStorage.getItem('token').then((res) => {
   let filterData=  data.filter((item)=>item._id!==id)
   setData([...filterData])
    axios.delete(`${pathUrl}/sanai3y/deletestore/${id}`,{headers:{authorization:res}})
   .then((res)=>{
     console.log(res);
-  })
-  .catch((err) => {
+  }).catch((err) => {
 
     console.log(err)
 
   })
-  })
+  }).catch((err)=> console.log(err))
 }
   return (
-
-    <View>
-
       <View style={styles.cont}>
         <View style={{alignItems:"center",paddingVertical:10,backgroundColor:'#fff'}}>
           <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('AddWorks')}>
@@ -81,7 +73,7 @@ const deleted =async (id) => {
 
         </View>
         {data.length > 0 && <FlatList
-         contentContainerStyle={{ paddingBottom: 200,marginLeft:20 }}
+         contentContainerStyle={{ paddingBottom: 200,marginLeft:20 ,backgroundColor:"#fff"}}
          refreshControl={
            <RefreshControl
              refreshing={refreshing}
@@ -89,7 +81,7 @@ const deleted =async (id) => {
            />
          }
           data={data}
-          keyExtractor={({ item, index }) => index}
+          keyExtractor={( item ,index ) => index}
           renderItem={({ item }) => (
 
             <View  style={styles.card}>
@@ -114,6 +106,7 @@ const deleted =async (id) => {
           )}
         />}
         <ScrollView
+          style={{backgroundColor:"#fff"}}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -124,16 +117,12 @@ const deleted =async (id) => {
 
           {data.length == 0 && <NotFind data={"لايوجد منشورات"} />}
         </ScrollView>
-
-
       </View>
-    </View>
-
   );
 }
 const styles = StyleSheet.create({
   cont: {
-    // flex:1,
+    flex:1,
     color: "black",
     backgroundColor:'#FFF',
     flexDirection: "column",

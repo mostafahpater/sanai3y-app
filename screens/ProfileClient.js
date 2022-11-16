@@ -78,7 +78,6 @@ export default function ProfileClient() {
   // Get Jobs The Client
   let data = useSelector(state => state.ClientReducer.clintdata)
   let getAllJobs = useSelector(state => state.ClientReducer.jops)
-  // const [getAllJobs, setGetAllJob] = useState([]);
   useEffect(() => {
     setTimeout(() => {
       setLoader(false)
@@ -99,9 +98,9 @@ export default function ProfileClient() {
         { headers: { "authorization": tok } }
       ).then((result0) => {
         // Logic  
-        console.log(result0)
+        // console.log(result0)
         if (result0.status == 200) {
-          AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
+          AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result))).catch((err)=> console.log(err))
         }
 
       })
@@ -152,13 +151,27 @@ export default function ProfileClient() {
     AsyncStorage.getItem('id').then(result => dispatch(getDataClient(result)))
   }, []);
 
-  const succesChangePass = ()=>{
+  const succesChangePass = () => {
     Toast.success("تم تغيير الباسورد بنجاح")
   }
-  const [errPass , setErrPass]= useState(false)
+  const [errPass, setErrPass] = useState(false)
+
+  function confirmJob(id){
+    // console.log(id)
+    let body={
+      "sanai3yId": id
+    }
+    console.log(body)
+    axios.put(`${pathUrl}/client/confirmjob`,body).then(
+      (res)=>{
+        console.log(res)
+      }
+    ).catch((err) => console.log(err))
+  }
+
   return (
     <>
-      <ToastManager position="bottom" positionValue={500}/>
+      <ToastManager position="bottom" positionValue={500} />
       {!loader && <ScrollView style={{ backgroundColor: "#fff" }}
         refreshControl={
           <RefreshControl
@@ -306,7 +319,7 @@ export default function ProfileClient() {
             <View style={styles.row}>
               {/* Change Detalis */}
               <View style={styles.col}>
-                <TouchableOpacity onPress={() => navigation.navigate("EditDataSani3y")}
+                <TouchableOpacity onPress={() => navigate.navigate("editDataClient")}
                   style={{
                     backgroundColor: "#eee", padding: 5, flexDirection: "row-reverse", borderRadius: 5,
                     alignItems: "baseline",
@@ -325,7 +338,7 @@ export default function ProfileClient() {
                     paddingHorizontal: 10,
                     marginEnd: 5
                   }}>
-                  <AntDesign name="setting" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
+                  <AntDesign name="lock" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
                   <Text style={{ fontSize: 22 }}>تغيير كلمة السر</Text>
                 </TouchableOpacity>
 
@@ -348,32 +361,32 @@ export default function ProfileClient() {
                           }}
                           validationSchema={yup.object().shape({
                             currentPassword: yup.string().required("هذا الحقل مطلوب"),
-                            newPassword: yup.string().required("هذا الحقل مطلوب").matches(/^(?=.*[0-9])(?=.*[a-z]).{8,32}$/,"يجب ان تحتوي كلمة المرور عل حرف صغير وحرف كبير وان لاتقل عن 8 أحرف"),
+                            newPassword: yup.string().required("هذا الحقل مطلوب").matches(/^(?=.*[0-9])(?=.*[a-z]).{8,32}$/, "يجب ان تحتوي كلمة المرور عل حرف صغير وحرف كبير وان لاتقل عن 8 أحرف"),
                             confirmPassword: yup.string().oneOf([yup.ref('newPassword'), null], "كلمة السر غير متطابقة").required("هذا الحقل مطلوب")
                           })}
                           onSubmit={(value) => {
-                            let data={
+                            let data = {
                               currentPassword: value.currentPassword,
                               newPassword: value.newPassword
                             }
-                            AsyncStorage.getItem("token").then((token)=>{
-                              axios.put(`${pathUrl}/client/changepassword`,data,{headers:{"authorization":token}})
-                              .then(res =>{
-                                if(res.status == 200){
-                                  toggleModalPass()
-                                  succesChangePass()
-                                  setErrPass(false)
-                                }
-                              }).catch(()=>{
-                                setErrPass(true)
-                              })
+                            AsyncStorage.getItem("token").then((token) => {
+                              axios.put(`${pathUrl}/client/changepassword`, data, { headers: { "authorization": token } })
+                                .then(res => {
+                                  if (res.status == 200) {
+                                    toggleModalPass()
+                                    succesChangePass()
+                                    setErrPass(false)
+                                  }
+                                }).catch(() => {
+                                  setErrPass(true)
+                                })
                             })
                             console.log(value)
                           }}
                         >
                           {({ handleSubmit, handleBlur, handleChange, values, touched, errors }) =>
                             <View style={{ marginTop: 20, flexDirection: "column", alignItems: "center", justifyContent: "center", width: 300 }}>
-                              {errPass&&<Text style={{color:"red"}}>برجاء التاكد من كلمة السر الحالية</Text>}
+                              {errPass && <Text style={{ color: "red" }}>برجاء التاكد من كلمة السر الحالية</Text>}
                               <View style={{ width: "80%", marginBottom: 5 }}>
 
                                 <TextInput
@@ -514,7 +527,7 @@ export default function ProfileClient() {
 
               <View style={styles.cardBody}>
                 {/* jop des */}
-                <View style={{ flex: 1, alignItems: "flex-start", padding: 10 ,width:"50%" }}>
+                <View style={{ flex: 1, alignItems: "flex-start", padding: 10, width: "50%" }}>
 
                   <View style={{ borderLeftWidth: 1, borderLeftColor: '#ffb200' }}>
                     <Text style={[styles.text, { fontSize: 14 }]}>{item.title}</Text>
@@ -532,12 +545,19 @@ export default function ProfileClient() {
 
 
                 </View>
-                <View style={{width:"50%"}}>
-                    <Image style={{width:"100%",height:100}} source={{uri: `${pathUrl}${item.image.slice(21)}`}}/>
+                <View style={{ width: "50%" }}>
+                  <Image style={{ width: "100%", height: 100 }} source={{ uri: `${pathUrl}${item.image.slice(21)}` }} />
                 </View>
               </View>
 
               <View style={styles.parentButton}>
+                {item.status == "compelete" &&<TouchableOpacity style={[styles.button,{backgroundColor:"#fbb200"}]}
+                  onPress={()=> confirmJob(item.sanai3yId) }
+                >
+                  <Text style={styles.buttonText}>تم الانتهاء</Text>
+                </TouchableOpacity>}
+
+
                 <TouchableOpacity style={[styles.button,
                 {
                   backgroundColor: item.status == "in progress" ? "#555" : "#fbb200"
@@ -550,14 +570,16 @@ export default function ProfileClient() {
                     onPress={() =>
                       navigate.navigate("talpatSending", {
                         proposal: item,
-                        status:item.status
+                        status: item.status
                       })
                     }
-                    disabled={item.status == "in progress"}
+                    // disabled={item.status == "in progress"}
                   >
                     الطلبات المقدمة
                   </Text>
                 </TouchableOpacity>
+
+
               </View>
 
             </View>
@@ -679,10 +701,10 @@ const styles = StyleSheet.create({
   parentButton: {
     flex: 1,
     marginBottom: 20,
-    // marginTop: 10,
+    marginTop: 10,
     flexDirection: 'row',
-    justifyContent: "flex-end",
-    marginRight: 15
+    justifyContent: "space-between",
+    marginHorizontal: 15
   },
   // Button Style
   button: {

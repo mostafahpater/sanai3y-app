@@ -46,6 +46,9 @@ export default function SendTalpFromClient() {
   const showToastsErr = () => {
     Toast.error('برجاء الاشتراك اولا')
   }
+  const showToastsErrstatus = () => {
+    Toast.error('برجاء اكمال الوظيفة اولا')
+  }
   function sendProposal(id) {
     let body = {
       sanai3yProposal: proposal
@@ -56,20 +59,26 @@ export default function SendTalpFromClient() {
         showToastsErr()
       }
       else{
+        if(dataSani3y.statusws == "free")
+        {
 
-        axios.put(`${pathUrl}/jobs/addproposal/${id}`, body, { headers: { "Authorization": token } })
-          .then(res => {
-    
-            if (res.status == 200) {
-                showToasts()
-                setTimeout(() => {
-                  navigate.navigate("HomePost")
-                }, 3000);
-              
-            }
-          }).catch((err) => {
-            console.log(err)
-          })
+          axios.put(`${pathUrl}/jobs/addproposal/${id}`, body, { headers: { "Authorization": token } })
+            .then(res => {
+      
+              if (res.status == 200) {
+                  showToasts()
+                  setTimeout(() => {
+                    navigate.navigate("HomePost")
+                  }, 3000);
+                
+              }
+            }).catch((err) => {
+              console.log(err)
+            })
+        }
+        else{
+          showToastsErrstatus()
+        }
       }
     })
 

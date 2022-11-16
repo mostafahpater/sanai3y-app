@@ -13,10 +13,13 @@ import React from "react";
 export default function Coursel({ item }) {
   return (
     <View style={styles.conteiner}>
-      <Image
-        source={item.img}
-        style={[styles.img, { resizeMode: "contain" }]}
-      />
+      <View style={{width:"100%",height:250}}>
+        <Image
+          source={item.img}
+          style={[styles.img, { resizeMode: "contain" }]}
+        />
+
+      </View>
       <View style={styles.Content}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.Discraption}>{item.Discraption}</Text>
@@ -27,7 +30,6 @@ export default function Coursel({ item }) {
           {item.id == 4 ? <Text style={styles.Click}>سجل الآن </Text> : null}
         </TouchableOpacity>
       </View>
-      <View></View>
     </View>
   );
 }
@@ -36,17 +38,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection:"column",
+    // width:"100%",
+    height:"100%"
   },
   img: {
-    flex: 0.5,
+    flex: 1,
     justifyContent: "center",
-    textAlign: "center",
-    width: 360,
+    width: "100%",
+    height:"100%",
+    alignItems:"center"
   },
   Content: {
-    flex: 0.4,
-    flexDirection: "column",
+    // flex: 2,
+    // flexDirection: "column",
     // alignItems:'flex-end'
+    // justifyContent:"center",
+    // alignItems:"center"
   },
   title: {
     fontSize: 28,

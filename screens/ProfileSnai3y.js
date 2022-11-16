@@ -58,10 +58,8 @@ export default function ProfileSnai3y() {
   const [snai3yJobs, setSnai3yJobs] = useState([])
   const dispatch = useDispatch()
   const datas = useSelector(state => state.Snai3yReducer.dataSani3y)
-  console.log(datas);
+  // console.log(datas);
   useEffect(() => {
-    // setDatas(data)
-    setPhoto(datas.img)
     AsyncStorage.getItem('token').then((res) => {
 
       axios.get(`${pathUrl}/sanai3y/jobs`, { headers: { "Authorization": res } }).then((result) => {
@@ -83,7 +81,7 @@ export default function ProfileSnai3y() {
   }, [])
   function sendImg() {
     AsyncStorage.getItem('token').then((token) => {
-      console.log("first")
+      // console.log("first")
       const send = async () => {
         try {
           const formdata = new FormData()
@@ -92,7 +90,7 @@ export default function ProfileSnai3y() {
             type: "image/*",
             uri: image
           })
-          console.log(image)
+          // console.log(image)
           const res = await axios.post(`${pathUrl}/sanai3y/addimage`, formdata, {
             headers: {
               "Authorization": token,
@@ -302,7 +300,7 @@ const tostErr= () =>{
                     paddingHorizontal: 10,
                     marginEnd: 5
                   }}>
-                  <AntDesign name="setting" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
+                  <AntDesign name="lock" size={20} style={[styles.iconCol, { marginStart: 5 }]} />
                   <Text style={{ fontSize: 18, color:'#666'  }}>تغيير كلمة السر</Text>
                 </TouchableOpacity>
 
@@ -480,7 +478,8 @@ const tostErr= () =>{
                 <Text style={styles.textcol}>{`عدد الوظائف المتاحة :  (${datas?.jobcount})`}</Text>
               </View>
               <View style={[styles.col,{width:"20%"}]}>
-                <Entypo name='tools' style={styles.iconCol} />
+                {datas.jobcount > 0 && <AntDesign name='like2' style={styles.iconCol} />}
+                {datas.jobcount ==0 &&<AntDesign name='dislike2' style={styles.iconCol} />}
               </View>
             </View>
 

@@ -348,11 +348,9 @@ const RegisterSnai3y = () => {
                                                 rowTextForSelection={(item) => {
                                                     return item.value
                                                 }}
-                                                // onSelect={}
                                                 onSelect={(item) => values.address = item.value}
-                                            // onBlur={handleBlur('address')}
                                             />
-                                            <Text style={styles.errorTextStyle}>{errors.address}</Text>
+                                            <Text style={styles.errorTextStyle}>{touched.address &&errors.address}</Text>
                                         </View>
 
                                         <View style={{ flex: 0.5, height: 50, alignItems: "center" }}>
@@ -366,11 +364,9 @@ const RegisterSnai3y = () => {
                                                 rowTextForSelection={(item) => {
                                                     return item.value
                                                 }}
-                                                // onSelect={}
                                                 onSelect={(item) => values.skills = item.value}
-                                            // onBlur={handleBlur('address')}
                                             />
-                                            <Text style={styles.errorTextStyle}>{errors.skills}</Text>
+                                            <Text style={styles.errorTextStyle}>{touched.skills && errors.skills}</Text>
                                         </View>
                                     </View>
 

@@ -3,27 +3,29 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ChooseScreen from '../screens/Register/ChooseScreen'
 import RegisterSnai3y from '../screens/Register/Sani3yRegister'
 import RegisterClient from '../screens/Register/ClientRegister'
+import CuorselItem from '../screens/CourselScreen'
 const RegisterationStack = () => {
   const { Navigator, Screen } = createStackNavigator()
   return (
 
     <Navigator>
       <Screen
+        name='helloScreen'
+        component={CuorselItem}
+        options={
+          {
+            tabBarShowLabel: false,
+            headerShown:false
+          }
+        }
+      />
+      <Screen
         name='registerChoose'
         component={ChooseScreen}
         options={
           {
             tabBarShowLabel: false,
-            headerTitle: "التسجيل",
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              fontSize: 25
-            },
-            headerStyle: {
-              backgroundColor: "#fbb150",
-              elevation: 15,
-              shadowColor: "#000"
-            },
+            headerShown:false
           }
         }
       />

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons'
+import { AntDesign, Entypo, FontAwesome, Ionicons } from '@expo/vector-icons'
 import * as ImagePicker from "expo-image-picker";
 import Modal from "react-native-modal";
 import axios from 'axios';
@@ -26,29 +26,28 @@ export default function ShowSanai3y() {
   // Start Image in Modal
   const { params } = useRoute()
   const data = get(params, "data")
-  const [ loader , setLoader]= useState(true)
+  const [loader, setLoader] = useState(true)
   // End Image in Modal 
-//   console.log(data);
-// console.log("ahmed");
+  //   console.log(data);
+  // console.log("ahmed");
   const [workstore, setWorkstore] = useState([])
   useEffect(() => {
-      axios.get(`${pathUrl}/sanai3y/sanai3ies/${data?._id}`)
-        .then((res) => {
-            setWorkstore(res.data.Data.workStore)
-            if(res.status == 200){
-              setTimeout(() => {
-                setLoader(false)
-              }, 1100);
-            }
-        }).catch((err) => console.log(err))
-  
+    axios.get(`${pathUrl}/sanai3y/sanai3ies/${data?._id}`)
+      .then((res) => {
+        setWorkstore(res.data.Data.workStore)
+        if (res.status == 200) {
+          setTimeout(() => {
+            setLoader(false)
+          }, 1100);
+        }
+      }).catch((err) => console.log(err))
+
   }, [data])
 
+
   return (
-
-
     <>
-      {!loader &&<ScrollView style={{ backgroundColor: "#fff" }}>
+      {!loader && <ScrollView style={{ backgroundColor: "#fff" }}>
 
         <View style={styles.parent}>
           <View style={styles.image}>
@@ -58,7 +57,6 @@ export default function ShowSanai3y() {
                   style={{ width: 200, height: 200, borderRadius: 5, resizeMode: "cover" }}
                 />
               </View>
-
 
             </View>
 
@@ -91,10 +89,10 @@ export default function ShowSanai3y() {
             {/* numoer of the jops  */}
             <View style={styles.row}>
               <View style={styles.col}>
-                <Text style={styles.textcol}>{`عدد الوظائف : ${data?.jobs.length == 0?"لا يوجد":data?.jobs.length}`}</Text>
+                <Text style={styles.textcol}>{`عدد الوظائف : ${data?.jobs.length == 0 ? "لا يوجد" : data?.jobs.length}`}</Text>
               </View>
               <View style={styles.col}>
-                <Entypo name={data?.jobs.length == 0?'emoji-sad':"emoji-happy"} style={[styles.iconCol]} />
+                <Entypo name={data?.jobs.length == 0 ? 'emoji-sad' : "emoji-happy"} style={[styles.iconCol]} />
               </View>
             </View>
           </View>
@@ -106,7 +104,7 @@ export default function ShowSanai3y() {
 
           {/* Card Style */}
 
-          {workstore.length > 0 && workstore.map((item,index) =>
+          {workstore.length > 0 && workstore.map((item, index) =>
             <View style={styles.card} key={index} >
               <View style={styles.cardBody} >
                 {/* jop des */}
@@ -130,7 +128,7 @@ export default function ShowSanai3y() {
           {workstore == 0 && <NotFind data={"لاتوجد منشورات "} />}
         </View>
       </ScrollView>}
-      {loader &&<Loader/>}
+      {loader && <Loader />}
     </>
   )
 }
