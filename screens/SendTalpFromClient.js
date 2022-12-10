@@ -59,7 +59,7 @@ export default function SendTalpFromClient() {
         showToastsErr()
       }
       else{
-        if(dataSani3y.statusws == "free")
+        if(dataSani3y.status == "free")
         {
 
           axios.put(`${pathUrl}/jobs/addproposal/${id}`, body, { headers: { "Authorization": token } })
@@ -130,7 +130,6 @@ export default function SendTalpFromClient() {
           <Image
             style={styles.tinyLogotest}
             source={{
-              // uri: 'http://192.168.1.6'+detailJob?.image?.split('http://localhost')[1],
               uri: `${pathUrl}${detailJob?.image?.slice(21)}`
             }}
           />
@@ -140,8 +139,6 @@ export default function SendTalpFromClient() {
           >
             {detailJob?.title}
           </Text>
-
-          {/* <Text>{JSON.stringify( detailJob.image)}</Text> */}
 
           <Text
             style={{

@@ -52,9 +52,6 @@ export default function ShowClient(props) {
             setToken(toke);
         }
         getToken();
-        // setTimeout(() => {
-        //     setLoader(false)
-        // }, 1000);
     }, [])
 
     // Fetching the data of the current sender (current sanai3y)
@@ -116,7 +113,7 @@ export default function ShowClient(props) {
     const navigation = useNavigation()
 
     useEffect(() => {
-        setTimeout(() => {
+        // setTimeout(() => {
             axios.get(`${pathUrl}/client/clients/${data.clientData?._id}`)
                 .then((res) => {
                     setJobs([...res.data.Data.jobs])
@@ -128,9 +125,12 @@ export default function ShowClient(props) {
                         setLoader(false)
                     }
                 }).catch((err) => console.log(err))
-        }, 100);
-
-    }, [])
+        // }, 1000);
+            
+        return ()=>{
+            setLoader(false)
+        }
+    }, [data])
 
     return (
         <>

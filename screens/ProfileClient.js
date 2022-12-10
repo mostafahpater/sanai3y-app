@@ -154,6 +154,9 @@ export default function ProfileClient() {
   const succesChangePass = () => {
     Toast.success("تم تغيير الباسورد بنجاح")
   }
+  const succesConfirm = () => {
+    Toast.success("تم التاكيد شكرا لك")
+  }
   const [errPass, setErrPass] = useState(false)
 
   function confirmJob(id){
@@ -164,6 +167,9 @@ export default function ProfileClient() {
     console.log(body)
     axios.put(`${pathUrl}/client/confirmjob`,body).then(
       (res)=>{
+        if(res.status == 200){
+          succesConfirm()
+        }
         console.log(res)
       }
     ).catch((err) => console.log(err))

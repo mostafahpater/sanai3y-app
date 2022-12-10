@@ -70,7 +70,7 @@ export default function MainTabs() {
         options={{
           tabBarShowLabel: false,
           headerStyle: {
-            backgroundColor: "#ffb200",
+            backgroundColor: "#fbb150",
           },
           headerTitleAlign: 'center',
           tabBarIcon: ({ focused }) => (
